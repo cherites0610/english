@@ -10,17 +10,32 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SpeechClient, protos } from '@google-cloud/speech';
+import { GoogleGenAI } from "@google/genai";
 import axios from 'axios';
 import multer from 'multer';
 
 @Controller('api')
 export class AppController {
   private speechClient: SpeechClient;
+  private ai: GoogleGenAI;
   private readonly logger = new Logger(AppController.name)
 
   constructor() {
+    const geminiApiKey = process.env.GCP_CREDENTIALS_JSON
+    if (!geminiApiKey) {
+      this.logger.error('GenimiAPI environment variable not set. Speech-to-Text will not work.');
+      throw new Error('GenimiAPI credentials are required for Speech-to-Text functionality.');
+    }
+    this.ai = new GoogleGenAI({ apiKey: "GEMINI_API_KEY" });
+
+    const gcpCredentialsJson = process.env.GCP_CREDENTIALS_JSON;
+    if (!gcpCredentialsJson) {
+      this.logger.error('GCP_CREDENTIALS_JSON environment variable not set. Speech-to-Text will not work.');
+      throw new Error('GCP credentials are required for Speech-to-Text functionality.');
+    }
+    const credentials = JSON.parse(gcpCredentialsJson);
     this.speechClient = new SpeechClient({
-      keyFilename: './english-463915-1da80c9cda10.json', // 改成你金鑰路徑
+      credentials,
     });
   }
 
@@ -73,7 +88,13 @@ export class AppController {
     try {
       // 這裡示範呼叫 Gemini API，請依你的實際API修改
       const GEMINI_API_URL = 'https://api.gemini.example/v1/chat';
-      const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'your_api_key_here';
+      const GEMINI_API_KEY = process.env.GCP_CREDENTIALS_JSON || 'your_api_key_here';
+
+      const response = await this.ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: body.prompt,
+      });
+      console.log(response.text);
 
       const res = await axios.post(
         GEMINI_API_URL,
