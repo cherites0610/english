@@ -63,7 +63,7 @@ async function sendAudioToGoogleSTT(audioBlob) {
   // 假設有後端API /api/google-stt 接收音訊檔並回傳文字
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.webm');
-  const res = await fetch('http://localhost:3000/api/google-stt', {
+  const res = await fetch('https://api.cherites.net/api/google-stt', {
     method: 'POST',
     body: formData
   });
@@ -73,7 +73,7 @@ async function sendAudioToGoogleSTT(audioBlob) {
 
 async function sendTextToGeminiAPI(text) {
   // 假設有後端API /api/gemini 接收文字加prompt回傳結果
-  const res = await fetch('http://localhost:3000/api/gemini', {
+  const res = await fetch('https://api.cherites.net/api/gemini', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: text })
