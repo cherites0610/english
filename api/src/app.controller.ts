@@ -36,9 +36,8 @@ export class AppController {
     }
     
     const gcpCredentialsJsonBuffer = Buffer.from(gcpCredentialsJsonBase64, 'base64').toString('utf-8');
-    const gcpCredentialsJson = JSON.parse(gcpCredentialsJsonBuffer);
     
-    const credentials = JSON.parse(gcpCredentialsJson);
+    const credentials = JSON.parse(gcpCredentialsJsonBuffer);
     this.speechClient = new SpeechClient({
       credentials,
     });
