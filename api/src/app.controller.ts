@@ -27,7 +27,7 @@ export class AppController {
       this.logger.error('GenimiAPI environment variable not set. Speech-to-Text will not work.');
       throw new Error('GenimiAPI credentials are required for Speech-to-Text functionality.');
     }
-    this.ai = new GoogleGenAI({ apiKey: "GEMINI_API_KEY" });
+    this.ai = new GoogleGenAI({ apiKey: geminiApiKey });
 
     const gcpCredentialsJsonBase64 = process.env.GCP_CREDENTIALS_JSON;
     if (!gcpCredentialsJsonBase64) {
