@@ -1,8 +1,17 @@
 <template>
   <div>
-    <h2>語音錄製與交互Demo</h2>
+    <h2>語音錄製與交互 Demo</h2>
+
+    <label>
+      請輸入 Prompt 前綴內容：
+      <input v-model="promptPrefix" placeholder="例如：請用簡單中文說明…" />
+    </label>
+
+    <br />
+
     <button @click="startRecording" :disabled="isRecording">開始錄音</button>
     <button @click="stopRecording" :disabled="!isRecording">停止錄音</button>
+
     <p>辨識文字：{{ transcript }}</p>
     <p>回覆文字：{{ reply }}</p>
   </div>
@@ -14,6 +23,7 @@ import { ref } from 'vue';
 const isRecording = ref(false);
 const transcript = ref('');
 const reply = ref('');
+const promptPrefix = ref('請你幫我翻譯這段英文：'); // 使用者輸入的前綴 prompt
 
 let mediaRecorder = null;
 let audioChunks = [];
@@ -35,15 +45,14 @@ function startRecording() {
 
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        // 送音訊Blob到後端轉Google STT
+
         const text = await sendAudioToGoogleSTT(audioBlob);
         transcript.value = text;
 
-        // 跟 Gemini API 互動
-        const gptReply = await sendTextToGeminiAPI(text);
+        const prompt = promptPrefix.value + text;
+        const gptReply = await sendTextToGeminiAPI(prompt);
         reply.value = gptReply;
 
-        // 用瀏覽器合成語音播放回覆
         playTextAsSpeech(gptReply);
       };
     })
@@ -60,7 +69,6 @@ function stopRecording() {
 }
 
 async function sendAudioToGoogleSTT(audioBlob) {
-  // 假設有後端API /api/google-stt 接收音訊檔並回傳文字
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.webm');
   const res = await fetch('https://api.cherites.net/api/google-stt', {
@@ -72,7 +80,6 @@ async function sendAudioToGoogleSTT(audioBlob) {
 }
 
 async function sendTextToGeminiAPI(text) {
-  // 假設有後端API /api/gemini 接收文字加prompt回傳結果
   const res = await fetch('https://api.cherites.net/api/gemini', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
