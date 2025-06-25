@@ -20,8 +20,9 @@ export class AppController {
   private ai: GoogleGenAI;
   private readonly logger = new Logger(AppController.name)
 
+  
   constructor() {
-    const geminiApiKey = process.env.GCP_CREDENTIALS_JSON
+    const geminiApiKey = process.env.GCP_GEMINI_API
     if (!geminiApiKey) {
       this.logger.error('GenimiAPI environment variable not set. Speech-to-Text will not work.');
       throw new Error('GenimiAPI credentials are required for Speech-to-Text functionality.');
