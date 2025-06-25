@@ -20,7 +20,7 @@ export class AppController {
   private ai: GoogleGenAI;
   private readonly logger = new Logger(AppController.name)
 
-  
+
   constructor() {
     const geminiApiKey = process.env.GCP_GEMINI_API
     if (!geminiApiKey) {
@@ -34,9 +34,9 @@ export class AppController {
       this.logger.error('GCP_CREDENTIALS_JSON environment variable not set. Speech-to-Text will not work.');
       throw new Error('GCP credentials are required for Speech-to-Text functionality.');
     }
-    
+
     const gcpCredentialsJsonBuffer = Buffer.from(gcpCredentialsJsonBase64, 'base64').toString('utf-8');
-    
+
     const credentials = JSON.parse(gcpCredentialsJsonBuffer);
     this.speechClient = new SpeechClient({
       credentials,
@@ -90,32 +90,14 @@ export class AppController {
     }
 
     try {
-      // 這裡示範呼叫 Gemini API，請依你的實際API修改
-      const GEMINI_API_URL = 'https://api.gemini.example/v1/chat';
-      const GEMINI_API_KEY = process.env.GCP_GEMINI_API || 'your_api_key_here';
-
       const response = await this.ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: body.prompt,
       });
       console.log(response.text);
 
-      const res = await axios.post(
-        GEMINI_API_URL,
-        {
-          prompt: body.prompt,
-          // 如果需要可加其他參數
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${GEMINI_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
       // 假設回傳格式是 { reply: '...' }
-      return { reply: res.data.reply || 'No reply' };
+      return { reply: response.text || 'No reply' };
     } catch (error) {
       console.error(error.response?.data || error.message);
       throw new HttpException(
