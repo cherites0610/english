@@ -92,7 +92,7 @@ export class AppController {
     try {
       // 這裡示範呼叫 Gemini API，請依你的實際API修改
       const GEMINI_API_URL = 'https://api.gemini.example/v1/chat';
-      const GEMINI_API_KEY = process.env.GCP_CREDENTIALS_JSON || 'your_api_key_here';
+      const GEMINI_API_KEY = process.env.GCP_GEMINI_API || 'your_api_key_here';
 
       const response = await this.ai.models.generateContent({
         model: "gemini-2.5-flash",
