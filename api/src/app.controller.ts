@@ -28,11 +28,15 @@ export class AppController {
     }
     this.ai = new GoogleGenAI({ apiKey: "GEMINI_API_KEY" });
 
-    const gcpCredentialsJson = process.env.GCP_CREDENTIALS_JSON;
-    if (!gcpCredentialsJson) {
+    const gcpCredentialsJsonBase64 = process.env.GCP_CREDENTIALS_JSON;
+    if (!gcpCredentialsJsonBase64) {
       this.logger.error('GCP_CREDENTIALS_JSON environment variable not set. Speech-to-Text will not work.');
       throw new Error('GCP credentials are required for Speech-to-Text functionality.');
     }
+    
+    const gcpCredentialsJsonBuffer = Buffer.from(gcpCredentialsJsonBase64, 'base64').toString('utf-8');
+    const gcpCredentialsJson = JSON.parse(gcpCredentialsJsonBuffer);
+    
     const credentials = JSON.parse(gcpCredentialsJson);
     this.speechClient = new SpeechClient({
       credentials,
