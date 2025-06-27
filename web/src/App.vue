@@ -393,7 +393,7 @@ async function sendAudioToGoogleSTT(audioBlob) {
 }
 
 async function sendTextToGeminiAPI(text) {
-  const res = await fetch('http://43.163.2.11:3000/api/gemini', {
+  const res = await fetch('http://43.163.2.11:8020/api/gemini', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: text })
@@ -404,7 +404,7 @@ async function sendTextToGeminiAPI(text) {
 
 async function playTextAsSpeech(text) {
   try {
-    const res = await fetch('http://43.163.2.11:3000/api/google-tts', {
+    const res = await fetch('http://43.163.2.11:8020/api/google-tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       // ✅ 修改此行，將 text 和 speakingRate 一起傳送
