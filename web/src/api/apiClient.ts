@@ -4,7 +4,7 @@ import type { ResponseDto } from '../types/api'; // 引入我們定義的響應�
 // 引入我們定義的響應接口
 
 const apiClient: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/api', // 您後端的地址
+    baseURL: `${import.meta.env.VITE_API_URL}`, // 您後端的地址
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${import.meta.env.TOKEN}`

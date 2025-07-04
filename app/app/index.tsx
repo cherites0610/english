@@ -1,6 +1,6 @@
 import Rive, { Fit, RiveRef } from 'rive-react-native';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // ====================================================================
 // Demo 01: 您原本的可互動開關按鈕
@@ -14,6 +14,13 @@ function SwitchButtonDemo() {
     riveRef.current?.setInputState('ButtonState', 'isOn', !isToggled);
     setIsToggled(!isToggled);
   };
+
+  useEffect(() => {
+    console.log('--- SwitchButtonDemo 掛載 (MOUNTED) ---');
+    return () => {
+      console.log('--- SwitchButtonDemo 卸載 (UNMOUNTED) ---');
+    };
+  }, []);
 
   return (
     <View style={styles.demoContent}>
@@ -42,18 +49,23 @@ function SwitchButtonDemo() {
   );
 }
 
-// ====================================================================
-// Demo 02: 一個新的、播放不同動畫的簡單 Rive 元件
-// ====================================================================
 function LoopingAnimationDemo() {
+  useEffect(() => {
+    console.log('### LoopingAnimationDemo 掛載 (MOUNTED) ###');
+    return () => {
+      console.log('### LoopingAnimationDemo 卸載 (UNMOUNTED) ###');
+    };
+  }, []);
+
   return (
     <View style={styles.demoContent}>
       <Text style={styles.demoTitle}>Demo 02: 循環播放動畫</Text>
       <View style={styles.riveContainer}>
         <Rive
-          url="https://public.rive.app/community/runtime-files/2195-4346-avatar-pack-use-case.riv"
-          artboardName="Avatar 1"
-          stateMachineName="avatar"
+          url="https://english-rive.s3.ap-northeast-1.amazonaws.com/untitled.riv"
+          artboardName="Artboard"
+          animationName="Timeline 1"
+          autoplay={true}
           style={{ flex: 1 }}
         />
       </View>
@@ -64,10 +76,6 @@ function LoopingAnimationDemo() {
   );
 }
 
-
-// ====================================================================
-// 主畫面 App 元件，負責管理和切換 Demo
-// ====================================================================
 export default function App() {
   // 1. 建立一個 state 來記住目前要顯示哪個 demo
   // 'demo01' 或 'demo02'
@@ -101,10 +109,6 @@ export default function App() {
   );
 }
 
-
-// ====================================================================
-// 樣式表 (Styles)
-// ====================================================================
 const styles = StyleSheet.create({
   container: {
     flex: 1,
