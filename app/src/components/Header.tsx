@@ -1,15 +1,5 @@
 import React from 'react';
-
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    TouchableOpacity,
-    SafeAreaView,
-    Platform,
-    StatusBar
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, Platform, StatusBar } from 'react-native';
 
 type MainHeaderProps = {
     variant: 'main';
@@ -17,20 +7,24 @@ type MainHeaderProps = {
     name: string;
     level: number;
     money: number;
+    onAvatarPress?: () => void; // ✨ 新增 prop
 };
+
 type GameHeaderProps = {
     variant: 'game';
     title: string;
     onBackPress: () => void;
 };
-type HeaderProps = MainHeaderProps | GameHeaderProps;
 
+type HeaderProps = MainHeaderProps | GameHeaderProps;
 
 const Header: React.FC<HeaderProps> = (props) => {
     const renderMainHeader = (p: MainHeaderProps) => (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
-                <Image source={{ uri: p.avatarUrl }} style={styles.avatar} />
+                <TouchableOpacity onPress={p.onAvatarPress} activeOpacity={0.8}>
+                    <Image source={{ uri: p.avatarUrl }} style={styles.avatar} />
+                </TouchableOpacity>
                 <View>
                     <Text style={styles.nameText}>{p.name}</Text>
                     <Text style={styles.levelText}>Lv. {p.level}</Text>

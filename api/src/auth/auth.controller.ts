@@ -1,12 +1,8 @@
-// src/auth/auth.controller.ts (重構後)
-
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
 import { UserService } from 'src/user/user.service';
 import { ConfigService } from '@nestjs/config';
-
-// --- Swagger 和響應 DTO 相關的 imports ---
 import { ApiTags, ApiOkResponse, ApiBody } from '@nestjs/swagger';
 import {
   GoogleLoginResponse,
@@ -14,7 +10,7 @@ import {
   RefreshTokenResponse,
   AuthUrlResponse,
 } from './dto/auth.response.dto';
-
+import { Response } from "express"
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
@@ -22,49 +18,34 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
-  ) {}
-
-  @Public()
-  @Get('/line/callback')
-  @ApiOkResponse({
-    description: 'Line 登入或註冊成功',
-    type: LineLoginResponse,
-  })
-  async handleLineLogin(
-    @Query('code') code: string,
-  ): Promise<LineLoginResponse> {
-    // 假設 authService.loginWithLine 返回 { accessToken, refreshToken, user: User }
-    const result = await this.authService.loginWithLine(code);
-
-    return {
-      message: 'Line 登入成功',
-      data: {
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
-        user: result.user, // 轉換為安全的 DTO
-      },
-    };
-  }
+  ) { }
 
   @Public()
   @Get('/google/callback')
   @ApiOkResponse({
-    description: 'Google 登入或註冊成功',
-    type: GoogleLoginResponse,
+    description: 'Google 登入或註冊成功後，重定向回 App',
   })
   async handleGoogleLogin(
     @Query('code') code: string,
-  ): Promise<GoogleLoginResponse> {
+    @Res() res: Response,
+  ): Promise<void> {
     const result = await this.authService.loginWithGoogle(code);
+    const redirectUrl = `mou-english://auth?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`;
+    res.redirect(redirectUrl);
+  }
 
-    return {
-      message: 'Google 登入成功',
-      data: {
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
-        user: result.user,
-      },
-    };
+  @Public()
+  @Get('/line/callback')
+  @ApiOkResponse({
+    description: 'Line 登入或註冊成功後，重定向回 App',
+  })
+  async handleLineLogin(
+    @Query('code') code: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    const result = await this.authService.loginWithLine(code);
+    const redirectUrl = `mou-english://auth?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`;
+    res.redirect(redirectUrl);
   }
 
   @Public()

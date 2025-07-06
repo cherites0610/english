@@ -1,48 +1,32 @@
-import React from 'react';
-import { Tabs } from 'expo-router';
-import BottomNavBar, { TabConfig } from '@/src/components/BottomNavBar';
+import { useEffect } from 'react';
+import { useRouter, useSegments } from 'expo-router';
+import { Slot } from 'expo-router';
+import { useAuth, AuthProvider } from '@/src/context/AuthContext';
 
-const tabsConfig: TabConfig[] = [
-  { name: '(tabs)/tasks', label: '任務', iconName: 'checkbox-outline' },
-  { name: '(tabs)/index', label: '首頁', iconName: 'home-outline' },
-  { name: '(tabs)/profile', label: '我的', iconName: 'person-circle-outline' },
-];
+const InitialLayout = () => {
+    const { userToken, isLoading } = useAuth();
+    const segments = useSegments();
+    const router = useRouter();
 
-export default function AppLayout() {
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-      }}
-      tabBar={(props) => {
-        const activeTabName = props.state.routeNames[props.state.index];
-        const activeRoute = props.state.routes.find(route => route.name === activeTabName);
+    useEffect(() => {
+        if (isLoading) return;
 
-        const params = activeRoute?.params as { tabBarVisible?: boolean };
+        const inAuthGroup = segments[0] === '(app)';
 
-        if (params?.tabBarVisible === false) {
-          return null;
+        if (userToken && !inAuthGroup) {
+            router.replace('/(app)/(tabs)');
+        } else if (!userToken && inAuthGroup) {
+            router.replace('/login');
         }
+    }, [userToken, isLoading, segments]);
 
-        const handleTabPress = (tabName: string) => {
-          props.navigation.navigate(tabName);
-        };
+    return <Slot />;
+};
 
-        return (
-          <BottomNavBar
-            activeTab={activeTabName}
-            tabs={tabsConfig}
-            onTabPress={handleTabPress}
-          />
-        );
-      }}
-    >
-      <Tabs.Screen name="(tabs)/tasks" />
-      <Tabs.Screen name="(tabs)/index" />
-      <Tabs.Screen
-        name="(tabs)/profile"
-        initialParams={{ tabBarVisible: false }}
-      />
-    </Tabs>
-  );
+export default function RootLayout() {
+    return (
+        <AuthProvider>
+            <InitialLayout />
+        </AuthProvider>
+    );
 }
