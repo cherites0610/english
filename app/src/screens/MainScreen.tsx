@@ -43,7 +43,7 @@ export default function MainScreen() {
         variant="main"
         avatarUrl="https://i.pravatar.cc/150?u=a042581f4e29026704d" // 替換成真實的頭像 URL
         name="程式夥伴"
-        level={99}
+        userLevel={99}
         money={123456}
       />
 

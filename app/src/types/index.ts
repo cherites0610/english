@@ -1,6 +1,36 @@
-export interface RiveAssetProps {
-    resourceName: string; // Rive 檔案的資源名稱 (key)
-    artboardName?: string; // Artboard 名稱 (可選)
-    animationName?: string; // 動畫名稱 (可選)
-    stateMachineName?: string; // 狀態機名稱 (可選)
-}
+import { Ionicons } from "@expo/vector-icons";
+
+// User 相關
+export type UserProfileData = {
+    id: string;
+    name: string;
+    userLevel: number;
+    money: number
+    avatarUrl: string;
+    achievements: Achievement[];
+};
+
+export type Achievement = {
+    id: string;
+    name: string;
+    iconName: keyof typeof Ionicons.glyphMap;
+};
+
+export type Mail = {
+    id: string;
+    sender: string;
+    title: string;
+    isRead: boolean;
+    receivedAt: string;
+};
+
+// Task 相關
+export type Task = {
+    id: string;
+    title: string;
+    description: string;
+    isMainQuest?: boolean;
+    progress?: number;
+    goal?: number;
+    isClaimed?: boolean;
+};

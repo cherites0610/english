@@ -1,8 +1,7 @@
-import apiClient from './apiClient';
+import apiClient, { ApiResponse } from './apiClient';
 
 type AuthUrlResponse = {
-    message: string,
-    data: { url: string };
+    url: string
 };
 
 type RefreshAuthTokenResponse = {
@@ -11,16 +10,16 @@ type RefreshAuthTokenResponse = {
 
 
 export const getGoogleAuthUrl = async (): Promise<AuthUrlResponse> => {
-    const response = await apiClient.get('/auth/google');
-    return response.data;
+    const response = await apiClient.get<ApiResponse<AuthUrlResponse>>('/auth/google');
+    return response.data.data;
 };
 
 export const getLineAuthUrl = async (): Promise<AuthUrlResponse> => {
-    const response = await apiClient.get('/auth/line');
-    return response.data;
+    const response = await apiClient.get<ApiResponse<AuthUrlResponse>>('/auth/line');
+    return response.data.data;
 };
 
 export const refreshAuthToken = async (refreshToken: string): Promise<RefreshAuthTokenResponse> => {
-    const response = await apiClient.post('/auth/refresh', { refreshToken });
-    return { accessToken: response.data.accessToken, refreshToken };
+    const response = await apiClient.post<ApiResponse<{ accessToken: string }>>('/auth/refresh', { refreshToken });
+    return { accessToken: response.data.data.accessToken, refreshToken };
 };

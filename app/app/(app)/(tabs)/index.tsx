@@ -2,30 +2,18 @@ import Header from '@/src/components/Header';
 import HouseLayout from '@/src/components/HouseLayout';
 import MailModal from '@/src/components/MailModal';
 import NpcLayout from '@/src/components/NpcLayout';
-import ProfileModal, { UserProfileData } from '@/src/components/ProfileModal';
+import ProfileModal from '@/src/components/ProfileModal';
 import SettingsModal from '@/src/components/SettingsModal';
 import SideActionBar, { ActionItemConfig } from '@/src/components/SideActionBar';
 import { TaskBriefingModal } from '@/src/components/TaskBriefingModal';
 import TaskModal from '@/src/components/TaskModal';
+import { useUserProfile } from '@/src/hooks/useUserProfile';
 import { displayedNpcs, NpcData, TaskBriefing } from '@/src/services/gameService';
+import { fetchUserProfile } from '@/src/services/userService';
+import { UserProfileData } from '@/src/types';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Alert, ImageBackground, ImageSourcePropType, SafeAreaView, StyleSheet, View } from 'react-native';
-
-const currentUserData: UserProfileData = {
-  id: 'PLAYER_123456789',
-  name: '程式夥伴',
-  level: 99,
-  avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-  achievements: [
-    { id: 'a1', name: '初出茅廬', iconName: 'footsteps' },
-    { id: 'a2', name: '小小財主', iconName: 'cash' },
-    { id: 'a3', name: '探險家', iconName: 'map' },
-    { id: 'a4', name: '戰鬥大師', iconName: 'flash' },
-    { id: 'a5', name: '工匠精神', iconName: 'hammer' },
-    { id: 'a6', name: '釣魚高手', iconName: 'fish' },
-  ]
-};
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, ImageBackground, ImageSourcePropType, SafeAreaView, StyleSheet, View, Text } from 'react-native';
 
 type HouseData = {
   id: string;
@@ -36,15 +24,18 @@ type HouseData = {
 export default function HomeScreen() {
   const router = useRouter();
 
+  const [selectedTask, setSelectedTask] = useState<TaskBriefing | null>(null);
+
   const [isMailModalVisible, setMailModalVisible] = useState(false);
   const [isSettingsModalVisible, setSettingsModalVisible] = useState(false);
   const [isTaskModalVisible, setTaskModalVisible] = useState(false);
   const [isProfileModalVisible, setProfileModalVisible] = useState(false);
   const [isTaskBriefingModalVisible, setTaskBriefingModalVisible] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<TaskBriefing | null>(null);
 
   const [taskCount, setTaskCount] = useState(5);
   const [mailCount, setMailCount] = useState(12);
+
+  const { userProfile, isLoading, error } = useUserProfile();
 
   const handleActionPress = (id: string) => {
     if (id === 'mail') {
@@ -63,8 +54,6 @@ export default function HomeScreen() {
   };
 
   const handleNpcPress = (npc: NpcData) => {
-    console.log(npc);
-    
     if (npc.task) {
       setSelectedTask(npc.task);
       setTaskBriefingModalVisible(true);
@@ -113,16 +102,31 @@ export default function HomeScreen() {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1 }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (error || !userProfile) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: 'red' }}>{error || '無法載入資料'}</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.screen}>
         <Header
           variant="main"
-          avatarUrl="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-          name="程式夥伴"
-          level={99}
-          money={123456}
+          avatarUrl={userProfile.avatarUrl}
+          name={userProfile.name}
+          userLevel={userProfile.userLevel}
+          money={userProfile.money}
           onAvatarPress={handleAvatarPress}
         />
         <ImageBackground
@@ -149,7 +153,7 @@ export default function HomeScreen() {
           <ProfileModal
             isVisible={isProfileModalVisible}
             onClose={() => setProfileModalVisible(false)}
-            userData={currentUserData} // ✨ 傳遞資料
+            userData={userProfile} // ✨ 傳遞資料
           />
           <TaskBriefingModal
             isVisible={isTaskBriefingModalVisible}

@@ -1,46 +1,43 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useAuthRequest, makeRedirectUri } from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
+import { makeRedirectUri } from 'expo-auth-session';
 import { useAuth } from '@/src/context/AuthContext';
 import { getGoogleAuthUrl, getLineAuthUrl } from '@/src/services/authService';
-
 
 export default function LoginScreen() {
     const { signIn } = useAuth();
 
-    const redirectUri = makeRedirectUri({
-        native: 'mou-english://auth',
-    });
-
-    const [request, response, promptAsync] = useAuthRequest(
-        {
-            clientId: 'placeholder-client-id',
-            redirectUri,
-        },
-        // 這個 discovery 物件也是佔位符
-        { authorizationEndpoint: 'https://placeholder.com/auth' }
-    );
-
-    useEffect(() => {
-        if (response?.type === 'success' && response.params?.accessToken && response.params?.refreshToken) {
-            const accessToken = response.params.accessToken as string;
-            const refreshToken = response.params.refreshToken as string;
-            signIn(accessToken, refreshToken); // ✨ 傳遞兩個 token
-        } else if (response?.type === 'error' || (response?.type === 'success' && !response.params?.token)) {
-            Alert.alert('登入失敗', '無法從驗證提供商獲取 token，請稍後再試。');
-        }
-    }, [response]);
-
     const handleLogin = async (provider: 'google' | 'line') => {
         try {
             const getAuthUrl = provider === 'google' ? getGoogleAuthUrl : getLineAuthUrl;
-            const { data } = await getAuthUrl();
-
-            if (data.url) {
-                await promptAsync({ url: data.url });
+            const { url } = await getAuthUrl();
+            if (!url) {
+                throw new Error('無法獲取登入網址');
             }
+
+            const redirectUri = makeRedirectUri({
+                path: 'auth',
+            });
+
+            const result = await WebBrowser.openAuthSessionAsync(url, redirectUri);
+
+            if (result.type === 'success' && result.url) {
+                const urlObj = new URL(result.url);
+                const accessToken = urlObj.searchParams.get('accessToken');
+                const refreshToken = urlObj.searchParams.get('refreshToken');
+
+                if (accessToken && refreshToken) {
+                    signIn(accessToken, refreshToken);
+                } else {
+                    Alert.alert('登入失敗', '無法在回調網址中找到 token。');
+                }
+            } else if (result.type !== 'cancel' && result.type !== 'dismiss') {
+                Alert.alert('登入失敗', '驗證流程中斷。');
+            }
+
         } catch (error) {
             console.error(error);
             Alert.alert('登入錯誤', '似乎發生了一些問題，請檢查你的網路連線。');
@@ -55,19 +52,11 @@ export default function LoginScreen() {
         >
             <View style={styles.container}>
                 <Text style={styles.title}>歡迎回來！</Text>
-                <TouchableOpacity
-                    style={[styles.button, styles.googleButton]}
-                    onPress={() => handleLogin('google')}
-                    disabled={!request}
-                >
+                <TouchableOpacity style={[styles.button, styles.googleButton]} onPress={() => handleLogin('google')}>
                     <Ionicons name="logo-google" size={24} color="white" />
                     <Text style={styles.buttonText}>使用 Google 登入</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.button, styles.lineButton]}
-                    onPress={() => handleLogin('line')}
-                    disabled={!request}
-                >
+                <TouchableOpacity style={[styles.button, styles.lineButton]} onPress={() => handleLogin('line')}>
                     <Ionicons name="chatbubble-ellipses" size={24} color="white" />
                     <Text style={styles.buttonText}>使用 LINE 登入</Text>
                 </TouchableOpacity>
@@ -76,8 +65,7 @@ export default function LoginScreen() {
     );
 }
 
-// ... 樣式不變 ...
-
+// ... 樣式保持不變 ...
 const styles = StyleSheet.create({
     screen: { flex: 1 },
     container: {

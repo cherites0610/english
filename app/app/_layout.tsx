@@ -4,7 +4,7 @@ import { Slot } from 'expo-router';
 import { useAuth, AuthProvider } from '@/src/context/AuthContext';
 
 const InitialLayout = () => {
-    const { userToken, isLoading } = useAuth();
+    const { accessToken, isLoading } = useAuth();
     const segments = useSegments();
     const router = useRouter();
 
@@ -13,12 +13,12 @@ const InitialLayout = () => {
 
         const inAuthGroup = segments[0] === '(app)';
 
-        if (userToken && !inAuthGroup) {
+        if (accessToken && !inAuthGroup) {
             router.replace('/(app)/(tabs)');
-        } else if (!userToken && inAuthGroup) {
+        } else if (!accessToken && inAuthGroup) {
             router.replace('/login');
         }
-    }, [userToken, isLoading, segments]);
+    }, [accessToken, isLoading, segments]);
 
     return <Slot />;
 };

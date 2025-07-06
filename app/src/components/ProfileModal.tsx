@@ -2,20 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import CustomModal from './CustomModal';
-
-type Achievement = {
-    id: string;
-    name: string;
-    iconName: keyof typeof Ionicons.glyphMap;
-};
-
-export type UserProfileData = {
-    id: string;
-    name: string;
-    level: number;
-    avatarUrl: string;
-    achievements: Achievement[];
-};
+import { UserProfileData } from '../types';
 
 type ProfileModalProps = {
     isVisible: boolean;
@@ -37,7 +24,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isVisible, onClose, userDat
                 <View style={styles.infoSection}>
                     <Image source={{ uri: userData.avatarUrl }} style={styles.avatar} />
                     <Text style={styles.name}>{userData.name}</Text>
-                    <Text style={styles.level}>等級 {userData.level}</Text>
+                    <Text style={styles.userLevel}>等級 {userData.userLevel}</Text>
                     <Text style={styles.userID}>ID: {userData.id}</Text>
                 </View>
                 <View style={styles.achievementSection}>
@@ -82,7 +69,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 12,
     },
-    level: {
+    userLevel: {
         fontSize: 16,
         color: '#3B82F6',
         fontWeight: '600',

@@ -5,22 +5,26 @@ import { refreshAuthToken } from './authService';
 const ACCESS_TOKEN_KEY = 'my-super-secret-access-token';
 const REFRESH_TOKEN_KEY = 'my-super-secret-refresh-token';
 
+export type ApiResponse<T> = {
+    message: string;
+    data: T;
+};
+
 const apiClient = axios.create({
     baseURL: 'https://english-api.cherites.org/api',
-
-    // 預設請求超時時間
     timeout: 10000,
-
     headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': 'Bearer YOUR_TOKEN' 
     },
 });
 
+// ✨ 請求攔截器 (Request Interceptor)
 apiClient.interceptors.request.use(
     async (config) => {
+        // 在發送請求前，從 SecureStore 獲取 token
         const accessToken = await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
         if (accessToken) {
+            // 如果 token 存在，就將其加入到請求標頭中
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
         return config;
@@ -30,8 +34,10 @@ apiClient.interceptors.request.use(
     }
 );
 
+// ✨ 回應攔截器 (Response Interceptor)
 apiClient.interceptors.response.use(
     (response) => {
+        // 任何 2xx 狀態碼的響應都會觸發這裡
         return response;
     },
     async (error) => {
@@ -43,28 +49,31 @@ apiClient.interceptors.response.use(
 
             try {
                 const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
-                if (!refreshToken) return Promise.reject(error);
+                if (!refreshToken) {
+                    // 如果連 refresh token 都沒有，就直接拋出錯誤，觸發登出
+                    // 這裡可以加入全局的登出邏輯
+                    return Promise.reject(error);
+                }
 
                 const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await refreshAuthToken(refreshToken);
 
-                // 更新 SecureStore 和 axios 預設標頭
                 await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, newAccessToken);
                 await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, newRefreshToken);
-                apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
 
-                // 更新原始請求的標頭並重新發送
+                apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
                 originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
                 return apiClient(originalRequest);
             } catch (refreshError) {
-                // 如果 refresh token 也失效，就需要強制登出
-                // 這裡可以呼叫 signOut，或透過其他方式通知 AuthContext
-                console.error('Refresh token failed, logging out.', refreshError);
-                // await signOut(); // 在 service 層呼叫 context 方法比較複雜，通常會用事件或導航來處理
+                console.error('Refresh token failed, user should be logged out.', refreshError);
+                // 在這裡可以觸發全局登出事件
                 return Promise.reject(refreshError);
             }
         }
 
+        // 對於其他非 401 的錯誤，直接拋出
         return Promise.reject(error);
     }
 );
+
 export default apiClient;

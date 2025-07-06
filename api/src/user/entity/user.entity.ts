@@ -46,6 +46,9 @@ export class User {
   googleID: string;
 
   @Column()
+  avatarUrl: string;
+
+  @Column()
   name: string;
 
   @Column()

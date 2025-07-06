@@ -5,7 +5,7 @@ type MainHeaderProps = {
     variant: 'main';
     avatarUrl: string;
     name: string;
-    level: number;
+    userLevel: number;
     money: number;
     onAvatarPress?: () => void; // ✨ 新增 prop
 };
@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                 </TouchableOpacity>
                 <View>
                     <Text style={styles.nameText}>{p.name}</Text>
-                    <Text style={styles.levelText}>Lv. {p.level}</Text>
+                    <Text style={styles.userLevelText}>Lv. {p.userLevel}</Text>
                 </View>
             </View>
             <View style={styles.rightContainer}>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    levelText: {
+    userLevelText: {
         fontSize: 14,
         color: '#666',
     },

@@ -48,8 +48,6 @@ export class JournalService {
         if (!entry.isPublic && entry.author.id !== viewerId) {
             throw new ForbiddenException('無權查看此日誌');
         }
-        console.log(entry);
-
         return this.mapJournalToDto(entry, true); // 傳入 true 來加載子評論數量
     }
 
