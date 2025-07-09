@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+  Relation,
+} from 'typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { WallMessage } from './wall-message.entity';
 import { JournalEntry } from './journal-entry.entity';
@@ -13,26 +19,35 @@ import { Comment } from './comment.entity';
  */
 @Entity('likes')
 export class Like {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    /**
-     * 點讚的發起者
-     */
-    @ManyToOne(() => User, { onDelete: 'CASCADE' })
-    user: Relation<User>;
+  /**
+   * 點讚的發起者
+   */
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  user: Relation<User>;
 
-    // --- 多態關聯: 點讚的目標對象 ---
-    // 一個讚，只會屬於以下三種類型中的一個
-    @ManyToOne(() => WallMessage, msg => msg.likes, { nullable: true, onDelete: 'CASCADE' })
-    wallMessage?: Relation<WallMessage>;
+  // --- 多態關聯: 點讚的目標對象 ---
+  // 一個讚，只會屬於以下三種類型中的一個
+  @ManyToOne(() => WallMessage, (msg) => msg.likes, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  wallMessage?: Relation<WallMessage>;
 
-    @ManyToOne(() => JournalEntry, entry => entry.likes, { nullable: true, onDelete: 'CASCADE' })
-    journalEntry?: Relation<JournalEntry>;
+  @ManyToOne(() => JournalEntry, (entry) => entry.likes, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  journalEntry?: Relation<JournalEntry>;
 
-    @ManyToOne(() => Comment, comment => comment.likes, { nullable: true, onDelete: 'CASCADE' })
-    comment?: Relation<Comment>;
+  @ManyToOne(() => Comment, (comment) => comment.likes, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  comment?: Relation<Comment>;
 
-    @CreateDateColumn({ type: 'timestamptz' })
-    createdAt: Date;
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
 }

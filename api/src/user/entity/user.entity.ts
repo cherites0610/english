@@ -84,11 +84,11 @@ export class User {
   @OneToMany(() => UserAchievement, (ua) => ua.user)
   userAchievements: Relation<UserAchievement>[];
 
-  @OneToOne(() => Hut, hut => hut.user, { cascade: true })
+  @OneToOne(() => Hut, (hut) => hut.user, { cascade: true })
   @JoinColumn()
   hut: Relation<Hut>;
 
-  @OneToMany(() => Furniture, furniture => furniture.owner)
+  @OneToMany(() => Furniture, (furniture) => furniture.owner)
   furnitureInventory: Relation<Furniture>[]; // 代表該用戶擁有的所有家具（無論是否放置）
 
   @OneToMany(() => WallMessage, (message) => message.wallOwner)

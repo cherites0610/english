@@ -7,10 +7,8 @@ import { Furniture } from 'src/furniture/entity/furniture.entity';
 import { FurnitureTemplate } from 'src/furniture/entity/furniture-template.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Hut, Furniture, FurnitureTemplate])
-  ],
+  imports: [TypeOrmModule.forFeature([Hut, Furniture, FurnitureTemplate])],
   controllers: [HutController],
   providers: [HutService],
 })
-export class HutModule { }
+export class HutModule {}

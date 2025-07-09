@@ -30,7 +30,7 @@ import { UserID } from 'src/common/decorators/user.decorator';
 @ApiTags('User Achievements') // 為 Swagger UI 加上標籤分組
 @Controller('user-achievement')
 export class UserAchievementController {
-  constructor(private readonly service: UserAchievementService) { }
+  constructor(private readonly service: UserAchievementService) {}
 
   /**
    * (管理員或系統用) 手動為使用者解鎖一項成就

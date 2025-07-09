@@ -34,7 +34,7 @@ export class QuestService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly userAchievementService: UserAchievementService,
-  ) { }
+  ) {}
 
   // 取得玩家的任務日誌
   async getPlayerQuestLog(

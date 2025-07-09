@@ -10,7 +10,7 @@ import {
   RefreshTokenResponse,
   AuthUrlResponse,
 } from './dto/auth.response.dto';
-import { Response } from "express"
+import { Response } from 'express';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
@@ -18,7 +18,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   @Public()
   @Get('/google/callback')

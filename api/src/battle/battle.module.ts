@@ -10,7 +10,6 @@ import { BattleParentCategory } from './entity/battle-parent-category.entity';
 import { BattleReward } from './entity/battle-reward.entity';
 import { BattleStage } from './entity/battle-stage.entity';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -21,7 +20,11 @@ import { BattleStage } from './entity/battle-stage.entity';
       Npc,
     ]),
   ],
-  controllers: [BattleStageAdminController, BattleChildCategoryAdminController, BattleParentCategoryAdminController],
+  controllers: [
+    BattleStageAdminController,
+    BattleChildCategoryAdminController,
+    BattleParentCategoryAdminController,
+  ],
   providers: [BattleAdminService],
 })
-export class BattleModule { }
+export class BattleModule {}

@@ -14,9 +14,9 @@ import { WallController } from './wall.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Comment, JournalEntry, Like, WallMessage, User])
+    TypeOrmModule.forFeature([Comment, JournalEntry, Like, WallMessage, User]),
   ],
   controllers: [JournalController, InteractionController, WallController],
   providers: [WallService, InteractionService, JournalService],
 })
-export class CommunityModule { }
+export class CommunityModule {}

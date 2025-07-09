@@ -16,6 +16,7 @@ import { HutModule } from './hut/hut.module';
 import { CommunityModule } from './community/community.module';
 import { NpcModule } from './npc/npc.module';
 import { BattleModule } from './battle/battle.module';
+import { TalkModule } from './talk/talk.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { BattleModule } from './battle/battle.module';
     CommunityModule,
     NpcModule,
     BattleModule,
+    TalkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

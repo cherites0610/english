@@ -14,7 +14,13 @@ import { NpcService } from './npc.service';
 import { CreateNpcDto, UpdateNpcDto } from './dto/npc.dto';
 
 // --- Swagger 和響應 DTO 相關的 imports ---
-import { ApiTags, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiNotFoundResponse,
+} from '@nestjs/swagger';
 import { NpcResponse, NpcListResponse } from './dto/npc.response.dto';
 import { SuccessResponse } from 'src/common/dto/success.response.dto';
 
@@ -22,7 +28,7 @@ import { SuccessResponse } from 'src/common/dto/success.response.dto';
 @ApiBearerAuth() // 假設管理員操作需要認證
 @Controller('admin/npcs') // 將 API 路徑放在 admin 下
 export class NpcController {
-  constructor(private readonly npcService: NpcService) { }
+  constructor(private readonly npcService: NpcService) {}
 
   @Post()
   @ApiCreatedResponse({ description: '成功創建 NPC', type: NpcResponse })
@@ -32,7 +38,10 @@ export class NpcController {
   }
 
   @Get()
-  @ApiOkResponse({ description: '成功獲取所有 NPC 列表', type: NpcListResponse })
+  @ApiOkResponse({
+    description: '成功獲取所有 NPC 列表',
+    type: NpcListResponse,
+  })
   async findAll(): Promise<NpcListResponse> {
     const npcs = await this.npcService.findAll();
     return { message: '查詢成功', data: npcs };
@@ -61,7 +70,9 @@ export class NpcController {
   @ApiOkResponse({ description: '成功刪除 NPC', type: SuccessResponse })
   @ApiNotFoundResponse({ description: '找不到指定的 NPC' })
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<SuccessResponse> {
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<SuccessResponse> {
     await this.npcService.remove(id);
     return { message: 'NPC 已成功刪除', data: null };
   }

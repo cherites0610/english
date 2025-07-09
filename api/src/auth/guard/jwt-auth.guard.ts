@@ -43,7 +43,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     const parts = authHeader.split(' ');
     // 2. 檢查 Header 格式是否正確 (應為 'Bearer <token>')
     if (parts.length !== 2 || parts[0] !== 'Bearer') {
-      throw new UnauthorizedException('授權標頭格式錯誤，應為 "Bearer <token>"');
+      throw new UnauthorizedException(
+        '授權標頭格式錯誤，應為 "Bearer <token>"',
+      );
     }
 
     const token = parts[1];
@@ -60,7 +62,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
         userId: this.configService.get<string>('TEST_USER_ID'),
         username: 'TEST_USER',
       };
-      
+
       return true;
     }
 

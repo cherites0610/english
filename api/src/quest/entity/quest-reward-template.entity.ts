@@ -7,8 +7,8 @@ export class QuestRewardTemplate {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => QuestTemplate, (template) => template.rewards,{
-    onDelete: 'CASCADE'
+  @ManyToOne(() => QuestTemplate, (template) => template.rewards, {
+    onDelete: 'CASCADE',
   })
   template: QuestTemplate;
 

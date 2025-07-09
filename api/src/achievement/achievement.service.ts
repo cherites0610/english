@@ -11,7 +11,7 @@ export class AchievementService {
   constructor(
     @InjectRepository(Achievement)
     private readonly achievementRepository: Repository<Achievement>,
-  ) { }
+  ) {}
 
   async create(dto: CreateAchievementDto): Promise<Achievement> {
     const achievement = this.achievementRepository.create(dto);

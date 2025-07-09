@@ -34,4 +34,4 @@ import { QuestAdminService } from './quest-admin.service';
   providers: [QuestService, QuestAdminService],
   exports: [QuestService],
 })
-export class QuestModule { }
+export class QuestModule {}

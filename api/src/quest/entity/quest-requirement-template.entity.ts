@@ -8,7 +8,7 @@ export class QuestRequirementTemplate {
   id: string;
 
   @ManyToOne(() => QuestTemplate, (template) => template.requirements, {
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
   })
   template: QuestTemplate;
 

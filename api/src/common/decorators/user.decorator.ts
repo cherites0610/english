@@ -26,7 +26,7 @@ export const UserID = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): string => {
     const request = ctx.switchToHttp().getRequest();
     const user = request.user;
-    
+
     // 增加一個健壯性檢查，確保 user 和 userId 存在
     if (!user || !user.userId) {
       throw new InternalServerErrorException('無法從請求中獲取使用者 ID');

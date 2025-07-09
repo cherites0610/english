@@ -5,10 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Npc } from './entity/npc.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Npc])
-  ],
+  imports: [TypeOrmModule.forFeature([Npc])],
   controllers: [NpcController],
   providers: [NpcService],
 })
-export class NpcModule { }
+export class NpcModule {}
