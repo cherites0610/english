@@ -45,7 +45,7 @@ export class User {
   })
   googleID: string;
 
-  @Column()
+  @Column({default:""})
   avatarUrl: string;
 
   @Column()

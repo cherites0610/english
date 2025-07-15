@@ -33,3 +33,4 @@ export class BattleReward {
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, any>;
 }
+

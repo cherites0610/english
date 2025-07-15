@@ -21,14 +21,14 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly httpService: HttpService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async loginWithLine(code: string) {
     try {
       const tokenResponse = await firstValueFrom(
         this.httpService.post(
           'https://api.line.me/oauth2/v2.1/token',
-          new URLSearchParams({
+          {
             grant_type: 'authorization_code',
             code: code,
             redirect_uri:
@@ -36,7 +36,7 @@ export class AuthService {
             client_id: this.configService.get<string>('LINE_CLIENT_ID') || '',
             client_secret:
               this.configService.get<string>('LINE_CLIENT_SECRET') || '',
-          }),
+          } ,
           { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
         ),
       );
@@ -75,11 +75,11 @@ export class AuthService {
       const payload = { sub: user.id, name: user.name };
 
       const accessToken = this.jwtService.sign(payload, {
-        expiresIn: '15m',
+        expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRETIME'),
       });
 
       const refreshToken = this.jwtService.sign(payload, {
-        expiresIn: '30d',
+        expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRETIME'),
       });
 
       return {
@@ -134,11 +134,11 @@ export class AuthService {
     const payload = { sub: user.id, name: user.name };
 
     const accessToken = this.jwtService.sign(payload, {
-      expiresIn: '15m',
+      expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRETIME'),
     });
 
     const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: '30d',
+      expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRETIME'),
     });
 
     return {
@@ -156,7 +156,7 @@ export class AuthService {
 
       const newAccessToken = this.jwtService.sign(
         { sub: user.id, name: user.name },
-        { expiresIn: '15m' },
+        { expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRETIME') },
       );
 
       return newAccessToken;

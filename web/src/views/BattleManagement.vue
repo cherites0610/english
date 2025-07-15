@@ -56,6 +56,7 @@
                         </div>
                     </template>
                     <el-table v-if="selectedChild" :data="filteredStages" border height="600px">
+                        <el-table-column prop="id" label="關卡ID" />
                         <el-table-column prop="name" label="關卡名稱" />
                         <el-table-column prop="npc.name" label="關聯 NPC" />
                         <el-table-column prop="targets" label="目標類型" />

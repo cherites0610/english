@@ -15,7 +15,7 @@
         <el-menu router :default-active="$route.path" class="nav-menu">
           <el-menu-item index="/">
             <template #title>
-              <span>對話實驗區</span>
+              <span>prompt實驗區</span>
             </template>
           </el-menu-item>
           <el-menu-item index="/quest">
@@ -41,6 +41,11 @@
           <el-menu-item index="/battle">
             <template #title>
               <span>對戰管理</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="/talk-test">
+            <template #title>
+              <span>對話對戰測試區</span>
             </template>
           </el-menu-item>
         </el-menu>

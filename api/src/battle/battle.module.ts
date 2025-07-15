@@ -26,5 +26,6 @@ import { BattleStage } from './entity/battle-stage.entity';
     BattleParentCategoryAdminController,
   ],
   providers: [BattleAdminService],
+  exports: [BattleAdminService]
 })
 export class BattleModule {}

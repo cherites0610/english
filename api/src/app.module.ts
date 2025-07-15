@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -17,6 +17,9 @@ import { CommunityModule } from './community/community.module';
 import { NpcModule } from './npc/npc.module';
 import { BattleModule } from './battle/battle.module';
 import { TalkModule } from './talk/talk.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -36,6 +39,7 @@ import { TalkModule } from './talk/talk.module';
         synchronize: true,
       }),
     }),
+    RedisModule,
     UserModule,
     AuthModule,
     GeminiModule,
@@ -53,4 +57,4 @@ import { TalkModule } from './talk/talk.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -62,7 +62,6 @@ export class BattleAdminService {
     const categories = await this.parentCategoryRepo.find({
       order: { name: 'ASC' },
     });
-    // 【修正一】使用箭頭函式確保 `this` 上下文正確
     return categories.map((category) => this.mapParentToDto(category));
   }
 

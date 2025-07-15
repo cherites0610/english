@@ -8,11 +8,12 @@ const InitialLayout = () => {
     const segments = useSegments();
     const router = useRouter();
 
-    useEffect(() => {
+    useEffect(() => {        
         if (isLoading) return;
-
+        // router.replace('/login');
         const inAuthGroup = segments[0] === '(app)';
-
+        
+        
         if (accessToken && !inAuthGroup) {
             router.replace('/(app)/(tabs)');
         } else if (!accessToken && inAuthGroup) {

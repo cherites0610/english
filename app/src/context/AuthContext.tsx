@@ -30,9 +30,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const loadTokens = async () => {
             try {
                 const storedAccessToken = await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+                
                 if (storedAccessToken) {
                     setAccessToken(storedAccessToken);
-                    // 在 App 啟動時，也為 apiClient 設定一次標頭
                     apiClient.defaults.headers.common['Authorization'] = `Bearer ${storedAccessToken}`;
                 }
             } catch (e) {

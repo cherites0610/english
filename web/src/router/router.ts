@@ -6,6 +6,7 @@ import QuestManagement from '@/views/QuestManagement.vue'
 import FurnitureTemplateManagement from '@/views/FurnitureTemplateManagement.vue'
 import NpcManagement from '@/views/NpcManagement.vue'
 import BattleManagement from '@/views/BattleManagement.vue'
+import TalkTest from '@/views/TalkTest.vue'
 
 const routes = [
     { path: '/', component: Talk },
@@ -13,7 +14,8 @@ const routes = [
     { path: '/quest', component: QuestManagement },
     { path: '/furniture-template', component: FurnitureTemplateManagement },
     { path: '/npc', component: NpcManagement },
-    { path: '/battle', component: BattleManagement }
+    { path: '/battle', component: BattleManagement },
+    { path: '/talk-test', component: TalkTest }
 ]
 
 export const router = createRouter({

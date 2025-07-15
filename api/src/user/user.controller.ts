@@ -11,14 +11,13 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserProfileResponse } from './dto/user-profile.response.dto';
-import { UserProfileDto } from './dto/user-profile.dto';
 import { UserID } from 'src/common/decorators/user.decorator';
 
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get('profile')
   @ApiOkResponse({
