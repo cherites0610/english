@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
         gap: 4,
     },
     image: {
-        width: 80,
-        height: 80,
+        width: 200,
+        height: 200,
         resizeMode: 'contain',
     },
     title: {

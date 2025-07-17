@@ -35,6 +35,9 @@ const allNpcs: NpcData[] = [
         }
     },
     { id: '鐵匠', imageUrl: require('../../assets/images/MainScreen/npc2.png') },
+    { id: '村民', imageUrl: require('../../assets/images/MainScreen/npc3.png') },
+    { id: '農民', imageUrl: require('../../assets/images/MainScreen/npc4.png') },
+    { id: '村長', imageUrl: require('../../assets/images/MainScreen/npc5.png') },
 ];
 
 const spawnPoints = [

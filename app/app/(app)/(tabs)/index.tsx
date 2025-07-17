@@ -135,7 +135,7 @@ export default function HomeScreen() {
           source={require('@/assets/images/MainScreen/background.png')}
         >
           <SideActionBar actionItems={actionBarItems} />
-          <HouseLayout houses={houseData} onHousePress={handleHousePress} verticalOffset={80} />
+          <HouseLayout houses={houseData} onHousePress={handleHousePress} verticalOffset={-50} horizontalOffset={-40} />
           <NpcLayout npcs={displayedNpcs} onNpcPress={handleNpcPress} />
 
           <TaskModal

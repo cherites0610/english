@@ -22,12 +22,9 @@ export const getLineAuthUrl = async (): Promise<AuthUrlResponse> => {
 export const refreshAuthToken = async (refreshToken: string): Promise<RefreshAuthTokenResponse> => {
     try{
         const response = await apiClient.post<ApiResponse<{ accessToken: string }>>('/auth/refresh', { refreshToken });
-        console.log(response);
-        
         return { accessToken: response.data.data.accessToken, refreshToken };
     }catch(err:any) {
         console.log(123);
         return { accessToken: "1", refreshToken:"2" };
     }
-    
 };

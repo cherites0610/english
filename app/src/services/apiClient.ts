@@ -1,25 +1,23 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { refreshAuthToken } from './authService';
-import { useAuth } from '../context/AuthContext';
+import eventBus from './eventBus';
 
 const ACCESS_TOKEN_KEY = 'my-super-secret-access-token';
 const REFRESH_TOKEN_KEY = 'my-super-secret-refresh-token';
-// const { signOut } = useAuth();
+
 export type ApiResponse<T> = {
     message: string;
     data: T;
 };
 
 const apiClient = axios.create({
-    baseURL: 'https://shrew-smart-kit.ngrok-free.app/api',
+    baseURL: 'https://english-api.cherites.org/api',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
-// ✨ 請求攔截器 (Request Interceptor)
 apiClient.interceptors.request.use(
     async (config) => {
 
@@ -33,7 +31,8 @@ apiClient.interceptors.request.use(
         return config;
     },
     (error) => {
-        // signOut()
+        console.error('Refresh token failed, emitting force-logout event.', error);
+        eventBus.emit('force-logout');
         return Promise.reject(error);
     }
 );
@@ -56,8 +55,9 @@ apiClient.interceptors.response.use(
                     return Promise.reject(error);
                 }
 
-                const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await refreshAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YzdjNmY0MS02YzJjLTRkMGYtYmMwZS1kZjFhY2Y1ODk5ZjciLCJuYW1lIjoi5buW5p-P5a6JIiwiaWF0IjoxNzUyMTUzMDkwLCJleHAiOjE3NTQ3NDUwOTB9.riGJKlxHyRqEGc1_z8szqQICyPPVI4dApXmOeGicmWM");
-
+                const { data } = await axios.post('/auth/refresh', { refreshToken });
+                const newAccessToken = data.data.accessToken;
+                const newRefreshToken = refreshToken;
 
                 await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, newAccessToken);
                 await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, newRefreshToken);
@@ -67,16 +67,12 @@ apiClient.interceptors.response.use(
 
                 return apiClient(originalRequest);
             } catch (refreshError: any) {
-                console.error('Refresh token failed, user should be logged out.', refreshError);
-                console.log(refreshError);
-                // signOut()
-                // 在這裡可以觸發全局登出事件
+                console.error('Refresh token failed, emitting force-logout event.', refreshError);
+                eventBus.emit('force-logout');
                 return Promise.reject(refreshError);
             }
         }
-        console.log(123);
 
-        // 對於其他非 401 的錯誤，直接拋出
         return Promise.reject(error);
     }
 );

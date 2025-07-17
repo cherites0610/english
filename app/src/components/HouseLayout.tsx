@@ -12,6 +12,7 @@ type HouseLayoutProps = {
     houses: HouseData[];
     onHousePress: (houseId: string) => void;
     verticalOffset?: number;
+    horizontalOffset?: number
 };
 
 const positionMap: { [count: number]: { top: number; left: number }[] } = {
@@ -28,7 +29,7 @@ const positionMap: { [count: number]: { top: number; left: number }[] } = {
     ],
 };
 
-const HouseLayout: React.FC<HouseLayoutProps> = ({ houses, onHousePress, verticalOffset = 0 }) => {
+const HouseLayout: React.FC<HouseLayoutProps> = ({ houses, onHousePress, verticalOffset = 0, horizontalOffset = 0 }) => {
     const houseCount = Math.min(houses.length, 5);
     const positions = positionMap[houseCount];
 
@@ -39,7 +40,10 @@ const HouseLayout: React.FC<HouseLayoutProps> = ({ houses, onHousePress, vertica
                     position: 'absolute' as const,
                     top: `${positions[index].top * 100}%`,
                     left: `${positions[index].left * 100}%`,
-                    transform: [{ translateY: verticalOffset }],
+                    transform: [
+                        { translateY: verticalOffset },
+                        { translateX: horizontalOffset }
+                    ]
                 } as ViewStyle;
 
                 return (

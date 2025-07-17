@@ -55,7 +55,8 @@ export default function HouseMenuScreen() {
                             handleHousePress(house.id, house.title);
                         }
                     }}
-                    verticalOffset={-275}
+                    verticalOffset={-400}
+                    horizontalOffset={-50}
                 />
             </ImageBackground>
         </View>
