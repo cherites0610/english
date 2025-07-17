@@ -6,6 +6,12 @@ import { RedisService } from 'src/redis/redis.service';
 import { UserService } from 'src/user/user.service';
 import { v4 as uuidv4 } from 'uuid';
 
+interface TalkData {
+    history: string;
+    voiceSpeed: number;
+    voiceId: string;
+}
+
 @Injectable()
 export class TalkService {
     constructor(
@@ -54,34 +60,61 @@ export class TalkService {
             .replaceAll('{currentQuestObjective}', battle.rewards.join(','))
 
         const talkID = uuidv4()
-        await this.redisService.set(`talk:${userID}:${talkID}`, ".", 20 * 60)
+        const initialTalkData: TalkData = {
+            history: "",
+            voiceSpeed: 1.0,
+            voiceId: battle.npc?.voiceId ?? "en-US-Chirp3-HD-Sadaltager"
+        };
 
-        const reply = await this.addMessageToTalk(user.id, talkID, finalPrompt, 'USER')
+        await this.redisService.set(
+            `talk:${userID}:${talkID}`,
+            JSON.stringify(initialTalkData),
+            20 * 60
+        );
+
+        const { reply, audioBase64 } = await this.addMessageToTalk(user.id, talkID, finalPrompt, 'USER')
+
+
         return {
             message: reply,
+            audioBase64,
             talkID: talkID
         };
     }
 
     async addMessageToTalk(userID: string, talkID: string, message: string, role: 'AI' | "USER") {
-        let talk = await this.redisService.get(`talk:${userID}:${talkID}`)
-        if (!talk) throw new NotFoundException("找不到對話")
+        const rawTalkData = await this.redisService.get(`talk:${userID}:${talkID}`);
+        if (!rawTalkData) throw new NotFoundException("找不到對話");
 
-        talk = talk + '\n' + `${role}:${message}`
+        const talkData: TalkData = JSON.parse(rawTalkData);
 
-        const { reply } = await this.geminiService.generateGeminiReply(talk)
+        talkData.history = talkData.history + '\n' + `${role}:${message}`;
 
-        talk = talk + '\n' + `AI:${reply}`
+        const { reply } = await this.geminiService.generateGeminiReply(talkData.history);
 
-        await this.redisService.set(`talk:${userID}:${talkID}`, talk, 20 * 60)
-        return reply
+        talkData.history = talkData.history + '\n' + `AI:${reply}`;
+
+        await this.redisService.set(
+            `talk:${userID}:${talkID}`,
+            JSON.stringify(talkData),
+            20 * 60
+        );
+
+        const audioBuffer = await this.geminiService.googleTTS(
+            reply,
+            talkData.voiceSpeed,
+            talkData.voiceId
+        );
+        const audioBase64 = audioBuffer.toString('base64');
+
+        return { reply, audioBase64 };
     }
 
     async SpeachToText(fileBuffer: Buffer) {
         return await this.geminiService.googleSTT(fileBuffer)
     }
 
-    async getTalkSessionContext(userID:string,talkID:string) {
+    async getTalkSessionContext(userID: string, talkID: string) {
         let context = await this.redisService.get(`talk:${userID}:${talkID}`)
         if (!context) throw new NotFoundException('找不到該對話')
         return context

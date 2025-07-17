@@ -387,7 +387,8 @@ async function sendAudioToGoogleSTT(audioBlob) {
     formData.append('file', audioBlob, 'audio.webm');
     const res = await fetch(`${apiUrl}/gemini/google-stt`, {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
     });
     const data = await res.json();
     return data.text || '';
@@ -396,7 +397,7 @@ async function sendAudioToGoogleSTT(audioBlob) {
 async function sendTextToGeminiAPI(text) {
     const res = await fetch(`${apiUrl}/gemini/gemini`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` },
         body: JSON.stringify({ prompt: text })
     });
     const data = await res.json();
@@ -407,7 +408,7 @@ async function playTextAsSpeech(text) {
     try {
         const res = await fetch(`${apiUrl}/gemini/google-tts`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` },
             body: JSON.stringify({ text: text, speakingRate: speakingRate.value })
         });
         if (!res.ok) {

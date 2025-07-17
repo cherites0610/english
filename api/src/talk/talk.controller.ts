@@ -35,7 +35,9 @@ export class TalkController {
         talkID: result.talkID,
         message: {
           role: 'ASSISTANT',
-          content: result.message
+          content: result.message,
+          audioBase64: result.audioBase64,
+          audioFormat: 'audio/mpeg',
         }
       }
     }
@@ -53,7 +55,7 @@ export class TalkController {
     }
 
     const { text } = await this.talkService.SpeachToText(file.buffer)
-    const result = await this.talkService.addMessageToTalk(userID, talkID, text, "USER")
+    const { reply, audioBase64 } = await this.talkService.addMessageToTalk(userID, talkID, text, "USER")
     return {
       message: "對話成功",
       data: {
@@ -63,7 +65,9 @@ export class TalkController {
         },
         assistantMessage: {
           role: 'ASSISTANT',
-          content: result
+          content: reply,
+          audioBase64: audioBase64,
+          audioFormat: 'audio/mpeg',
         }
       }
     }

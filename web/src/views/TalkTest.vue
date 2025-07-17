@@ -148,6 +148,13 @@ const startTalk = async () => {
         talkId.value = response.data.talkID; // 假設返回的 data 中有 talkID
         conversationHistory.value.push(response.data.message); // 假設返回的 data 中有初始訊息
         ElMessage.success(`對話已開啟，ID: ${talkId.value}`);
+
+        const assistantMessage = response.data.message;
+        const audioBase64 = assistantMessage.audioBase64;
+        const audioFormat = assistantMessage.audioFormat;
+        const audioSrc = `data:${audioFormat};base64,${audioBase64}`;
+        const audio = new Audio(audioSrc);
+        audio.play();
     } catch (e) { console.error(e) }
     finally { talkLoading.value = false; getSessionContet() }
 };
@@ -174,7 +181,6 @@ const handleFileExceed: UploadProps['onExceed'] = (files) => {
     fileToUpload.value = file as File;
 };
 
-// ** 發送訊息 (核心修改) **
 const sendMessage = async () => {
     if (!fileToUpload.value) return ElMessage.warning('請先選擇或錄製一個音檔');
     talkLoading.value = true;
@@ -184,6 +190,13 @@ const sendMessage = async () => {
         if (response.data && response.data.userMessage && response.data.assistantMessage) {
             conversationHistory.value.push(response.data.userMessage);
             conversationHistory.value.push(response.data.assistantMessage);
+
+            const assistantMessage = response.data.assistantMessage;
+            const audioBase64 = assistantMessage.audioBase64;
+            const audioFormat = assistantMessage.audioFormat;
+            const audioSrc = `data:${audioFormat};base64,${audioBase64}`;
+            const audio = new Audio(audioSrc);
+            audio.play();
         }
 
         uploadRef.value?.clearFiles(); // 清空檔案上傳列表
@@ -196,9 +209,6 @@ const sendMessage = async () => {
     } catch (e) { console.error(e) }
     finally { talkLoading.value = false; getSessionContet() }
 };
-
-
-// ** 新增：錄音功能方法 **
 
 const startRecording = async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {

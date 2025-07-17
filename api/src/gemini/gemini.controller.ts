@@ -17,7 +17,6 @@ import { Public } from 'src/common/decorators/public.decorator';
 export class GeminiController {
   constructor(private readonly geminiService: GeminiService) {}
 
-  @Public()
   @Post('google-stt')
   @UseInterceptors(FileInterceptor('file'))
   async googleSTT(@UploadedFile() file: Express.Multer.File) {
@@ -26,8 +25,7 @@ export class GeminiController {
     }
     return this.geminiService.googleSTT(file.buffer);
   }
-
-  @Public()
+  
   @Post('gemini')
   async gemini(@Body() body: { prompt: string }) {
     if (!body.prompt) {
@@ -36,7 +34,6 @@ export class GeminiController {
     return this.geminiService.generateGeminiReply(body.prompt);
   }
 
-  @Public()
   @Post('google-tts')
   async googleTTS(
     @Res() res: Response,

@@ -92,7 +92,7 @@ export class GeminiService {
     }
   }
 
-  async googleTTS(text: string, speakingRate?: number): Promise<Buffer> {
+  async googleTTS(text: string, speakingRate?: number, soundID?: string): Promise<Buffer> {
     if (!text) {
       throw new HttpException('Text is required', HttpStatus.BAD_REQUEST);
     }
@@ -102,7 +102,7 @@ export class GeminiService {
         input: { text },
         voice: {
           languageCode: 'en-US',
-          name: 'en-US-Chirp3-HD-Sadaltager',
+          name: soundID ?? 'en-US-Chirp3-HD-Sadaltager',
         },
         audioConfig: {
           audioEncoding: 'MP3',
