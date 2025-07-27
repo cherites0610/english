@@ -24,13 +24,3 @@ export type Mail = {
     receivedAt: string;
 };
 
-// Task 相關
-export type Task = {
-    id: string;
-    title: string;
-    description: string;
-    isMainQuest?: boolean;
-    progress?: number;
-    goal?: number;
-    isClaimed?: boolean;
-};
