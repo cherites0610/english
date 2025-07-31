@@ -26,7 +26,7 @@ export default function HouseMenuScreen() {
     };
 
     const houseData: HouseData[] = [
-        { id: 'house1', title: '主屋', imageUrl: require('@/assets/images/MainScreen/house1.png') },
+        { id: 'house1', title: '汽車', imageUrl: require('@/assets/images/MainScreen/house1.png') },
         { id: 'house2', title: '工坊', imageUrl: require('@/assets/images/MainScreen/house2.png') },
         { id: 'house3', title: '農場', imageUrl: require('@/assets/images/MainScreen/house3.png') },
         { id: 'house4', title: '礦場', imageUrl: require('@/assets/images/MainScreen/house4.png') },

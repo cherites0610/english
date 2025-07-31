@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ImageBackground, Image, Pressable, Text, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -29,8 +29,15 @@ export default function DialogueScreen() {
     const [sound, setSound] = useState<Audio.Sound>(); // 新增：用來存放 sound 物件
     const [currentPlayingUri, setCurrentPlayingUri] = useState<string | null>(null);
     const [isPlaying, setIsPlaying] = useState(false); // 新增：追蹤播放狀態
+    const [isInitializing, setIsInitializing] = useState(true);
 
     const { recorderState, startRecording, stopRecording } = useAudioRecording();
+
+    const messagesRef = useRef(messages);
+
+    useEffect(() => {
+        messagesRef.current = messages;
+    }, [messages]);
 
     const playableMessages = messages.filter(m => m.uri && m.uri.startsWith('file://'));
     const lastMessage = playableMessages[playableMessages.length - 1];
@@ -92,10 +99,14 @@ export default function DialogueScreen() {
     // 初始載入對話
     useEffect(() => {
         const loadAndPrepareAudio = async () => {
-            if (!houseTitle) return;
+            if (!houseTitle) {
+                setIsInitializing(false);
+                return
+            };
+
             try {
                 console.log(1);
-                const result = await createTalkByCategoryName("汽車"); // 使用 houseTitle
+                const result = await createTalkByCategoryName(houseTitle); // 使用 houseTitle
                 console.log(2);
 
                 if (result?.message?.audioBase64) {
@@ -118,6 +129,8 @@ export default function DialogueScreen() {
                 }
             } catch (error) {
                 console.error("載入初始音訊時發生錯誤:", error);
+            } finally {
+                setIsInitializing(false)
             }
         };
         loadAndPrepareAudio();
@@ -195,62 +208,93 @@ export default function DialogueScreen() {
         }
     }, [recorderState.url]);
 
+    useEffect(() => {
+        return () => {
+            const cleanupFiles = async () => {
+                const allUris = messagesRef.current.map(m => m.uri).filter(Boolean);
+
+                console.log(`準備刪除 ${allUris.length} 個檔案...`);
+
+                for (const uri of allUris) {
+                    try {
+                        const fileInfo = await FileSystem.getInfoAsync(uri);
+                        if (fileInfo.exists) {
+                            await FileSystem.deleteAsync(uri, { idempotent: true });
+                            console.log(`已成功刪除快取檔案: ${uri}`);
+                        }
+                    } catch (error) {
+                        console.error(`刪除檔案 ${uri} 時發生錯誤:`, error);
+                    }
+                }
+            };
+            cleanupFiles();
+        };
+    }, []);
+
     const getPlayIcon = (uri: string | undefined) => {
         if (!uri) return 'play';
         return isPlaying && currentPlayingUri === uri ? 'pause' : 'play';
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: '#000' }}>
             <Header variant="game" title={houseTitle} onBackPress={() => router.back()} />
-            <ImageBackground
-                source={require('@/assets/images/Dialogue/background.png')}
-                style={styles.screen}
-                resizeMode="cover"
-            >
-                <View style={styles.characterContainer}>
-                    <Image
-                        source={require('@/assets/images/Dialogue/npc_full_body.png')}
-                        style={styles.characterImage}
-                    />
-                </View>
-
-                {/* --- 全新的底部控制 UI --- */}
-                <View style={styles.bottomContainer}>
-                    {/* 你可以保留或修改波形圖 */}
-                    <WaveformPlaceholder />
-
-                    <View style={styles.bottomControlsContainer}>
-                        {/* 播放上一則按鈕 */}
-                        <Pressable
-                            onPress={() => playAudioFromUri(secondLastMessage?.uri)}
-                            disabled={!secondLastMessage || isUploading}
-                            style={[styles.smallButton, (!secondLastMessage || isUploading) && styles.disabledButton]}
-                        >
-                            <Ionicons name="play-skip-back" size={32} color="white" />
-                        </Pressable>
-
-                        <Pressable
-                            onPress={recorderState.isRecording ? stopRecording : startRecording}
-                            disabled={isUploading}
-                            style={[styles.recordButton, (recorderState.isRecording || isUploading) && styles.recordButtonActive]}
-                        >
-                            {isUploading ? <ActivityIndicator size="large" color="white" /> : <Ionicons name="mic" size={50} color="white" />}
-                        </Pressable>
-
-                        <Pressable
-                            onPress={() => playAudioFromUri(lastMessage?.uri)}
-                            disabled={!lastMessage || isUploading}
-                            style={[styles.smallButton, (!lastMessage || isUploading) && styles.disabledButton]}
-                        >
-                            <Ionicons name={getPlayIcon(lastMessage?.uri)} size={32} color="white" />
-                        </Pressable>
-                    </View>
-                </View>
-            </ImageBackground>
+            {isInitializing ? (
+                // 需求二：顯示初始載入動畫 A
+                <LoadingAnimationA />
+            ) : (
+                <>
+                    <ImageBackground
+                        source={require('@/assets/images/Dialogue/background.png')}
+                        style={styles.screen}
+                        resizeMode="cover"
+                    >
+                        <View style={styles.characterContainer}>
+                            <Image
+                                source={require('@/assets/images/Dialogue/npc_full_body.png')}
+                                style={styles.characterImage}
+                            />
+                        </View>
+                        <View style={styles.bottomContainer}>
+                            <WaveformPlaceholder />
+                            <View style={styles.bottomControlsContainer}>
+                                <Pressable
+                                    onPress={() => playAudioFromUri(secondLastMessage?.uri)}
+                                    disabled={!secondLastMessage || isUploading}
+                                    style={[styles.smallButton, (!secondLastMessage || isUploading) && styles.disabledButton]}
+                                >
+                                    <Ionicons name="play-skip-back" size={32} color="white" />
+                                </Pressable>
+                                <Pressable
+                                    onPress={recorderState.isRecording ? stopRecording : startRecording}
+                                    disabled={isUploading}
+                                    style={[styles.recordButton, (recorderState.isRecording || isUploading) && styles.recordButtonActive]}
+                                >
+                                    {/* 維持原樣，因為全螢幕的載入動畫 B 會覆蓋它 */}
+                                    <Ionicons name="mic" size={50} color="white" />
+                                </Pressable>
+                                <Pressable
+                                    onPress={() => playAudioFromUri(lastMessage?.uri)}
+                                    disabled={!lastMessage || isUploading}
+                                    style={[styles.smallButton, (!lastMessage || isUploading) && styles.disabledButton]}
+                                >
+                                    <Ionicons name={getPlayIcon(lastMessage?.uri)} size={32} color="white" />
+                                </Pressable>
+                            </View>
+                        </View>
+                    </ImageBackground>
+                </>
+            )}
         </View>
     );
 }
+
+const LoadingAnimationA = () => (
+    <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FFFFFF" />
+        <Text style={styles.loadingText}>正在建立對話，請稍候...</Text>
+    </View>
+);
 
 // --- 樣式表 ---
 const styles = StyleSheet.create({
@@ -302,5 +346,16 @@ const styles = StyleSheet.create({
     disabledButton: {
         opacity: 0.5,
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    }
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#1a1a1a', // 給一個深色背景
+    },
+    loadingText: {
+        color: 'white',
+        marginTop: 15,
+        fontSize: 16,
+    },
 });
