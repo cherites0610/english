@@ -76,7 +76,6 @@ export class NpcService {
       name: npc.name,
       avatar: npc.avatar,
       voiceId: npc.voiceId,
-      profession: npc.profession,
       backstory: npc.backstory,
     };
   }

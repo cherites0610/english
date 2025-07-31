@@ -295,7 +295,6 @@ export class BattleAdminService {
       name: npc.name,
       avatar: npc.avatar,
       voiceId: npc.voiceId,
-      profession: npc.profession,
       backstory: npc.backstory,
     };
   }

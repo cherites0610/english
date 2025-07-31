@@ -6,7 +6,6 @@ import {
   IsUrl,
   IsOptional,
 } from 'class-validator';
-import { NpcProfession } from '../enums/npc-profession.enum';
 
 /**
  * 用於創建新 NPC 的請求體格式
@@ -31,14 +30,6 @@ export class CreateNpcDto {
   @IsString()
   @IsNotEmpty()
   voiceId: string;
-
-  @ApiProperty({
-    description: 'NPC 的職業',
-    enum: NpcProfession,
-    example: NpcProfession.BLACKSMITH,
-  })
-  @IsEnum(NpcProfession)
-  profession: NpcProfession;
 
   @ApiProperty({
     description: 'NPC 的背景故事',
@@ -71,9 +62,6 @@ export class NpcDto {
 
   @ApiProperty({ description: '對應的聲音檔案編號' })
   voiceId: string;
-
-  @ApiProperty({ enum: NpcProfession, description: 'NPC 的職業' })
-  profession: NpcProfession;
 
   @ApiProperty({ description: 'NPC 的背景故事' })
   backstory: string;

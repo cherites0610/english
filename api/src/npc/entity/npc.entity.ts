@@ -5,7 +5,6 @@ import {
   OneToMany,
   Relation,
 } from 'typeorm';
-import { NpcProfession } from '../enums/npc-profession.enum';
 import { BattleStage } from 'src/battle/entity/battle-stage.entity';
 
 @Entity('npcs')
@@ -30,16 +29,6 @@ export class Npc {
    */
   @Column()
   voiceId: string;
-
-  /**
-   * NPC 的職業，使用 Enum 確保數據一致性
-   */
-  @Column({
-    type: 'enum',
-    enum: NpcProfession,
-    default: NpcProfession.VILLAGER,
-  })
-  profession: NpcProfession;
 
   /**
    * NPC 的背景故事，使用 'text' 類型以支援較長內容

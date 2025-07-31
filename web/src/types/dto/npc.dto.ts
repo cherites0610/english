@@ -1,5 +1,3 @@
-import { NpcProfession } from '../enums';
-
 /**
  * 用於 API 響應的、單個 NPC 的公開數據格式
  * 這也是在前端列表中顯示的單個 NPC 物件的類型
@@ -9,7 +7,6 @@ export interface NpcDto {
     name: string;
     avatar: string;
     voiceId: string;
-    profession: NpcProfession;
     backstory: string;
 }
 
@@ -20,7 +17,6 @@ export interface CreateNpcDto {
     name: string;
     avatar: string;
     voiceId: string;
-    profession: NpcProfession;
     backstory: string;
 }
 

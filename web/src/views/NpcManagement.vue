@@ -12,7 +12,6 @@
                 </template>
             </el-table-column>
             <el-table-column prop="name" label="名稱" width="200" />
-            <el-table-column prop="profession" label="職業" width="150" />
             <el-table-column prop="backstory" label="背景故事" show-overflow-tooltip />
             <el-table-column label="操作" width="150" fixed="right">
                 <template #default="{ row }">
@@ -33,12 +32,6 @@
                 <el-form-item label="聲音編號" prop="voiceId" required>
                     <el-input v-model="currentNpc.voiceId" />
                 </el-form-item>
-                <el-form-item label="職業" prop="profession" required>
-                    <el-select v-model="currentNpc.profession" placeholder="請選擇職業">
-                        <el-option v-for="prof in professionOptions" :key="prof.value" :label="prof.label"
-                            :value="prof.value" />
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="背景故事" prop="backstory" required>
                     <el-input type="textarea" :rows="4" v-model="currentNpc.backstory" />
                 </el-form-item>
@@ -58,7 +51,6 @@ import { ref, reactive, onMounted, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import npcApi from '../api/npc.api';
 import type { NpcDto, CreateNpcDto } from '../types/dto/npc.dto';
-import { NpcProfession } from '@/types/enums';
 
 // --- 響應式狀態 ---
 const npcs = ref<NpcDto[]>([]);
@@ -73,19 +65,10 @@ const defaultFormData: CreateNpcDto & { id: string | null } = {
     name: '',
     avatar: '',
     voiceId: '',
-    profession: NpcProfession.VILLAGER, // 給一個預設值
     backstory: '',
 };
 const currentNpc = reactive({ ...defaultFormData });
 
-// --- 輔助數據 ---
-// 將 Enum 轉換為 Element Plus Select 可用的格式
-const professionOptions = computed(() =>
-    Object.entries(NpcProfession).map(([key, value]) => ({
-        label: key, // 您可以自訂更友好的中文標籤
-        value: value,
-    }))
-);
 
 // --- CRUD 方法 ---
 const fetchNpcs = async () => {
