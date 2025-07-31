@@ -1,9 +1,12 @@
 import { BadGatewayException, Body, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 import { BattleAdminService } from 'src/battle/battle-admin.service';
+import { BattleChildCategory } from 'src/battle/entity/battle-child-category.entity';
 import { GeminiService } from 'src/gemini/gemini.service';
 import { RedisService } from 'src/redis/redis.service';
 import { UserService } from 'src/user/user.service';
+import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 interface TalkData {
@@ -19,7 +22,6 @@ export class TalkService {
         private readonly userService: UserService,
         private readonly battleService: BattleAdminService,
         private readonly geminiService: GeminiService,
-        private readonly configService: ConfigService
     ) { }
 
     async setPrompt(@Body() prompt: string) {
@@ -38,7 +40,12 @@ export class TalkService {
         return result
     }
 
-    async createTalk(userID: string, battleID: string) {
+    async createTalkByCategoryName(userID: string, categoryName: string) {
+        const { id } = await this.battleService.getRandomStageByChildCategoryName(categoryName)
+        return this.createTalkByID(userID, id)
+    }
+
+    async createTalkByID(userID: string, battleID: string) {
         // 1. 驗證用戶是否存在
         const user = await this.userService.findByID(userID);
         if (!user) {
@@ -58,7 +65,7 @@ export class TalkService {
             .replaceAll('{npcBackstory}', battle.npc?.backstory ?? "none stroy")
             .replaceAll('{currentStoryBackground}', battle.backstory)
             .replaceAll('{currentQuestObjective}', battle.rewards.join(','))
-
+        
         const talkID = uuidv4()
         const initialTalkData: TalkData = {
             history: "",
@@ -83,6 +90,7 @@ export class TalkService {
     }
 
     async addMessageToTalk(userID: string, talkID: string, message: string, role: 'AI' | "USER") {
+        console.log(1);
         const rawTalkData = await this.redisService.get(`talk:${userID}:${talkID}`);
         if (!rawTalkData) throw new NotFoundException("找不到對話");
 
@@ -111,6 +119,7 @@ export class TalkService {
     }
 
     async SpeachToText(fileBuffer: Buffer) {
+        console.log(3);
         return await this.geminiService.googleSTT(fileBuffer)
     }
 

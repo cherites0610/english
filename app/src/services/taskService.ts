@@ -1,4 +1,4 @@
-import { UserProfileData } from '../types';
+import { UserProfileData } from '../types/user.type';
 import { fetchTaskResponse, Task, TaskType } from '../types/task.type';
 import apiClient, { ApiResponse } from './apiClient';
 

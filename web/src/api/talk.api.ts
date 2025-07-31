@@ -38,7 +38,7 @@ const talkApi: TalkApiService = {
      * 根據 Battle ID 創建一個新的對話 Session
      */
     createTalk(battleId: string) {
-        return apiClient.post(`/talk/${battleId}`);
+        return apiClient.post(`/talk/battle/${battleId}`);
     },
 
     /**

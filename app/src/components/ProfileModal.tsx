@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import CustomModal from './CustomModal';
-import { UserProfileData } from '../types';
+import { UserProfileData } from '../types/user.type';
 
 type ProfileModalProps = {
     isVisible: boolean;

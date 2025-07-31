@@ -50,7 +50,7 @@ export class GeminiService {
         config: {
           encoding:
             protos.google.cloud.speech.v1.RecognitionConfig.AudioEncoding
-              .WEBM_OPUS,
+              .MP3,
           sampleRateHertz: 48000,
           languageCode: 'en-US',
         },

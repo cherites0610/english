@@ -22,6 +22,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
   }
 
   canActivate(context: ExecutionContext) {
+    console.log(1);
+    
     // 檢查是否為公開路由
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
@@ -34,7 +36,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers['authorization'] as string;
-
+    console.log(authHeader);
+    
     // 1. 優先檢查 Header 是否存在
     if (!authHeader) {
       throw new UnauthorizedException('未提供授權標頭 (Authorization header)');
@@ -49,7 +52,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     }
 
     const token = parts[1];
-
+    console.log(token);
+    
     // 3. 安全地檢查後門 token
     if (
       this.configService.get<string>('NODE_ENV') === 'development' &&
@@ -67,8 +71,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     }
 
     // 4. 若非後門 token，則交給 Passport-jwt 策略進行標準驗證
-    // super.canActivate(context) 會自動處理 token 驗證 (包括過期等)
-    // 如果驗證失敗，它會自動拋出 UnauthorizedException
     return super.canActivate(context);
   }
 }

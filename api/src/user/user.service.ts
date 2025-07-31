@@ -1,9 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { User } from './entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isSameDay } from 'date-fns';
 import { QuestService } from 'src/quest/quest.service';
+import { validate as isUuid } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly questService: QuestService,
-  ) {}
+  ) { }
 
   async findByID(id: string) {
     const user = await this.userRepository.findOneBy({ id: id });
@@ -84,5 +85,20 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async findListByNameOrID(param: string) {
+    const whereConditions: FindOptionsWhere<User>[] = [
+      { name: Like(`%${param}%`) }
+    ];
+
+    if (isUuid(param)) {
+      whereConditions.push({ id: Like(`%${param}%`) });
+    }
+
+    // 4. 使用動態產生的條件陣列進行查詢
+    return await this.userRepository.find({
+      where: whereConditions
+    });
   }
 }

@@ -5,7 +5,6 @@ export default function RootLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="house-menu" />
-      <Stack.Screen name="dialogue" />
     </Stack>
   );
 }

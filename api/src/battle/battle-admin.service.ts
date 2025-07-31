@@ -46,7 +46,7 @@ export class BattleAdminService {
     @InjectRepository(BattleStage)
     private readonly stageRepo: Repository<BattleStage>,
     @InjectRepository(Npc) private readonly npcRepo: Repository<Npc>,
-  ) {}
+  ) { }
 
   // --- Parent Category Management ---
 
@@ -222,6 +222,21 @@ export class BattleAdminService {
     const result = await this.stageRepo.delete(id);
     if (result.affected === 0)
       throw new NotFoundException(`找不到 ID 為 ${id} 的對戰關卡`);
+  }
+
+  async getRandomStageByChildCategoryName(categoryName: string) {
+    const category = await this.childCategoryRepo.findOneBy({ name: categoryName })
+    if (!category) throw new NotFoundException(`找不到分類${categoryName}`)
+
+    const stage = await this.stageRepo
+      .createQueryBuilder('stage')
+      .where('stage.categoryId = :categoryId', { categoryId: category.id })
+      .orderBy('RANDOM()')
+      .getOne()
+
+    if (!stage) throw new NotFoundException(`分類中無任何stage`)
+
+    return stage
   }
 
   // --- Private Mappers ---

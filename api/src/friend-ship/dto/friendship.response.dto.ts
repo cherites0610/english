@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import { FriendshipDto, PendingRequestDto, FriendDto } from './friendship.dto';
+import { UserProfileDto } from 'src/user/dto/user-profile.dto';
 
 // 返回單個好友關係記錄的響應
 export class FriendshipResponse extends ResponseDto<FriendshipDto> {

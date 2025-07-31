@@ -23,4 +23,3 @@ export type Mail = {
     isRead: boolean;
     receivedAt: string;
 };
-

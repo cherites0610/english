@@ -53,7 +53,7 @@ export class AuthService {
         ),
       );
 
-      const { sub, name, email } = profileResponse.data;
+      const { sub, name, email,picture } = profileResponse.data;
 
       if (!sub) throw new UnauthorizedException('無法取得 LINE 使用者資訊');
 
@@ -69,6 +69,7 @@ export class AuthService {
           money: 0,
           englishLevel: EnglishProficiency.NOVICE,
           lastLoginAt: new Date(),
+          avatarUrl: picture
         });
       }
 
@@ -114,7 +115,7 @@ export class AuthService {
       },
     );
 
-    const { id, email, name } = userRes.data;
+    const { id, email, name,picture } = userRes.data;
 
     // 3. 依照 email 找 user，找不到就註冊
     let user = await this.userService.findByGoogleID(id);
@@ -128,6 +129,7 @@ export class AuthService {
         money: 0,
         englishLevel: EnglishProficiency.NOVICE,
         lastLoginAt: new Date(),
+        avatarUrl: picture
       });
     }
 

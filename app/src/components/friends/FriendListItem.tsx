@@ -11,15 +11,20 @@ export type Friend = {
 
 type FriendListItemProps = {
     friend: Friend;
+    onDelete: (id: string) => void;
+    goHome: (id: string) => void;
 };
 
-const FriendListItem: React.FC<FriendListItemProps> = ({ friend }) => {
+const FriendListItem: React.FC<FriendListItemProps> = ({ friend,onDelete,goHome }) => {
     return (
         <View style={styles.container}>
             <View style={[styles.statusDot, { backgroundColor: friend.isOnline ? '#2ECC71' : '#95A5A6' }]} />
             <Image source={{ uri: friend.avatarUrl }} style={styles.avatar} />
             <Text style={styles.name}>{friend.name}</Text>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity onPress={() => onDelete(friend.id)} style={styles.iconButton}>
+                <Ionicons name='trash-outline' size={24} color="#3498DB" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => goHome(friend.id)} style={styles.iconButton}>
                 <Ionicons name="home-outline" size={24} color="#3498DB" />
             </TouchableOpacity>
         </View>

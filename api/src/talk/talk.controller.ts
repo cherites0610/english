@@ -26,9 +26,9 @@ export class TalkController {
     }
   }
 
-  @Post('/:battleId')
-  async createTalk(@UserID() userID: string, @Param("battleId") battleId: string) {
-    const result = await this.talkService.createTalk(userID, battleId)
+  @Post('/battle/:battleId')
+  async createTalkByBattleID(@UserID() userID: string, @Param("battleId") battleId: string) {
+    const result = await this.talkService.createTalkByID(userID, battleId)
     return {
       message: "創建成功",
       data: {
@@ -43,18 +43,40 @@ export class TalkController {
     }
   }
 
+  @Post('/category/:categoryName')
+  async createTalkByCategoryName(@UserID() userID: string, @Param("categoryName") categoryName: string) {
+    const result = await this.talkService.createTalkByCategoryName(userID, categoryName)
+    return {
+      message: "創建成功",
+      data: {
+        talkID: result.talkID,
+        message: {
+          role: 'ASSISTANT',
+          content: result.message,
+          audioBase64: result.audioBase64,
+          audioFormat: 'audio/mpeg',
+        }
+      }
+    }
+  }
+
+
+
   @Post('/:talkID/message')
   @UseInterceptors(FileInterceptor('audio'))
   async addMessageToTalk(
     @UserID() userID: string,
     @Param('talkID') talkID: string,
     @UploadedFile() file: Express.Multer.File) {
+    console.log(1);
 
+    console.log(file);
     if (!file) {
       throw new BadRequestException("未上傳檔案");
     }
-
+    console.log(2);
     const { text } = await this.talkService.SpeachToText(file.buffer)
+    console.log(4);
     const { reply, audioBase64 } = await this.talkService.addMessageToTalk(userID, talkID, text, "USER")
     return {
       message: "對話成功",

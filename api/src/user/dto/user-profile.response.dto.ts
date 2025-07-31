@@ -6,3 +6,8 @@ export class UserProfileResponse extends ResponseDto<UserProfileDto> {
   @ApiProperty({ type: UserProfileDto })
   declare data: UserProfileDto;
 }
+
+export class QueryUserProfileResponse extends ResponseDto<UserProfileDto[]> {
+  @ApiProperty({ type: [UserProfileDto] })
+  declare data: UserProfileDto[];
+}

@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import FriendListItem, { Friend } from './FriendListItem';
-
-const initialFriends: Friend[] = [
-    { id: '1', name: '鐵匠', avatarUrl: 'https://i.pravatar.cc/150?img=1', isOnline: true },
-    { id: '2', name: '商人', avatarUrl: 'https://i.pravatar.cc/150?img=2', isOnline: false },
-];
+import { useFriend } from '@/src/hooks/useFriend';
 
 const FriendsListTab = () => {
-    const [friends, setFriends] = useState(initialFriends);
+    const { friends, deleteFriend } = useFriend()
+
+    const goHome = (id: string) => {
+        console.log(`去${id}的家`);
+
+    }
+
     return (
         <FlatList
             data={friends}
-            renderItem={({ item }) => <FriendListItem friend={item} />}
+            renderItem={({ item }) =>
+                <FriendListItem onDelete={(id) => deleteFriend(id)} goHome={(id) => goHome(id)} friend={item} />
+            }
             keyExtractor={item => item.id}
         />
     );

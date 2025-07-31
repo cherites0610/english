@@ -10,7 +10,7 @@ import TaskModal from '@/src/components/TaskModal';
 import { useUserProfile } from '@/src/hooks/useUserProfile';
 import { displayedNpcs, NpcData, TaskBriefing } from '@/src/services/gameService';
 import { fetchUserProfile } from '@/src/services/userService';
-import { UserProfileData } from '@/src/types';
+import { UserProfileData } from '@/src/types/user.type';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, ImageBackground, ImageSourcePropType, SafeAreaView, StyleSheet, View, Text } from 'react-native';
@@ -31,9 +31,6 @@ export default function HomeScreen() {
   const [isTaskModalVisible, setTaskModalVisible] = useState(false);
   const [isProfileModalVisible, setProfileModalVisible] = useState(false);
   const [isTaskBriefingModalVisible, setTaskBriefingModalVisible] = useState(false);
-
-  const [taskCount, setTaskCount] = useState(5);
-  const [mailCount, setMailCount] = useState(12);
 
   const { userProfile, isLoading, error } = useUserProfile();
 
@@ -87,13 +84,13 @@ export default function HomeScreen() {
       id: 'tasks',
       iconName: 'checkbox-outline',
       onPress: handleActionPress,
-      bubbleCount: taskCount,
+      bubbleCount: 0,
     },
     {
       id: 'mail',
       iconName: 'mail-outline',
       onPress: handleActionPress,
-      bubbleCount: mailCount,
+      bubbleCount: 0,
     },
     {
       id: 'settings',

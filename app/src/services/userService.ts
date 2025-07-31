@@ -1,4 +1,4 @@
-import { UserProfileData } from '../types';
+import { UserProfileData } from '../types/user.type';
 import apiClient, { ApiResponse } from './apiClient';
 
 export const fetchUserProfile = async (): Promise<UserProfileData> => {

@@ -15,12 +15,15 @@
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.10.0",
     "expo": "~53.0.13",
     "expo-auth-session": "~6.2.1",
+    "expo-av": "^15.1.7",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.6",
     "expo-crypto": "~14.1.5",
+    "expo-file-system": "~18.1.11",
     "expo-font": "~13.3.1",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.3.0",
@@ -42,7 +45,8 @@
     "react-native-screens": "~4.11.1",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
-    "rive-react-native": "^9.3.4"
+    "rive-react-native": "^9.3.4",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

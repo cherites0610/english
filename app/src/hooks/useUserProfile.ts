@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserProfileData } from '../types'; // ✨ 我們將從新的 types 檔案匯入
+import { UserProfileData } from '../types/user.type'; // ✨ 我們將從新的 types 檔案匯入
 import { fetchUserProfile } from '../services/userService';
 
 export function useUserProfile() {
