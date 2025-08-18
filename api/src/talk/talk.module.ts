@@ -7,6 +7,7 @@ import { GeminiModule } from 'src/gemini/gemini.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BattleChildCategory } from 'src/battle/entity/battle-child-category.entity';
 import { TtsModule } from 'src/tts/tts.module';
+import { TalkGateway } from './talk.gateway';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { TtsModule } from 'src/tts/tts.module';
     TtsModule
   ],
   controllers: [TalkController],
-  providers: [TalkService],
+  providers: [TalkService,TalkGateway],
 })
 export class TalkModule { }

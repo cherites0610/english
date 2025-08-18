@@ -11,4 +11,12 @@ export interface TtsService {
       speakingRate?: number;
     }
   ): Promise<Buffer>;
+
+  generateSpeechStream(
+    textStream: AsyncIterable<string>,
+    options?: {
+      voiceId?: string;
+      speakingRate?: number;
+    }
+  ): AsyncIterable<Buffer>;
 }

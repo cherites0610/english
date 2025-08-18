@@ -71,7 +71,10 @@ export class TalkController {
     if (!file) {
       throw new BadRequestException("未上傳檔案");
     }
+    console.log('接受到錄音檔案:',new Date());
+    
     const { text } = await this.talkService.SpeachToText(file.buffer)
+    console.log("完成STT",new Date());
     const { reply, audioBase64 } = await this.talkService.addMessageToTalk(userID, talkID, text, "USER")
     return {
       message: "對話成功",

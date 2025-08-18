@@ -44,4 +44,19 @@ export class GoogleTtsService implements TtsService {
 
         return response.audioContent as Buffer;
     }
+
+    async *generateSpeechStream(
+        textStream: AsyncIterable<string>,
+        options?: { voiceId?: string; speakingRate?: number }
+    ): AsyncIterable<Buffer> {
+        this.logger.warn('Streaming is not implemented for GoogleTtsService yet.');
+        // 為了簡單起見，我們先收集所有文字再呼叫原本的方法
+        // 這不是真正的串流，但能讓程式碼運作
+        let fullText = '';
+        for await (const chunk of textStream) {
+            fullText += chunk;
+        }
+        const audioBuffer = await this.generateSpeech(fullText, options);
+        yield audioBuffer;
+    }
 }
