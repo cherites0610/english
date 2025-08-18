@@ -75,8 +75,9 @@ export class NpcService {
       id: npc.id,
       name: npc.name,
       avatar: npc.avatar,
-      voiceId: npc.voiceId,
+      googleVoiceId: npc.googleVoiceId,
       backstory: npc.backstory,
+      elevenlabsVoiceId: npc.elevenlabsVoiceId
     };
   }
 }

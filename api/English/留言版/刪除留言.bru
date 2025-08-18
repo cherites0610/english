@@ -1,0 +1,25 @@
+meta {
+  name: 刪除留言
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{base_url}}/wall/message/:id
+  body: text
+  auth: inherit
+}
+
+params:path {
+  id: 884e5edd-80b5-471a-9cf7-c72460fe8749
+}
+
+body:text {
+  {
+      "content": "我也不知道内容要是啥test"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

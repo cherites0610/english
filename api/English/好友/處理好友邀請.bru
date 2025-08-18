@@ -1,0 +1,22 @@
+meta {
+  name: 處理好友邀請
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/friend-ship/respond
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "requesterID": "c468f89d-d377-4ea2-8174-687dc3e0c22b",
+      "status": "accepted"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,21 @@
+meta {
+  name: 取得好友列表
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/friend-ship
+  body: text
+  auth: inherit
+}
+
+body:text {
+  {
+      "addresseeID": "4f5f1b2f-731e-4c0b-adbc-aae76b93ec18"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

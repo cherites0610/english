@@ -1,0 +1,21 @@
+meta {
+  name: 點贊
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/interactions/like
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "wallMessageId": "eb72ba5a-b50f-4438-8478-f0bb33c31f57"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

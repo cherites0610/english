@@ -16,6 +16,7 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
+import { Mail } from 'src/mail/entity/mail.entity';
 
 export enum EnglishProficiency {
   NOVICE = 'novice',
@@ -45,7 +46,7 @@ export class User {
   })
   googleID: string;
 
-  @Column({default:""})
+  @Column({ default: "" })
   avatarUrl: string;
 
   @Column()
@@ -111,4 +112,7 @@ export class User {
    */
   @OneToMany(() => Like, (like) => like.user)
   likesGiven: Relation<Like>[];
+
+  @OneToMany(() => Mail, (mail) => mail.user)
+  mails: Relation<Mail>[];
 }

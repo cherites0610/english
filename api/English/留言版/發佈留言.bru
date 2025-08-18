@@ -1,0 +1,22 @@
+meta {
+  name: 發佈留言
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/wall
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "wallOwnerId": "094e7551-3ce5-4930-abfb-38e89939db0b",
+      "content": "我也不知道内容要是啥"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

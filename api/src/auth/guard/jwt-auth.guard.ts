@@ -22,7 +22,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
   }
 
   canActivate(context: ExecutionContext) {
-    console.log(1);
     
     // 檢查是否為公開路由
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -36,7 +35,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers['authorization'] as string;
-    console.log(authHeader);
     
     // 1. 優先檢查 Header 是否存在
     if (!authHeader) {
@@ -52,7 +50,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     }
 
     const token = parts[1];
-    console.log(token);
     
     // 3. 安全地檢查後門 token
     if (

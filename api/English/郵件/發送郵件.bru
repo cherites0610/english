@@ -1,0 +1,24 @@
+meta {
+  name: 發送郵件
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{localUrl}}/mail
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title":"test",
+    "content":"test",
+    "from":"系統開發人員",
+    "targetUserId":""
+  }
+}
+
+settings {
+  encodeUrl: true
+}

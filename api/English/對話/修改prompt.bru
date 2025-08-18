@@ -1,0 +1,25 @@
+meta {
+  name: 修改prompt
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/talk/prompt
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: cherites
+}
+
+body:json {
+  {
+      "prompt":"測試用"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

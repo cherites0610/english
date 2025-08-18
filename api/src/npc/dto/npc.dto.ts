@@ -29,7 +29,11 @@ export class CreateNpcDto {
   })
   @IsString()
   @IsNotEmpty()
-  voiceId: string;
+  googleVoiceId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  elevenlabsVoiceId: string;
 
   @ApiProperty({
     description: 'NPC 的背景故事',
@@ -45,7 +49,7 @@ export class CreateNpcDto {
  * 用於更新 NPC 的請求體格式
  * PartialType 會自動將 CreateNpcDto 的所有屬性變為可選
  */
-export class UpdateNpcDto extends PartialType(CreateNpcDto) {}
+export class UpdateNpcDto extends PartialType(CreateNpcDto) { }
 
 /**
  * 用於 API 響應的、公開的 NPC 數據格式
@@ -61,7 +65,9 @@ export class NpcDto {
   avatar: string;
 
   @ApiProperty({ description: '對應的聲音檔案編號' })
-  voiceId: string;
+  googleVoiceId: string;
+
+  elevenlabsVoiceId: string;
 
   @ApiProperty({ description: 'NPC 的背景故事' })
   backstory: string;

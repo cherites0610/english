@@ -1,0 +1,23 @@
+meta {
+  name: 新增日志
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/journal
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "title": "日志測試",
+      "content": "我也不知道内容要是啥",
+      "isPublic": true
+  }
+}
+
+settings {
+  encodeUrl: true
+}

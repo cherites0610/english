@@ -1,0 +1,23 @@
+meta {
+  name: 取得當前對話上下文
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{base_url}}/talk/:talkID/context
+  body: text
+  auth: inherit
+}
+
+params:path {
+  talkID: 55d8330c-ca14-424a-b415-13a7c2b3f49d
+}
+
+body:text {
+  Oh,hello.I Think today is a nice day,How are you
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,39 @@
+meta {
+  name: 新增任務模板
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/admin/quest/templates
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "title": "成就：哥布林殺手",
+      "description": "累計擊敗 500 隻哥布林戰士。",
+      "type": "ACHIEVEMENT",
+      "questKey": "ACHIEVEMENT_GOBLIN_SLAYER_1",
+      "requirements": [
+          {
+              "type": "KILL_GOBLIN_WARRIOR",
+              "count": 500
+          }
+      ],
+      "rewards": [
+          {
+              "type": "gain_experience",
+              "count": 1,
+              "metadata": {
+                  "titleId": "title_goblin_slayer"
+              }
+          }
+      ]
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,22 @@
+meta {
+  name: 測試用
+  type: http
+  seq: 9
+}
+
+post {
+  url: https://api.line.me/oauth2/v2.1/verify
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "id_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWU2ODVhNzU2OWZiZmFlMjUzYjY3ZjNmOTY0MmU1ZGM3IiwiYXVkIjoiMjAwNzY1ODQ3MyIsImV4cCI6MTc1MTEwMzcwNywiaWF0IjoxNzUxMTAwMTA3LCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoi5buW5p-P5a6JIiwicGljdHVyZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoWjBaczY1dFdCUjluQ2hibkdRdDZTRnRQQzNJUUpBTlhIMlFmTFJBTEQzaExhaEJQRG0xUGNCY0xEQzVPYlVWTEQybENlQklDRGk4WSIsImVtYWlsIjoiY2hlcml0ZXMwNjEwQGdtYWlsLmNvbSJ9.EMRw-r-qg6iZPGNQ-3VaDMx7cDb0BisSz7e0qK6LTiI",
+      "client_id": "2007658473"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

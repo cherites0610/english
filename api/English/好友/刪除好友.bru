@@ -1,0 +1,25 @@
+meta {
+  name: 刪除好友
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{base_url}}/friend-ship/friend/:id
+  body: text
+  auth: inherit
+}
+
+params:path {
+  id: 4f5f1b2f-731e-4c0b-adbc-aae76b93ec18
+}
+
+body:text {
+  {
+      "addresseeID": "4f5f1b2f-731e-4c0b-adbc-aae76b93ec18"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

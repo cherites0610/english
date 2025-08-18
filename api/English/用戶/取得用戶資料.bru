@@ -1,0 +1,15 @@
+meta {
+  name: 取得用戶資料
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/user/profile
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

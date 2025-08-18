@@ -1,0 +1,27 @@
+meta {
+  name: 查看用戶日志
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/journal/user/:userID
+  body: text
+  auth: inherit
+}
+
+params:path {
+  userID: 7c7c6f41-6c2c-4d0f-bc0e-df1acf5899f7
+}
+
+body:text {
+  {
+      "title": "日志測試",
+      "content": "我也不知道内容要是啥",
+      "isPublic": true
+  }
+}
+
+settings {
+  encodeUrl: true
+}

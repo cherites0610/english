@@ -1,0 +1,15 @@
+meta {
+  name: 取得Google登入URL
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/auth/google
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

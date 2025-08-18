@@ -1,0 +1,21 @@
+meta {
+  name: 加好友
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/friend-ship/request
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "addresseeID": "ecd1933f-98b5-462c-8f7f-0ac5da5c4b14"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

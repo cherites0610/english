@@ -1,0 +1,25 @@
+meta {
+  name: 更改留言
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/wall/message/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 884e5edd-80b5-471a-9cf7-c72460fe8749
+}
+
+body:json {
+  {
+      "content": "我也不知道内容要是啥test"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

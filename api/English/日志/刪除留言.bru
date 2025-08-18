@@ -1,0 +1,26 @@
+meta {
+  name: 刪除留言
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{base_url}}/interactions/comments/:id
+  body: text
+  auth: inherit
+}
+
+params:path {
+  id: 2a8262e5-a29a-42f0-8133-0324386d02e4
+}
+
+body:text {
+  {
+      "content":"你好可悲",
+      "parentCommentId": "2a8262e5-a29a-42f0-8133-0324386d02e4"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

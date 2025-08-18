@@ -5,7 +5,9 @@ import { BattleAdminService } from 'src/battle/battle-admin.service';
 import { BattleChildCategory } from 'src/battle/entity/battle-child-category.entity';
 import { GeminiService } from 'src/gemini/gemini.service';
 import { RedisService } from 'src/redis/redis.service';
+import { TtsService } from 'src/tts/tts.interface';
 import { UserService } from 'src/user/user.service';
+import type { TtsProvider } from 'src/tts/tts.interface';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,6 +24,7 @@ export class TalkService {
         private readonly userService: UserService,
         private readonly battleService: BattleAdminService,
         private readonly geminiService: GeminiService,
+        @Inject('TtsService') private readonly ttsService: TtsService,
     ) { }
 
     async setPrompt(@Body() prompt: string) {
@@ -65,12 +68,26 @@ export class TalkService {
             .replaceAll('{npcBackstory}', battle.npc?.backstory ?? "none stroy")
             .replaceAll('{currentStoryBackground}', battle.backstory)
             .replaceAll('{currentQuestObjective}', battle.rewards.join(','))
-        
+
         const talkID = uuidv4()
+        let talkVoiceId: string;
+
+        switch (this.ttsService.providerName) {
+            case 'ELEVENLABS':
+                // 這裡可以放 ElevenLabs 的預設 voiceId
+                talkVoiceId = battle.npc?.elevenlabsVoiceId ?? "some-elevenlabs-default-voice";
+                break;
+            case 'GOOGLE':
+            default:
+                // 這裡放 Google 的預設 voiceId
+                talkVoiceId = battle.npc?.googleVoiceId ?? "en-US-Chirp3-HD-Sadaltager";
+                break;
+        }
+
         const initialTalkData: TalkData = {
             history: "",
             voiceSpeed: 1.0,
-            voiceId: battle.npc?.voiceId ?? "en-US-Chirp3-HD-Sadaltager"
+            voiceId: talkVoiceId
         };
 
         await this.redisService.set(
@@ -90,7 +107,6 @@ export class TalkService {
     }
 
     async addMessageToTalk(userID: string, talkID: string, message: string, role: 'AI' | "USER") {
-        console.log(1);
         const rawTalkData = await this.redisService.get(`talk:${userID}:${talkID}`);
         if (!rawTalkData) throw new NotFoundException("找不到對話");
 
@@ -108,11 +124,10 @@ export class TalkService {
             20 * 60
         );
 
-        const audioBuffer = await this.geminiService.googleTTS(
-            reply,
-            talkData.voiceSpeed,
-            talkData.voiceId
-        );
+        const audioBuffer = await this.ttsService.generateSpeech(reply, {
+            voiceId: talkData.voiceId,
+            speakingRate: talkData.voiceSpeed,
+        });
         const audioBase64 = audioBuffer.toString('base64');
 
         return { reply, audioBase64 };

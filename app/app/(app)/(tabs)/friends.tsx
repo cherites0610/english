@@ -18,7 +18,7 @@ export default function FriendsScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <Text style={{ fontSize: 30, fontStyle: 'italic', textAlign: 'center', marginTop: 10, marginBottom: 20 }}>好友</Text>
+      {/* <Text style={{ fontSize: 30, fontStyle: 'italic', textAlign: 'center', marginTop: 10, marginBottom: 20 }}>好友</Text> */}
       <View style={styles.tabContainer}>
         <TabButton label="好友列表" isActive={activeTab === 'list'} onPress={() => setActiveTab('list')} />
         <TabButton label="好友確認" isActive={activeTab === 'requests'} onPress={() => setActiveTab('requests')} />

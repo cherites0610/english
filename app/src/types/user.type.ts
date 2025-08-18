@@ -15,11 +15,3 @@ export type Achievement = {
     name: string;
     iconName: keyof typeof Ionicons.glyphMap;
 };
-
-export type Mail = {
-    id: string;
-    sender: string;
-    title: string;
-    isRead: boolean;
-    receivedAt: string;
-};

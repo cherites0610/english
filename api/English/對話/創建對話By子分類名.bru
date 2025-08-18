@@ -1,0 +1,19 @@
+meta {
+  name: 創建對話By子分類名
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/talk/category/:categoryName
+  body: none
+  auth: inherit
+}
+
+params:path {
+  categoryName: 汽車
+}
+
+settings {
+  encodeUrl: true
+}

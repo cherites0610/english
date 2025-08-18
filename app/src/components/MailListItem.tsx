@@ -1,14 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-export type Mail = {
-    id: string;
-    sender: string;
-    title: string;
-    isRead: boolean;
-    receivedAt: string;
-};
+import { Mail } from '../types/mail.type';
 
 type MailListItemProps = {
     mail: Mail;

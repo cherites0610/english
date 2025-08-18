@@ -6,7 +6,8 @@ export interface NpcDto {
     id: string;
     name: string;
     avatar: string;
-    voiceId: string;
+    elevenlabsVoiceId: string;
+    googleVoiceId: string
     backstory: string;
 }
 
@@ -16,8 +17,9 @@ export interface NpcDto {
 export interface CreateNpcDto {
     name: string;
     avatar: string;
-    voiceId: string;
+    elevenlabsVoiceId: string;
     backstory: string;
+    googleVoiceId: string
 }
 
 /**

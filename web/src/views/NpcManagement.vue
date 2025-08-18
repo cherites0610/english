@@ -29,8 +29,11 @@
                 <el-form-item label="頭像 URL" prop="avatar" required>
                     <el-input v-model="currentNpc.avatar" />
                 </el-form-item>
-                <el-form-item label="聲音編號" prop="voiceId" required>
-                    <el-input v-model="currentNpc.voiceId" />
+                <el-form-item label="google聲音編號" prop="googleVoiceId" required>
+                    <el-input v-model="currentNpc.googleVoiceId" />
+                </el-form-item>
+                <el-form-item label="elevenlabs聲音編號" prop="elevenlabsVoiceId" required>
+                    <el-input v-model="currentNpc.elevenlabsVoiceId" />
                 </el-form-item>
                 <el-form-item label="背景故事" prop="backstory" required>
                     <el-input type="textarea" :rows="4" v-model="currentNpc.backstory" />
@@ -64,7 +67,8 @@ const defaultFormData: CreateNpcDto & { id: string | null } = {
     id: null,
     name: '',
     avatar: '',
-    voiceId: '',
+    elevenlabsVoiceId: '',
+    googleVoiceId: '',
     backstory: '',
 };
 const currentNpc = reactive({ ...defaultFormData });

@@ -1,0 +1,47 @@
+meta {
+  name: 查看用戶任務
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/quest?viewType=REGULAR
+  body: text
+  auth: inherit
+}
+
+params:query {
+  viewType: REGULAR
+}
+
+body:text {
+  {
+      "title": "新手的第一步",
+      "description": "作為新手冒險者，你需要先熟悉戰鬥與採集。去村外完成你的第一個挑戰吧！",
+      "type": "MAIN",
+      "requirements": [
+          {
+              "type": "KILL_SLIME",
+              "count": 5
+          },
+          {
+              "type": "COLLECT_HERB",
+              "count": 3
+          }
+      ],
+      "rewards": [
+          {
+              "type": "GAIN_GOLD",
+              "count": 100
+          },
+          {
+              "type": "RECEIVE_HEALTH_POTION",
+              "count": 1
+          }
+      ]
+  }
+}
+
+settings {
+  encodeUrl: true
+}

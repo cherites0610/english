@@ -1,0 +1,25 @@
+meta {
+  name: 取得Line登入URL
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/auth/line
+  body: text
+  auth: inherit
+}
+
+body:text {
+  {
+      "code": "D-02",
+      "title":"完成對戰三次",
+      "description":"完成對戰三次",
+      "targetCount": 3,
+      "resetAt":"00:00:00"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

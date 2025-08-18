@@ -6,13 +6,15 @@ import { UserModule } from 'src/user/user.module';
 import { GeminiModule } from 'src/gemini/gemini.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BattleChildCategory } from 'src/battle/entity/battle-child-category.entity';
+import { TtsModule } from 'src/tts/tts.module';
 
 @Module({
   imports: [
     BattleModule,
     UserModule,
     GeminiModule,
-    TypeOrmModule.forFeature([BattleChildCategory])
+    TypeOrmModule.forFeature([BattleChildCategory]),
+    TtsModule
   ],
   controllers: [TalkController],
   providers: [TalkService],

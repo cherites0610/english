@@ -1,0 +1,27 @@
+meta {
+  name: 查看留言板
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/wall/user/:userID
+  body: text
+  auth: inherit
+}
+
+params:path {
+  userID: 094e7551-3ce5-4930-abfb-38e89939db0b
+}
+
+body:text {
+  {
+      "title": "日志測試",
+      "content": "我也不知道内容要是啥",
+      "isPublic": true
+  }
+}
+
+settings {
+  encodeUrl: true
+}

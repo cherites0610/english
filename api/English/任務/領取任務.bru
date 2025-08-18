@@ -1,0 +1,26 @@
+meta {
+  name: 領取任務
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/quest/:questID/claim
+  body: text
+  auth: inherit
+}
+
+params:path {
+  questID: cc7caca8-9c87-49a9-b99f-9abbe24b9839
+}
+
+body:text {
+  {
+      "eventType": "TALK_TO_VILLAGE_CHIEF",
+      "count":1
+  }
+}
+
+settings {
+  encodeUrl: true
+}

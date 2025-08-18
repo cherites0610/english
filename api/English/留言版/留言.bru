@@ -1,0 +1,22 @@
+meta {
+  name: 留言
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{base_url}}/interactions/comments
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "content":"你好可悲",
+      "parentCommentId": "eb72ba5a-b50f-4438-8478-f0bb33c31f57"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

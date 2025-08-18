@@ -1,0 +1,22 @@
+meta {
+  name: 取得所有成就
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/user-achievement
+  body: text
+  auth: inherit
+}
+
+body:text {
+  {
+      "eventType": "TALK_TO_VILLAGE_CHIEF",
+      "count":1
+  }
+}
+
+settings {
+  encodeUrl: true
+}

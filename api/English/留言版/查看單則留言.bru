@@ -1,0 +1,26 @@
+meta {
+  name: 查看單則留言
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/wall/message/:id
+  body: text
+  auth: inherit
+}
+
+params:path {
+  id: eb72ba5a-b50f-4438-8478-f0bb33c31f57
+}
+
+body:text {
+  {
+      "wallOwnerId": "7c7c6f41-6c2c-4d0f-bc0e-df1acf5899f7",
+      "content": "我也不知道内容要是啥"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

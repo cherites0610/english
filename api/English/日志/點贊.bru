@@ -1,0 +1,21 @@
+meta {
+  name: 點贊
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/interactions/like
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "journalEntryId": "60770c6d-b05a-4bdd-9311-a6d80ee49e8f"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

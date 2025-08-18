@@ -68,15 +68,10 @@ export class TalkController {
     @UserID() userID: string,
     @Param('talkID') talkID: string,
     @UploadedFile() file: Express.Multer.File) {
-    console.log(1);
-
-    console.log(file);
     if (!file) {
       throw new BadRequestException("未上傳檔案");
     }
-    console.log(2);
     const { text } = await this.talkService.SpeachToText(file.buffer)
-    console.log(4);
     const { reply, audioBase64 } = await this.talkService.addMessageToTalk(userID, talkID, text, "USER")
     return {
       message: "對話成功",

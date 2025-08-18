@@ -1,0 +1,22 @@
+meta {
+  name: 觸發游戲事件
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/quest/event
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "eventType": "KILL_SLIME",
+      "count":1
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -17,9 +17,9 @@ import { CommunityModule } from './community/community.module';
 import { NpcModule } from './npc/npc.module';
 import { BattleModule } from './battle/battle.module';
 import { TalkModule } from './talk/talk.module';
-import { CacheModule } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-yet';
 import { RedisModule } from './redis/redis.module';
+import { MailModule } from './mail/mail.module'
+import { TtsModule } from './tts/tts.module';
 
 @Module({
   imports: [
@@ -53,6 +53,8 @@ import { RedisModule } from './redis/redis.module';
     NpcModule,
     BattleModule,
     TalkModule,
+    MailModule,
+    TtsModule
   ],
   controllers: [AppController],
   providers: [AppService],

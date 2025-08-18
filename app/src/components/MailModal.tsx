@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, Alert } from 'react-native';
 import CustomModal from './CustomModal';
 import MailListItem from './MailListItem';
-import { initialMails, Mail } from '../services/gameService';
+import { Mail } from '../types/mail.type';
+import { useMail } from '../hooks/useMail';
 
 type MailModalProps = {
     isVisible: boolean;
@@ -10,14 +11,15 @@ type MailModalProps = {
 };
 
 const MailModal: React.FC<MailModalProps> = ({ isVisible, onClose }) => {
-    const [mails, setMails] = useState<Mail[]>(initialMails);
+    const { mail, isLoading, error, readMail } = useMail();
 
     const handleMailPress = (mailId: string) => {
-        setMails(currentMails =>
-            currentMails.map(mail =>
-                mail.id === mailId ? { ...mail, isRead: true } : mail
-            )
-        );
+        // setMails(currentMails =>
+        //     currentMails.map(mail =>
+        //         mail.id === mailId ? { ...mail, isRead: true } : mail
+        //     )
+        // );
+        readMail(mailId)
         Alert.alert('郵件已讀', `郵件 ${mailId} 已被標示為已讀`);
     };
 
@@ -30,7 +32,7 @@ const MailModal: React.FC<MailModalProps> = ({ isVisible, onClose }) => {
         >
             <View style={styles.modalContent}>
                 <FlatList
-                    data={mails}
+                    data={mail}
                     renderItem={({ item }) => (
                         <MailListItem mail={item} onPress={() => handleMailPress(item.id)} />
                     )}

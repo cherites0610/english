@@ -11,13 +11,13 @@ export type ApiResponse<T> = {
 };
 
 const apiClient = axios.create({
-    baseURL: 'https://shrew-smart-kit.ngrok-free.app/api',
+    baseURL: 'http://localhost:5010/api',
     timeout: 100000,
 });
 
 apiClient.interceptors.request.use(
     async (config) => {
-        await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, "cherites");
+        // await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, "cherites");
         // 在發送請求前，從 SecureStore 獲取 token
         const accessToken = await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
 

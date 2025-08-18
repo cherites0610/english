@@ -8,6 +8,7 @@ import WaveformPlaceholder from '@/src/components/WaveformPlaceholder';
 import { addMessage, createTalkByCategoryName } from '@/src/services/talkService';
 import { useAudioRecording } from '@/src/hooks/useAudioRecording';
 import { Audio } from 'expo-av';
+import Rive, { RiveRef } from 'rive-react-native';
 
 // Message 介面維持不變
 interface message {
@@ -22,6 +23,8 @@ export default function DialogueScreen() {
     const router = useRouter();
 
     // --- State 管理 ---
+    const talkTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const riveRef = useRef<RiveRef>(null);
     const [talkID, setTalkID] = useState<string>('');
     const [messages, setMessages] = useState<message[]>([]);
     const [isUploading, setIsUploading] = useState(false);
@@ -30,6 +33,25 @@ export default function DialogueScreen() {
     const [currentPlayingUri, setCurrentPlayingUri] = useState<string | null>(null);
     const [isPlaying, setIsPlaying] = useState(false); // 新增：追蹤播放狀態
     const [isInitializing, setIsInitializing] = useState(true);
+
+    const [isListening, setIsListening] = useState(false);
+    const [isTalking, setIsTalking] = useState(false);
+
+    const setRiveListenState = (value: boolean) => {
+        setIsListening(value);
+        riveRef.current?.setInputState("State Machine 1", "listening", value);
+        console.log(`Rive 'listening' state set to: ${value}`);
+    };
+
+    const setRiveTalkState = (value: boolean) => {
+        if (talkTimerRef.current) {
+            clearTimeout(talkTimerRef.current);
+            talkTimerRef.current = null;
+        }
+        setIsTalking(value);
+        riveRef.current?.setInputState("State Machine 1", "talk", value);
+        console.log(`Rive 'talk' state set to: ${value} at ${new Date().toISOString()}`);
+    };
 
     const { recorderState, startRecording, stopRecording } = useAudioRecording();
 
@@ -63,7 +85,7 @@ export default function DialogueScreen() {
             await sound.unloadAsync();
         }
 
-        console.log('Loading Sound from:', uri);
+        console.log('Loading Sound from:', uri);
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
                 { uri },
@@ -71,10 +93,32 @@ export default function DialogueScreen() {
                 (status) => { // 播放狀態更新時的回呼
                     if (status.isLoaded) {
                         setIsPlaying(status.isPlaying);
+                        setRiveTalkState(status.isPlaying);
                         if (status.didJustFinish) {
-                            // 音訊播放完畢
-                            setIsPlaying(false);
+                            // 播放剛剛結束
                             setCurrentPlayingUri(null);
+
+                            // 1. 計算距離下一個 "整秒" 還需要多少毫秒
+                            const now = new Date();
+                            const milliseconds = now.getMilliseconds();
+                            const delay = 1000 - milliseconds;
+
+                            console.log(`音訊播放完畢。將在 ${delay} 毫秒後，於下一個整秒切換 talk 狀態為 false。`);
+
+                            // 2. 設定一個計時器，在精確的時間點執行
+                            talkTimerRef.current = setTimeout(() => {
+                                // 執行後清除 ref
+                                talkTimerRef.current = null;
+                                // 這裡只設定 Rive 的狀態，UI 的 isPlaying 狀態已經是 false
+                                setIsTalking(false);
+                                riveRef.current?.setInputState("State Machine 1", "talk", false);
+                                console.log(`Rive 'talk' state set to: false at ${new Date().toISOString()}`);
+                            }, delay);
+
+                        } else {
+                            // 處理播放、暫停、手動跳轉等其他情況
+                            // 讓 talk 狀態與實際播放狀態同步
+                            setRiveTalkState(status.isPlaying);
                         }
                     }
                 }
@@ -105,9 +149,7 @@ export default function DialogueScreen() {
             };
 
             try {
-                console.log(1);
                 const result = await createTalkByCategoryName(houseTitle); // 使用 houseTitle
-                console.log(2);
 
                 if (result?.message?.audioBase64) {
                     const path = `${FileSystem.cacheDirectory}npc-talk-${Date.now()}.mp3`;
@@ -202,6 +244,20 @@ export default function DialogueScreen() {
         }
     }
 
+    const handleRecordButtonPress = () => {
+        console.log(recorderState.isRecording);
+
+        if (recorderState.isRecording) {
+            // 停止錄音
+            stopRecording();
+            setRiveListenState(false);
+        } else {
+            // 開始錄音
+            startRecording();
+            setRiveListenState(true);
+        }
+    };
+
     useEffect(() => {
         if (recorderState.url) {
             handleUploadRecording(recorderState.url);
@@ -228,6 +284,9 @@ export default function DialogueScreen() {
                 }
             };
             cleanupFiles();
+            if (talkTimerRef.current) {
+                clearTimeout(talkTimerRef.current);
+            }
         };
     }, []);
 
@@ -238,52 +297,66 @@ export default function DialogueScreen() {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#000' }}>
-            <Header variant="game" title={houseTitle} onBackPress={() => router.back()} />
+            {/* <Header variant="game" title={houseTitle} onBackPress={() => router.back()} /> */}
             {isInitializing ? (
-                // 需求二：顯示初始載入動畫 A
                 <LoadingAnimationA />
             ) : (
-                <>
+                // [修改] 使用一個 View 包裹所有需要疊加的元素
+                <View style={styles.mainContainer}>
+                    {/* 1. 背景圖片 (最底層) */}
                     <ImageBackground
-                        source={require('@/assets/images/Dialogue/background.png')}
-                        style={styles.screen}
+                        source={require('@/assets/images/Dialogue/bg.png')}
+                        style={styles.backgroundImage}
                         resizeMode="cover"
                     >
-                        <View style={styles.characterContainer}>
-                            <Image
-                                source={require('@/assets/images/Dialogue/npc_full_body.png')}
-                                style={styles.characterImage}
+                        {/* 2. Rive 動畫 (中間層) */}
+                        <View style={styles.riveContainer}>
+                            <Rive
+                                ref={riveRef}
+                                url="https://mou-english.s3.ap-northeast-1.amazonaws.com/Anna.riv"
+                                artboardName="iPhone 16 - 1"
+                                stateMachineName="State Machine 1"
+                                autoplay={true}
+                                style={styles.rive}
                             />
                         </View>
-                        <View style={styles.bottomContainer}>
-                            <WaveformPlaceholder />
-                            <View style={styles.bottomControlsContainer}>
-                                <Pressable
-                                    onPress={() => playAudioFromUri(secondLastMessage?.uri)}
-                                    disabled={!secondLastMessage || isUploading}
-                                    style={[styles.smallButton, (!secondLastMessage || isUploading) && styles.disabledButton]}
-                                >
-                                    <Ionicons name="play-skip-back" size={32} color="white" />
-                                </Pressable>
-                                <Pressable
-                                    onPress={recorderState.isRecording ? stopRecording : startRecording}
-                                    disabled={isUploading}
-                                    style={[styles.recordButton, (recorderState.isRecording || isUploading) && styles.recordButtonActive]}
-                                >
-                                    {/* 維持原樣，因為全螢幕的載入動畫 B 會覆蓋它 */}
-                                    <Ionicons name="mic" size={50} color="white" />
-                                </Pressable>
-                                <Pressable
-                                    onPress={() => playAudioFromUri(lastMessage?.uri)}
-                                    disabled={!lastMessage || isUploading}
-                                    style={[styles.smallButton, (!lastMessage || isUploading) && styles.disabledButton]}
-                                >
-                                    <Ionicons name={getPlayIcon(lastMessage?.uri)} size={32} color="white" />
-                                </Pressable>
-                            </View>
-                        </View>
                     </ImageBackground>
-                </>
+
+                    {/* 3. 您要加入的頂部圖片 (最上層) */}
+                    <Image
+                        source={require('@/assets/images/Dialogue/fg.png')}
+                        style={styles.topOverlayImage}
+                        resizeMode="cover"
+                    />
+
+                    {/* 底部的控制元件，為了確保它們在最上層，可以放在這個 View 之外 */}
+                    <View style={styles.bottomContainer}>
+                        <WaveformPlaceholder />
+                        <View style={styles.bottomControlsContainer}>
+                            <Pressable
+                                onPress={() => playAudioFromUri(secondLastMessage?.uri)}
+                                disabled={!secondLastMessage || isUploading}
+                                style={[styles.smallButton, (!secondLastMessage || isUploading) && styles.disabledButton]}
+                            >
+                                <Ionicons name="play-skip-back" size={32} color="white" />
+                            </Pressable>
+                            <Pressable
+                                onPress={handleRecordButtonPress}
+                                disabled={isUploading}
+                                style={[styles.recordButton, (recorderState.isRecording || isUploading) && styles.recordButtonActive]}
+                            >
+                                <Ionicons name="mic" size={50} color="white" />
+                            </Pressable>
+                            <Pressable
+                                onPress={() => playAudioFromUri(lastMessage?.uri)}
+                                disabled={!lastMessage || isUploading}
+                                style={[styles.smallButton, (!lastMessage || isUploading) && styles.disabledButton]}
+                            >
+                                <Ionicons name={getPlayIcon(lastMessage?.uri)} size={32} color="white" />
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
             )}
         </View>
     );
@@ -298,6 +371,31 @@ const LoadingAnimationA = () => (
 
 // --- 樣式表 ---
 const styles = StyleSheet.create({
+    mainContainer: {
+        flex: 1,
+    },
+    backgroundImage: {
+        flex: 1, // 讓背景圖片佔滿整個容器
+    },
+    riveContainer: {
+        flex: 1, // 讓 Rive 容器也佔滿，以便在背景上疊加
+        marginTop:100,
+        justifyContent: 'center', // 可以根據需要調整 Rive 的垂直位置
+        alignItems: 'center',   // 可以根據需要調整 Rive 的水平位置
+    },
+    topOverlayImage: {
+        // [修改] 使用絕對定位將圖片疊加到最上層
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain', // 根據需要調整
+        zIndex: 10, // 確保圖片在其他元素之上
+        // 可以根據需要添加額外的 margin、padding 或調整位置
+    },
     screen: {
         flex: 1,
         justifyContent: 'flex-end', // 讓內容靠底
@@ -315,6 +413,7 @@ const styles = StyleSheet.create({
     bottomContainer: {
         paddingBottom: 40,
         paddingHorizontal: 20,
+        zIndex:10000
     },
     bottomControlsContainer: {
         flexDirection: 'row',
@@ -357,5 +456,9 @@ const styles = StyleSheet.create({
         color: 'white',
         marginTop: 15,
         fontSize: 16,
+    },
+    rive: {
+        width: 400,
+        height: 400,
     },
 });

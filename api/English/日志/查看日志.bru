@@ -1,0 +1,19 @@
+meta {
+  name: 查看日志
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/journal/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 60770c6d-b05a-4bdd-9311-a6d80ee49e8f
+}
+
+settings {
+  encodeUrl: true
+}

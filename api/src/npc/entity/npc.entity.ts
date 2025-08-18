@@ -18,6 +18,9 @@ export class Npc {
   @Column({ unique: true })
   name: string;
 
+  @Column({ default: '' })
+  elevenlabsVoiceId: string
+
   /**
    * NPC 的頭像圖片 URL
    */
@@ -28,7 +31,7 @@ export class Npc {
    * 對應到聲音資源檔案的編號或 ID
    */
   @Column()
-  voiceId: string;
+  googleVoiceId: string;
 
   /**
    * NPC 的背景故事，使用 'text' 類型以支援較長內容

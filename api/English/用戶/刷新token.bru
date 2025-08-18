@@ -1,0 +1,21 @@
+meta {
+  name: 刷新token
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/auth/refresh
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYzIzNGNhMS0yNTA0LTQ4YTQtYWUyYS1mNGMxMmQ0MGI2N2MiLCJuYW1lIjoi5buW5p-P5a6JIiwiaWF0IjoxNzUzNTk1MTE0LCJleHAiOjE3NTYxODcxMTR9.i0l5NoOoOWgwb6AEelfZT-_jBHyHhUTvpUoguPj3Bjo"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
