@@ -85,7 +85,7 @@ const isPlaying = ref(false);
 
 // --- WebSocket 初始化與事件監聽 ---
 const initializeSocket = () => {
-    socket = io(API_BASE_URL, { transports: ['websocket'] });
+    socket = io(import.meta.env.VITE_WEBSOCKET_URL, { transports: ['websocket'] });
 
     socket.on('connect', () => console.log('WebSocket 已連接!'));
     socket.on('disconnect', () => console.log('WebSocket 已斷開.'));

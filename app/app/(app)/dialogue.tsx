@@ -9,10 +9,13 @@ import { addMessage, createTalkByCategoryName } from '@/src/services/talkService
 import { useAudioRecording } from '@/src/hooks/useAudioRecording';
 import { Audio } from 'expo-av';
 import Rive, { RiveRef } from 'rive-react-native';
+import { io, Socket } from 'socket.io-client';
+import { useUserProfile } from '@/src/hooks/useUserProfile';
+import { Buffer } from 'buffer';
 
 // Message 介面維持不變
 interface message {
-    uri: string,
+    uri?: string,
     content: string,
     role: 'ASSISTANT' | 'USER',
     timestamp: number
@@ -20,275 +23,248 @@ interface message {
 
 export default function DialogueScreen() {
     const { houseTitle } = useLocalSearchParams<{ houseTitle: string }>();
-    const router = useRouter();
+    const { userProfile: user } = useUserProfile()
 
     // --- State 管理 ---
-    const talkTimerRef = useRef<NodeJS.Timeout | null>(null);
     const riveRef = useRef<RiveRef>(null);
     const [talkID, setTalkID] = useState<string>('');
     const [messages, setMessages] = useState<message[]>([]);
     const [isUploading, setIsUploading] = useState(false);
-
-    const [sound, setSound] = useState<Audio.Sound>(); // 新增：用來存放 sound 物件
-    const [currentPlayingUri, setCurrentPlayingUri] = useState<string | null>(null);
-    const [isPlaying, setIsPlaying] = useState(false); // 新增：追蹤播放狀態
     const [isInitializing, setIsInitializing] = useState(true);
-
-    const [isListening, setIsListening] = useState(false);
-    const [isTalking, setIsTalking] = useState(false);
-
-    const setRiveListenState = (value: boolean) => {
-        setIsListening(value);
-        riveRef.current?.setInputState("State Machine 1", "listening", value);
-        console.log(`Rive 'listening' state set to: ${value}`);
-    };
-
-    const setRiveTalkState = (value: boolean) => {
-        if (talkTimerRef.current) {
-            clearTimeout(talkTimerRef.current);
-            talkTimerRef.current = null;
-        }
-        setIsTalking(value);
-        riveRef.current?.setInputState("State Machine 1", "talk", value);
-        console.log(`Rive 'talk' state set to: ${value} at ${new Date().toISOString()}`);
-    };
 
     const { recorderState, startRecording, stopRecording } = useAudioRecording();
 
-    const messagesRef = useRef(messages);
+    const [sound, setSound] = useState<Audio.Sound | null>(null);
+    const [currentPlayingUri, setCurrentPlayingUri] = useState<string | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [playbackQueue, setPlaybackQueue] = useState<string[]>([]); // 新增：音訊播放佇列
+    const isPlayingRef = useRef(isPlaying); // 新增：用 Ref 同步 isPlaying 狀態
+    isPlayingRef.current = isPlaying;
+
+    const isLoadingSound = useRef(false);
+
+    const socketRef = useRef<Socket | null>(null);
+
+    // [修改] Rive 動畫狀態控制 (邏輯簡化)
+    const setRiveListenState = (value: boolean) => riveRef.current?.setInputState("State Machine 1", "listening", value);
+    const setRiveTalkState = (value: boolean) => riveRef.current?.setInputState("State Machine 1", "talk", value);
 
     useEffect(() => {
-        messagesRef.current = messages;
-    }, [messages]);
+        // 連接 Socket
+        socketRef.current = io('http://localhost:5010', { transports: ['websocket'] });
+        const socket = socketRef.current;
 
-    const playableMessages = messages.filter(m => m.uri && m.uri.startsWith('file://'));
-    const lastMessage = playableMessages[playableMessages.length - 1];
-    const secondLastMessage = playableMessages[playableMessages.length - 2];
+        socket.on('connect', () => console.log('Socket connected!'));
+        socket.on('disconnect', () => console.log('Socket disconnected.'));
+        socket.on('stream-error', (err) => {
+            console.error('Stream error:', err);
+            setIsUploading(false); // 發生錯誤時停止 loading
+        });
 
-    const playAudioFromUri = async (uri: string | null) => {
-        if (!uri) return;
+        // 監聽 AI 回傳的文字片段
+        socket.on('ai-text-chunk', (textChunk: string) => {
+            setMessages(prev => {
+                const lastMessage = prev[prev.length - 1];
+                if (lastMessage && lastMessage.role === 'ASSISTANT') {
+                    lastMessage.content += textChunk;
+                    return [...prev];
+                }
+                return prev;
+            });
+        });
 
-        // 如果點擊的是正在播放的音訊，則暫停/播放
-        if (sound && currentPlayingUri === uri) {
-            if (isPlaying) {
-                await sound.pauseAsync();
-                setIsPlaying(false);
-            } else {
-                await sound.playAsync();
-                setIsPlaying(true);
+        // 監聽 AI 回傳的音訊片段
+        socket.on('audio-chunk', async (chunk: ArrayBuffer) => {
+            try {
+                // 將收到的音訊塊存為暫存檔
+                const path = `${FileSystem.cacheDirectory}ai-chunk-${Date.now()}.mp3`;
+                const base64Chunk = Buffer.from(chunk).toString('base64');
+                await FileSystem.writeAsStringAsync(path, base64Chunk, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+                // 將檔案路徑加入播放佇列
+                setPlaybackQueue(prev => [...prev, path]);
+            } catch (error) {
+                console.error("處理音訊 chunk 失敗:", error);
             }
+        });
+
+        socket.on('stream-end', () => {
+            console.log('AI stream ended.');
+            setIsUploading(false);
+        });
+
+        // 組件卸載時斷開連接
+        return () => {
+            socket.disconnect();
+            // ... 其他清理邏輯 ...
+        };
+    }, []);
+
+    const playNextInQueue = async () => {
+        if (playbackQueue.length === 0 || isPlayingRef.current || isLoadingSound.current) {
+            if (playbackQueue.length === 0) setRiveTalkState(false);
             return;
         }
 
-        // 如果目前有音訊正在播放或已載入，先卸載它
+        isLoadingSound.current = true;
+
+        const uriToPlay = playbackQueue[0];
+        console.log('Playing next in queue:', uriToPlay);
+
+        // 如果目前有 sound 物件，先卸載
         if (sound) {
             await sound.unloadAsync();
         }
 
-        console.log('Loading Sound from:', uri);
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri },
-                { shouldPlay: true }, // 載入後立即播放
-                (status) => { // 播放狀態更新時的回呼
+                { uri: uriToPlay },
+                { shouldPlay: true },
+                (status) => {
                     if (status.isLoaded) {
                         setIsPlaying(status.isPlaying);
                         setRiveTalkState(status.isPlaying);
                         if (status.didJustFinish) {
-                            // 播放剛剛結束
-                            setCurrentPlayingUri(null);
-
-                            // 1. 計算距離下一個 "整秒" 還需要多少毫秒
-                            const now = new Date();
-                            const milliseconds = now.getMilliseconds();
-                            const delay = 1000 - milliseconds;
-
-                            console.log(`音訊播放完畢。將在 ${delay} 毫秒後，於下一個整秒切換 talk 狀態為 false。`);
-
-                            // 2. 設定一個計時器，在精確的時間點執行
-                            talkTimerRef.current = setTimeout(() => {
-                                // 執行後清除 ref
-                                talkTimerRef.current = null;
-                                // 這裡只設定 Rive 的狀態，UI 的 isPlaying 狀態已經是 false
-                                setIsTalking(false);
-                                riveRef.current?.setInputState("State Machine 1", "talk", false);
-                                console.log(`Rive 'talk' state set to: false at ${new Date().toISOString()}`);
-                            }, delay);
-
-                        } else {
-                            // 處理播放、暫停、手動跳轉等其他情況
-                            // 讓 talk 狀態與實際播放狀態同步
-                            setRiveTalkState(status.isPlaying);
+                            // 播放完畢，從佇列中移除，並觸發播放下一個
+                            setPlaybackQueue(prev => prev.slice(1));
                         }
                     }
                 }
             );
             setSound(newSound);
-            setCurrentPlayingUri(uri);
-            setIsPlaying(true);
+            setCurrentPlayingUri(uriToPlay);
         } catch (error) {
-            console.error("載入音訊時發生錯誤:", error);
+            console.error("載入或播放音訊佇列失敗:", error);
+            // 即使出錯也嘗試播放下一個
+            setPlaybackQueue(prev => prev.slice(1));
+        } finally {
+            isLoadingSound.current = false;
         }
     };
 
+    // 監聽佇列變化，觸發播放
     useEffect(() => {
-        return sound
-            ? () => {
-                console.log('Unloading Sound');
-                sound.unloadAsync();
-            }
-            : undefined;
-    }, [sound]);
+        playNextInQueue();
+    }, [playbackQueue]);
 
-    // 初始載入對話
+    // 初始載入對話 (邏輯基本不變)
     useEffect(() => {
-        const loadAndPrepareAudio = async () => {
-            if (!houseTitle) {
-                setIsInitializing(false);
-                return
-            };
-
+        const loadInitialTalk = async () => {
+            if (!houseTitle) return setIsInitializing(false);
             try {
-                const result = await createTalkByCategoryName(houseTitle); // 使用 houseTitle
-
+                const result = await createTalkByCategoryName(houseTitle);
                 if (result?.message?.audioBase64) {
                     const path = `${FileSystem.cacheDirectory}npc-talk-${Date.now()}.mp3`;
                     await FileSystem.writeAsStringAsync(path, result.message.audioBase64, {
                         encoding: FileSystem.EncodingType.Base64,
                     });
-
                     setTalkID(result.talkID);
-                    const newMessage: message = {
+                    setMessages([{
                         uri: path,
                         content: result.message.content,
-                        role: result.message.role,
+                        role: 'ASSISTANT',
                         timestamp: Date.now()
-                    };
-                    setMessages([newMessage]); // 初始訊息，直接設定
-
-                    // 自動播放初始訊息
-                    playAudioFromUri(path);
+                    }]);
+                    setPlaybackQueue(prev => [...prev, path]); // 加入佇列自動播放
                 }
             } catch (error) {
-                console.error("載入初始音訊時發生錯誤:", error);
+                console.error("載入初始音訊失敗:", error);
             } finally {
-                setIsInitializing(false)
+                setIsInitializing(false);
             }
         };
-        loadAndPrepareAudio();
+        loadInitialTalk();
     }, [houseTitle]);
 
-    async function handleUploadRecording(uri: string) {
+    const streamRecordingToServer = async (uri: string) => {
         if (!uri || !talkID) return;
-        const uploadTimestamp = Date.now();
-        setIsUploading(true);
-        try {
+        const socket = socketRef.current;
+        if (!socket) return console.error("Socket not connected.");
 
-            const formData = new FormData();
+        setIsUploading(true); // 開始等待 AI 回應
 
-            // 根據後端 FileInterceptor('audio') 的設定，欄位名稱必須是 'audio'
-            formData.append('audio', {
-                uri: uri,
-                name: `recording-${uploadTimestamp}.m4a`, // 提供一個檔名
-                type: 'audio/m4a', // 指定檔案的 MIME 類型
-            } as any);
+        // 1. 通知後端開始對話
+        socket.emit('start-talk', { userID: user?.id, talkID });
 
-            console.log(`準備上傳錄音... TalkID: ${talkID}`);
+        // 2. 將使用者訊息加入歷史紀錄
+        setMessages(prev => [...prev, {
+            content: '',
+            role: 'USER',
+            timestamp: Date.now()
+        }]);
 
-            // 步驟 2: 呼叫 API
-            // result 的型別應該要根據你的後端回傳值來定義，這裡我們先假設它包含 userMessage 和 assistantMessage
-            const result = await addMessage(talkID, formData);
+        const fileInfo = await FileSystem.getInfoAsync(uri);
 
-            // 如果沒有成功的回應，就直接返回
-            if (!result) {
-                throw new Error("API 沒有回傳有效的結果");
-            }
-
-            const messagesToAdd: message[] = [];
-
-            if (result.userMessage) {
-                messagesToAdd.push({
-                    uri: uri, // 使用者錄音的本地 URI
-                    content: result.userMessage.content,
-                    role: 'USER',
-                    timestamp: uploadTimestamp
-                });
-            }
-
-
-            if (result.assistantMessage?.audioBase64) {
-                const path = `${FileSystem.cacheDirectory}npc-talk-${Date.now()}.mp3`;
-                await FileSystem.writeAsStringAsync(path, result.assistantMessage.audioBase64, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
-
-                messagesToAdd.push({
-                    uri: path, // AI 回覆的音訊本地 URI
-                    content: result.assistantMessage.content,
-                    role: 'ASSISTANT',
-                    timestamp: Date.now()
-                });
-
-                // 步驟 5: 自動播放新的 AI 回覆
-                playAudioFromUri(path);
-            }
-
-            setMessages(prev => [...prev, ...messagesToAdd]);
-
-
-        } catch (error) {
-            console.error("上傳或處理錄音失敗:", error);
-            // 你可以在這裡加入錯誤處理的 UI 提示，例如 Toast 或 Alert
-        } finally {
-            setIsUploading(false);
+        if (!fileInfo.exists) {
+            console.error("Recording file does not exist, cannot stream:", uri);
+            setIsUploading(false); // 記得重設 loading 狀態
+            return;
         }
-    }
 
+        // 在這個檢查之後，TypeScript 就知道 fileInfo 包含 size 屬性
+        const CHUNK_SIZE = 4096;
+        let position = 0;
+        let keepReading = true;
+
+        console.log(`Starting to stream file of size: ${fileInfo.size}`);
+
+        while (keepReading) {
+            try {
+                const chunk = await FileSystem.readAsStringAsync(uri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                    position: position,
+                    length: CHUNK_SIZE,
+                });
+
+                if (chunk.length > 0) {
+                    // 如果讀到了內容，就發送
+                    // console.log(`Sending chunk from position: ${position}, size: ${chunk.length}`);
+                    socket.emit('audio-chunk', Buffer.from(chunk, 'base64'));
+                    position += CHUNK_SIZE; // 更新下一次讀取的位置
+                } else {
+                    // 如果讀到的是空字串，代表檔案已經讀完
+                    console.log("End of file reached.");
+                    keepReading = false;
+                }
+            } catch (error) {
+                console.error("Error reading file chunk:", error);
+                keepReading = false;
+            }
+        }
+
+        // 4. 通知後端音訊發送完畢
+        socket.emit('end-audio');
+        console.log('Finished streaming recording to server.');
+    };
+
+    // 監聽錄音狀態，結束後觸發串流上傳
+    useEffect(() => {
+        if (recorderState.url) {
+            streamRecordingToServer(recorderState.url);
+        }
+    }, [recorderState.url]);
+
+
+    // --- 按鈕事件處理 (邏輯簡化) ---
     const handleRecordButtonPress = () => {
-        console.log(recorderState.isRecording);
-
         if (recorderState.isRecording) {
-            // 停止錄音
             stopRecording();
             setRiveListenState(false);
         } else {
-            // 開始錄音
             startRecording();
             setRiveListenState(true);
         }
     };
 
-    useEffect(() => {
-        if (recorderState.url) {
-            handleUploadRecording(recorderState.url);
-        }
-    }, [recorderState.url]);
+    // --- 播放控制 (重播) ---
+    const replayAudio = (uri: string | undefined) => {
+        if (!uri) return;
+        setPlaybackQueue(prev => [...prev, uri]);
+    }
 
-    useEffect(() => {
-        return () => {
-            const cleanupFiles = async () => {
-                const allUris = messagesRef.current.map(m => m.uri).filter(Boolean);
-
-                console.log(`準備刪除 ${allUris.length} 個檔案...`);
-
-                for (const uri of allUris) {
-                    try {
-                        const fileInfo = await FileSystem.getInfoAsync(uri);
-                        if (fileInfo.exists) {
-                            await FileSystem.deleteAsync(uri, { idempotent: true });
-                            console.log(`已成功刪除快取檔案: ${uri}`);
-                        }
-                    } catch (error) {
-                        console.error(`刪除檔案 ${uri} 時發生錯誤:`, error);
-                    }
-                }
-            };
-            cleanupFiles();
-            if (talkTimerRef.current) {
-                clearTimeout(talkTimerRef.current);
-            }
-        };
-    }, []);
+    const lastMessage = messages[messages.length - 1];
+    const secondLastMessage = messages[messages.length - 2];
 
     const getPlayIcon = (uri: string | undefined) => {
         if (!uri) return 'play';
@@ -334,9 +310,9 @@ export default function DialogueScreen() {
                         <WaveformPlaceholder />
                         <View style={styles.bottomControlsContainer}>
                             <Pressable
-                                onPress={() => playAudioFromUri(secondLastMessage?.uri)}
-                                disabled={!secondLastMessage || isUploading}
-                                style={[styles.smallButton, (!secondLastMessage || isUploading) && styles.disabledButton]}
+                                onPress={() => replayAudio(secondLastMessage?.uri)}
+                                disabled={!secondLastMessage?.uri || isUploading}
+                                style={[styles.smallButton, (!secondLastMessage?.uri || isUploading) && styles.disabledButton]}
                             >
                                 <Ionicons name="play-skip-back" size={32} color="white" />
                             </Pressable>
@@ -348,9 +324,9 @@ export default function DialogueScreen() {
                                 <Ionicons name="mic" size={50} color="white" />
                             </Pressable>
                             <Pressable
-                                onPress={() => playAudioFromUri(lastMessage?.uri)}
-                                disabled={!lastMessage || isUploading}
-                                style={[styles.smallButton, (!lastMessage || isUploading) && styles.disabledButton]}
+                                onPress={() => replayAudio(lastMessage?.uri)}
+                                disabled={!secondLastMessage?.uri || isUploading}
+                                style={[styles.smallButton, (!secondLastMessage?.uri || isUploading) && styles.disabledButton]}
                             >
                                 <Ionicons name={getPlayIcon(lastMessage?.uri)} size={32} color="white" />
                             </Pressable>
@@ -379,7 +355,7 @@ const styles = StyleSheet.create({
     },
     riveContainer: {
         flex: 1, // 讓 Rive 容器也佔滿，以便在背景上疊加
-        marginTop:100,
+        marginTop: 100,
         justifyContent: 'center', // 可以根據需要調整 Rive 的垂直位置
         alignItems: 'center',   // 可以根據需要調整 Rive 的水平位置
     },
@@ -413,7 +389,7 @@ const styles = StyleSheet.create({
     bottomContainer: {
         paddingBottom: 40,
         paddingHorizontal: 20,
-        zIndex:10000
+        zIndex: 10000
     },
     bottomControlsContainer: {
         flexDirection: 'row',

@@ -13,7 +13,6 @@ import { Logger } from '@nestjs/common';
 import { PassThrough } from 'stream';
 
 @WebSocketGateway({
-    namespace: 'api',
     cors: { origin: '*' },
 })
 export class TalkGateway {
