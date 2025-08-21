@@ -7,6 +7,7 @@ import Reanimated, {
     runOnJS,
 } from 'react-native-reanimated';
 import Bubble from './Bubble';
+import Rive, { RiveRef } from 'rive-react-native';
 
 type NpcItemProps = {
     imageUrl: ImageSourcePropType;
@@ -39,7 +40,13 @@ const NpcItem: React.FC<NpcItemProps> = ({ imageUrl, bubbleCount, onAnimationEnd
         <Bubble mode="count" count={bubbleCount || 0} size={24} offsetX={8} offsetY={-2}>
             <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
                 <Reanimated.View style={animatedStyle}>
-                    <Image source={imageUrl} style={styles.image} />
+                    <Rive
+                        resourceName="NPC"
+                        artboardName="Artboard"
+                        stateMachineName="State Machine 1"
+                        autoplay={true}
+                        style={styles.rive}
+                    />
                 </Reanimated.View>
             </Pressable>
         </Bubble>
@@ -51,6 +58,10 @@ const styles = StyleSheet.create({
         width: 90,
         height: 90,
         resizeMode: 'contain',
+    },
+    rive: {
+        width: 70,
+        height: 70,
     },
 });
 

@@ -41,9 +41,8 @@ const allNpcs: NpcData[] = [
 ];
 
 const spawnPoints = [
-    { top: 1300 * 0.25, left: 100 * 0.65 },
-    { top: 200 * 0.40, left: 400 * 0.05 },
-    { top: 2500 * 0.25, left: 100 * 0.60 },
+    { top: 50, left:100 },
+    { top: 550, left:100 },
 ];
 
 // --- 核心邏輯：隨機生成函式 ---
