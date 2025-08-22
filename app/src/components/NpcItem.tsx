@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Image, Pressable, ImageSourcePropType } from 'react-native';
 import Reanimated, {
     useSharedValue,
@@ -17,12 +17,16 @@ type NpcItemProps = {
 
 const NpcItem: React.FC<NpcItemProps> = ({ imageUrl, bubbleCount, onAnimationEnd }) => {
     const scale = useSharedValue(1);
-
+    const riveRef = useRef<RiveRef>(null);
     const animatedStyle = useAnimatedStyle(() => {
         return {
             transform: [{ scale: scale.value }],
         };
     });
+
+    useEffect(() => {
+        riveRef.current?.setInputState("State Machine 1", "finish", true);
+    }, [])
 
     const handlePressIn = () => {
         scale.value = withTiming(0.9, { duration: 150 });
@@ -41,7 +45,8 @@ const NpcItem: React.FC<NpcItemProps> = ({ imageUrl, bubbleCount, onAnimationEnd
             <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
                 <Reanimated.View style={animatedStyle}>
                     <Rive
-                        resourceName="NPC"
+                        ref={riveRef}
+                        resourceName="npc"
                         artboardName="Artboard"
                         stateMachineName="State Machine 1"
                         autoplay={true}
@@ -60,8 +65,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     rive: {
-        width: 70,
-        height: 70,
+        width: 200,
+        height: 200,
     },
 });
 
