@@ -1,25 +1,36 @@
-import Header from '@/src/components/Header';
-import HouseLayout from '@/src/components/HouseLayout';
-import MailModal from '@/src/components/MailModal';
-import NpcLayout from '@/src/components/NpcLayout';
-import ProfileModal from '@/src/components/ProfileModal';
-import SettingsModal from '@/src/components/SettingsModal';
-import SideActionBar, { ActionItemConfig } from '@/src/components/SideActionBar';
-import { TaskBriefingModal } from '@/src/components/TaskBriefingModal';
-import TaskModal from '@/src/components/TaskModal';
-import { useUserProfile } from '@/src/hooks/useUserProfile';
-import { displayedNpcs, NpcData, TaskBriefing } from '@/src/services/gameService';
-import { fetchUserProfile } from '@/src/services/userService';
-import { UserProfileData } from '@/src/types/user.type';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ImageBackground, ImageSourcePropType, SafeAreaView, StyleSheet, View, Text } from 'react-native';
-
-type HouseData = {
-  id: string;
-  title: string;
-  imageUrl: ImageSourcePropType;
-};
+import Header from "@/src/components/Header";
+import HouseLayout from "@/src/components/HouseLayout";
+import MailModal from "@/src/components/MailModal";
+import NpcLayout from "@/src/components/NpcLayout";
+import ProfileModal from "@/src/components/ProfileModal";
+import SettingsModal from "@/src/components/SettingsModal";
+import SideActionBar, {
+  ActionItemConfig,
+} from "@/src/components/SideActionBar";
+import { TaskBriefingModal } from "@/src/components/TaskBriefingModal";
+import TaskModal from "@/src/components/TaskModal";
+import { useUserProfile } from "@/src/hooks/useUserProfile";
+import {
+  displayedNpcs,
+  HouseData,
+  HouseDatas,
+  NpcData,
+  TaskBriefing,
+} from "@/src/services/gameService";
+import { fetchUserProfile } from "@/src/services/userService";
+import { UserProfileData } from "@/src/types/user.type";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  ImageBackground,
+  ImageSourcePropType,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+} from "react-native";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -30,24 +41,33 @@ export default function HomeScreen() {
   const [isSettingsModalVisible, setSettingsModalVisible] = useState(false);
   const [isTaskModalVisible, setTaskModalVisible] = useState(false);
   const [isProfileModalVisible, setProfileModalVisible] = useState(false);
-  const [isTaskBriefingModalVisible, setTaskBriefingModalVisible] = useState(false);
+  const [isTaskBriefingModalVisible, setTaskBriefingModalVisible] =
+    useState(false);
 
   const { userProfile, isLoading, error } = useUserProfile();
 
   const handleActionPress = (id: string) => {
-    if (id === 'mail') {
+    if (id === "mail") {
       setMailModalVisible(true);
-    } else if (id === 'settings') {
+    } else if (id === "settings") {
       setSettingsModalVisible(true);
-    } else if (id === 'tasks') {
+    } else if (id === "tasks") {
       setTaskModalVisible(true);
     } else {
-      Alert.alert('按鈕點擊', `你點擊了 "${id}" 按鈕`);
+      Alert.alert("按鈕點擊", `你點擊了 "${id}" 按鈕`);
     }
   };
 
   const handleHousePress = (houseId: string) => {
-    router.push('/house-menu');
+    const houseInfo = houseData.find((house) => house.id === houseId)!;
+
+    router.push({
+      pathname: "/house-menu",
+      params: {
+        id: houseId,
+        title: houseInfo.title,
+      },
+    });
   };
 
   const handleNpcPress = (npc: NpcData) => {
@@ -55,7 +75,7 @@ export default function HomeScreen() {
       setSelectedTask(npc.task);
       setTaskBriefingModalVisible(true);
     } else {
-      Alert.alert('NPC 點擊', `你和 "${npc.id}" 開始了對話`);
+      Alert.alert("NPC 點擊", `你和 "${npc.id}" 開始了對話`);
     }
   };
 
@@ -63,38 +83,32 @@ export default function HomeScreen() {
     setTaskBriefingModalVisible(false);
     // 這裡可以傳遞任務 ID 或其他資訊到對話頁面
     router.push({
-      pathname: '/dialogue',
-      params: { taskTitle: selectedTask?.title || '任務' },
+      pathname: "/dialogue",
+      params: { taskTitle: selectedTask?.title || "任務" },
     });
     setSelectedTask(null);
   };
 
   const handleAvatarPress = () => setProfileModalVisible(true);
 
-  const houseData: HouseData[] = [
-    { id: 'house1', title: '主屋', imageUrl: require('@/assets/images/MainScreen/house1.png') },
-    { id: 'house2', title: '工坊', imageUrl: require('@/assets/images/MainScreen/house2.png') },
-    { id: 'house3', title: '農場', imageUrl: require('@/assets/images/MainScreen/house3.png') },
-    { id: 'house4', title: '礦場', imageUrl: require('@/assets/images/MainScreen/house4.png') },
-    { id: 'house5', title: '碼頭', imageUrl: require('@/assets/images/MainScreen/house5.png') },
-  ];
+  const houseData = HouseDatas;
 
   const actionBarItems: ActionItemConfig[] = [
     {
-      id: 'tasks',
-      iconName: 'checkbox-outline',
+      id: "tasks",
+      iconName: "checkbox-outline",
       onPress: handleActionPress,
       bubbleCount: 0,
     },
     {
-      id: 'mail',
-      iconName: 'mail-outline',
+      id: "mail",
+      iconName: "mail-outline",
       onPress: handleActionPress,
       bubbleCount: 0,
     },
     {
-      id: 'settings',
-      iconName: 'settings-outline',
+      id: "settings",
+      iconName: "settings-outline",
       onPress: handleActionPress,
     },
   ];
@@ -110,7 +124,7 @@ export default function HomeScreen() {
   if (error || !userProfile) {
     return (
       <View style={{ flex: 1 }}>
-        <Text style={{ color: 'red' }}>{error || '無法載入資料'}</Text>
+        <Text style={{ color: "red" }}>{error || "無法載入資料"}</Text>
       </View>
     );
   }
@@ -127,12 +141,17 @@ export default function HomeScreen() {
           onAvatarPress={handleAvatarPress}
         />
         <ImageBackground
-          resizeMode='stretch'
+          resizeMode="center"
           style={{ flex: 1 }}
-          source={require('@/assets/images/MainScreen/background.png')}
+          source={require("@/assets/images/MainScreen/background.png")}
         >
           <SideActionBar actionItems={actionBarItems} />
-          <HouseLayout houses={houseData} onHousePress={handleHousePress} verticalOffset={-50} horizontalOffset={-40} />
+          <HouseLayout
+            houses={houseData}
+            onHousePress={handleHousePress}
+            verticalOffset={-50}
+            horizontalOffset={-40}
+          />
           <NpcLayout npcs={displayedNpcs} onNpcPress={handleNpcPress} />
 
           <TaskModal
@@ -168,5 +187,5 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
-  modalContent: { height: 400, width: '100%' },
+  modalContent: { height: 400, width: "100%" },
 });

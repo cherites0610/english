@@ -1,73 +1,64 @@
-import React, { useState } from 'react';
-import { StyleSheet, Alert, ImageSourcePropType, ImageBackground, View } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
-import HouseLayout from '@/src/components/HouseLayout';
-import Header from '@/src/components/Header';
-
-type HouseData = {
-    id: string;
-    title: string;
-    imageUrl: ImageSourcePropType;
-};
+import { useState, useEffect } from "react"; // 引入 hooks
+import { useRouter, useLocalSearchParams, Stack } from "expo-router";
+import { View, ImageBackground, StyleSheet } from "react-native";
+import HouseLayout from "@/src/components/HouseLayout";
+import { HouseData, HouseDatas } from "@/src/services/gameService";
+import Header from "@/src/components/Header";
 
 export default function HouseMenuScreen() {
-    const router = useRouter()
-    const [title, setTitle] = useState<string>("Eating")
+  const router = useRouter();
+  const { id, title } = useLocalSearchParams<{ id: string; title: string }>();
 
-    const handleHousePress = (houseId: string, houseTitle: string) => {
-        router.push({
-            pathname: '/dialogue',
-            params: { houseId, houseTitle },
-        });
-    };
+  const [houseData, setHouseData] = useState<HouseData[]>([]);
 
-    const handleGoBack = () => {
-        router.back()
-    };
+  useEffect(() => {
+    const foundChildData =
+      HouseDatas.find((house) => house.id === id)?.child ?? [];
+    setHouseData(foundChildData);
+  }, [id]);
 
-    const houseData: HouseData[] = [
-        { id: 'house1', title: '汽車', imageUrl: require('@/assets/images/MainScreen/house1.png') },
-        { id: 'house2', title: '工坊', imageUrl: require('@/assets/images/MainScreen/house2.png') },
-        { id: 'house3', title: '農場', imageUrl: require('@/assets/images/MainScreen/house3.png') },
-        { id: 'house4', title: '礦場', imageUrl: require('@/assets/images/MainScreen/house4.png') },
-        { id: 'house5', title: '碼頭', imageUrl: require('@/assets/images/MainScreen/house5.png') },
-    ];
+  const handleHousePress = (houseId: string, houseTitle: string) => {
+    router.push({
+      pathname: "/dialogue",
+      params: { houseId, houseTitle },
+    });
+  };
 
-    return (
-        <View style={{ flex: 1 }}>
-            <Header
-                variant="game"
-                title={title}
-                onBackPress={handleGoBack}
-            />
+  const handleGoBack = () => {
+    router.back();
+  };
 
-            <ImageBackground
-                source={require('@/assets/images/MainScreen/background.png')}
-                style={styles.screen}
-                resizeMode="stretch"
-            >
-                <Stack.Screen options={{ title: '建築選單' }} />
-                <HouseLayout
-                    houses={houseData}
-                    onHousePress={(houseId) => {
-                        const house = houseData.find(h => h.id === houseId);
-                        if (house) {
-                            handleHousePress(house.id, house.title);
-                        }
-                    }}
-                    verticalOffset={-400}
-                    horizontalOffset={-50}
-                />
-            </ImageBackground>
-        </View>
+  return (
+    <View style={{ flex: 1 }}>
+      <Header variant="game" title={title} onBackPress={handleGoBack} />
 
-    );
+      <ImageBackground
+        source={require("@/assets/images/MainScreen/background.png")}
+        style={styles.screen}
+        resizeMode="center"
+      >
+        <Stack.Screen options={{ title: "建築選單" }} />
+        <HouseLayout
+          houses={houseData} // 現在這裡會傳入正確且更新後的資料
+          onHousePress={(houseId) => {
+            // 這個 find 是安全的，因為 houseId 來自 houseData 內部
+            const house = houseData.find((h) => h.id === houseId);
+            if (house) {
+              handleHousePress(house.id, house.title);
+            }
+          }}
+          verticalOffset={-400}
+          horizontalOffset={-50}
+        />
+      </ImageBackground>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
+  screen: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
 });

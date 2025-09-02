@@ -3,15 +3,12 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as express from 'express';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors({
-    origin: '*', // 或 true if you want to allow all
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // 如果你需要攜帶 cookies
-  });
+  app.enableCors();
+  app.useWebSocketAdapter(new WsAdapter(app));
   app.setGlobalPrefix('/api');
 
   const config = new DocumentBuilder()

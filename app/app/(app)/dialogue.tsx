@@ -1,440 +1,396 @@
-import { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, ImageBackground, Image, Pressable, Text, ActivityIndicator } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import * as FileSystem from 'expo-file-system';
-import Header from '@/src/components/Header';
-import WaveformPlaceholder from '@/src/components/WaveformPlaceholder';
-import { addMessage, createTalkByCategoryName } from '@/src/services/talkService';
-import { useAudioRecording } from '@/src/hooks/useAudioRecording';
-import { Audio } from 'expo-av';
-import Rive, { RiveRef } from 'rive-react-native';
-import { io, Socket } from 'socket.io-client';
-import { useUserProfile } from '@/src/hooks/useUserProfile';
-import { Buffer } from 'buffer';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Platform,
+  ActivityIndicator,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import * as FileSystem from "expo-file-system";
+import {
+  useAudioRecorder,
+  RecordingConfig,
+  ExpoAudioStreamModule,
+} from "@siteed/expo-audio-studio";
+import TrackPlayer, {
+  State as TrackPlayerState,
+  Event as TrackPlayerEvent,
+  useTrackPlayerEvents,
+} from "react-native-track-player";
+import { io, Socket } from "socket.io-client";
+import Rive, { RiveRef } from "rive-react-native";
 
-// Message 介面維持不變
-interface message {
-    uri?: string,
-    content: string,
-    role: 'ASSISTANT' | 'USER',
-    timestamp: number
-}
+// 在 App 檔案頂部註冊播放服務
+TrackPlayer.registerPlaybackService(() => require("./service.js"));
 
-export default function DialogueScreen() {
-    const { houseTitle } = useLocalSearchParams<{ houseTitle: string }>();
-    const { userProfile: user } = useUserProfile()
+// --- App Component ---
+export default function App() {
+  // --- 錄音相關 ---
+  const { startRecording, stopRecording, isRecording } = useAudioRecorder();
+  const audioChunksRef = useRef<string[]>([]);
 
-    // --- State 管理 ---
-    const riveRef = useRef<RiveRef>(null);
-    const [talkID, setTalkID] = useState<string>('');
-    const [messages, setMessages] = useState<message[]>([]);
-    const [isUploading, setIsUploading] = useState(false);
-    const [isInitializing, setIsInitializing] = useState(true);
+  const riveRef = useRef<RiveRef>(null);
 
-    const { recorderState, startRecording, stopRecording } = useAudioRecording();
+  // --- 狀態管理 ---
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [statusText, setStatusText] = useState<string>("正在連線到伺服器...");
+  const [isConversationEnded, setIsConversationEnded] =
+    useState<boolean>(false);
+  const [isAiSpeaking, setIsAiSpeaking] = useState<boolean>(false);
 
-    const [sound, setSound] = useState<Audio.Sound | null>(null);
-    const [currentPlayingUri, setCurrentPlayingUri] = useState<string | null>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [playbackQueue, setPlaybackQueue] = useState<string[]>([]); // 新增：音訊播放佇列
-    const isPlayingRef = useRef(isPlaying); // 新增：用 Ref 同步 isPlaying 狀態
-    isPlayingRef.current = isPlaying;
+  const [isInitialized, setIsInitialized] = useState<boolean>(true);
 
-    const isLoadingSound = useRef(false);
+  // --- Ref 管理 ---
+  const socketRef = useRef<Socket | null>(null);
+  const hasSentGreetingRef = useRef<boolean>(false);
 
-    const socketRef = useRef<Socket | null>(null);
+  const SERVER_URL =
+    Platform.OS === "android"
+      ? "http://10.0.2.2:5010"
+      : "https://61def6c3e8a3.ngrok-free.app";
 
-    // [修改] Rive 動畫狀態控制 (邏輯簡化)
-    const setRiveListenState = (value: boolean) => riveRef.current?.setInputState("State Machine 1", "listening", value);
-    const setRiveTalkState = (value: boolean) => riveRef.current?.setInputState("State Machine 1", "talk", value);
+  useEffect(() => {
+    // 這個 effect 會監聽 isRecording 的變化
+    console.log(`Rive: Syncing 'listening' state to: ${isRecording}`);
+    riveRef.current?.setInputState("State Machine 1", "listening", isRecording);
+  }, [isRecording]); // <--- 依賴項陣列中只有 isRecording
 
-    useEffect(() => {
-        // 連接 Socket
-        socketRef.current = io('http://localhost:5010', { transports: ['websocket'] });
-        const socket = socketRef.current;
+  // 【新增】Effect 2: 同步「AI 說話狀態」到 Rive
+  useEffect(() => {
+    // 這個 effect 會監聽 isAiSpeaking 的變化
+    console.log(`Rive: Syncing 'talk' state to: ${isAiSpeaking}`);
+    riveRef.current?.setInputState("State Machine 1", "talk", isAiSpeaking);
+  }, [isAiSpeaking]);
 
-        socket.on('connect', () => console.log('Socket connected!'));
-        socket.on('disconnect', () => console.log('Socket disconnected.'));
-        socket.on('stream-error', (err) => {
-            console.error('Stream error:', err);
-            setIsUploading(false); // 發生錯誤時停止 loading
+  // --- Track Player 初始化設定 ---
+  useEffect(() => {
+    const setupPlayer = async () => {
+      try {
+        await TrackPlayer.setupPlayer();
+        await TrackPlayer.updateOptions({
+          capabilities: [],
+          compactCapabilities: [],
         });
+      } catch (error) {
+        console.error("Error setting up Track Player:", error);
+      }
+    };
+    setupPlayer();
 
-        // 監聽 AI 回傳的文字片段
-        socket.on('ai-text-chunk', (textChunk: string) => {
-            setMessages(prev => {
-                const lastMessage = prev[prev.length - 1];
-                if (lastMessage && lastMessage.role === 'ASSISTANT') {
-                    lastMessage.content += textChunk;
-                    return [...prev];
-                }
-                return prev;
-            });
-        });
+    return () => {
+      TrackPlayer.reset();
+    };
+  }, []);
 
-        // 監聽 AI 回傳的音訊片段
-        socket.on('audio-chunk', async (chunk: ArrayBuffer) => {
-            try {
-                // 將收到的音訊塊存為暫存檔
-                const path = `${FileSystem.cacheDirectory}ai-chunk-${Date.now()}.mp3`;
-                const base64Chunk = Buffer.from(chunk).toString('base64');
-                await FileSystem.writeAsStringAsync(path, base64Chunk, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
-                // 將檔案路徑加入播放佇列
-                setPlaybackQueue(prev => [...prev, path]);
-            } catch (error) {
-                console.error("處理音訊 chunk 失敗:", error);
-            }
-        });
+  // --- WebSocket 連線與事件監聽 ---
+  useEffect(() => {
+    console.log("Setting up socket connection ONCE.");
+    const socket = io(SERVER_URL);
+    socketRef.current = socket;
 
-        socket.on('stream-end', () => {
-            console.log('AI stream ended.');
-            setIsUploading(false);
-        });
+    const onConnect = () => {
+      console.log(`✅ Connected to WebSocket! My ID: ${socket.id}`);
+      setIsConnected(true);
+      setStatusText("已連線，等待 AI 開場白...");
 
-        // 組件卸載時斷開連接
-        return () => {
-            socket.disconnect();
-            // ... 其他清理邏輯 ...
-        };
-    }, []);
+      if (!hasSentGreetingRef.current) {
+        const characterName = "Elara"; // 可替換為變數
+        console.log(`🚀 Sending createConversation for name: ${characterName}`);
+        socket.emit("createConversation", { name: characterName });
+        hasSentGreetingRef.current = true;
+      }
+    };
 
-    const playNextInQueue = async () => {
-        if (playbackQueue.length === 0 || isPlayingRef.current || isLoadingSound.current) {
-            if (playbackQueue.length === 0) setRiveTalkState(false);
-            return;
+    const onDisconnect = () => {
+      console.log("🔌 Disconnected from WebSocket server.");
+      setIsConnected(false);
+      setStatusText("已從伺服器斷線");
+    };
+
+    const onAudioResponse = (audioChunk: string) => {
+      if (audioChunk) {
+        console.log("接收到音訊！");
+
+        audioChunksRef.current.push(audioChunk);
+      }
+    };
+
+    const onFinalResponse = (data: { text: string }) => {
+      console.log(`🏁 Received FINAL text response: "${data.text}"`);
+      // 更新狀態文字，顯示最後的回應
+      setStatusText(data.text);
+      // 將對話標記為已結束
+      setIsConversationEnded(true);
+      // 確保 AI 說話狀態結束
+      setIsAiSpeaking(false);
+    };
+
+    const onEndAudioResponse = () => {
+      console.log(
+        "🏁 Received end of audio signal. Processing full response..."
+      );
+
+      const chunks = audioChunksRef.current;
+      if (chunks.length === 0) {
+        console.log("Chunks ref is empty, nothing to play.");
+        if (hasSentGreetingRef.current && !isRecording) {
+          setStatusText("輪到你了，請按鈕開始錄音");
         }
+        return;
+      }
 
-        isLoadingSound.current = true;
+      // 取得資料後，立刻清空 ref，為下一次對話做準備
+      audioChunksRef.current = [];
 
-        const uriToPlay = playbackQueue[0];
-        console.log('Playing next in queue:', uriToPlay);
-
-        // 如果目前有 sound 物件，先卸載
-        if (sound) {
-            await sound.unloadAsync();
-        }
-
+      const playFullResponseFromFile = async (queue: string[]) => {
         try {
-            const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri: uriToPlay },
-                { shouldPlay: true },
-                (status) => {
-                    if (status.isLoaded) {
-                        setIsPlaying(status.isPlaying);
-                        setRiveTalkState(status.isPlaying);
-                        if (status.didJustFinish) {
-                            // 播放完畢，從佇列中移除，並觸發播放下一個
-                            setPlaybackQueue(prev => prev.slice(1));
-                        }
-                    }
-                }
-            );
-            setSound(newSound);
-            setCurrentPlayingUri(uriToPlay);
+          console.log(
+            `Concatenating and saving ${queue.length} audio chunks...`
+          );
+          const fullBase64 = queue.join("");
+          const uri =
+            FileSystem.cacheDirectory + `full_response_${Date.now()}.mp3`;
+          console.log("uri:", uri);
+
+          await FileSystem.writeAsStringAsync(uri, fullBase64, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          await TrackPlayer.reset();
+          await TrackPlayer.add({
+            url: uri,
+            title: "AI Full Response",
+            artist: "Assistant",
+          });
+          await TrackPlayer.play();
         } catch (error) {
-            console.error("載入或播放音訊佇列失敗:", error);
-            // 即使出錯也嘗試播放下一個
-            setPlaybackQueue(prev => prev.slice(1));
-        } finally {
-            isLoadingSound.current = false;
+          console.error("ERROR during final playback setup", error);
         }
+      };
+
+      playFullResponseFromFile(chunks);
     };
 
-    // 監聽佇列變化，觸發播放
-    useEffect(() => {
-        playNextInQueue();
-    }, [playbackQueue]);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("audioResponse", onAudioResponse);
+    socket.on("endAudioResponse", onEndAudioResponse);
+    socket.on("finalResponse", onFinalResponse);
 
-    // 初始載入對話 (邏輯基本不變)
-    useEffect(() => {
-        const loadInitialTalk = async () => {
-            if (!houseTitle) return setIsInitializing(false);
-            try {
-                const result = await createTalkByCategoryName(houseTitle);
-                if (result?.message?.audioBase64) {
-                    const path = `${FileSystem.cacheDirectory}npc-talk-${Date.now()}.mp3`;
-                    await FileSystem.writeAsStringAsync(path, result.message.audioBase64, {
-                        encoding: FileSystem.EncodingType.Base64,
-                    });
-                    setTalkID(result.talkID);
-                    setMessages([{
-                        uri: path,
-                        content: result.message.content,
-                        role: 'ASSISTANT',
-                        timestamp: Date.now()
-                    }]);
-                    setPlaybackQueue(prev => [...prev, path]); // 加入佇列自動播放
-                }
-            } catch (error) {
-                console.error("載入初始音訊失敗:", error);
-            } finally {
-                setIsInitializing(false);
-            }
-        };
-        loadInitialTalk();
-    }, [houseTitle]);
-
-    const streamRecordingToServer = async (uri: string) => {
-        if (!uri || !talkID) return;
-        const socket = socketRef.current;
-        if (!socket) return console.error("Socket not connected.");
-
-        setIsUploading(true); // 開始等待 AI 回應
-
-        // 1. 通知後端開始對話
-        socket.emit('start-talk', { userID: user?.id, talkID });
-
-        // 2. 將使用者訊息加入歷史紀錄
-        setMessages(prev => [...prev, {
-            content: '',
-            role: 'USER',
-            timestamp: Date.now()
-        }]);
-
-        const fileInfo = await FileSystem.getInfoAsync(uri);
-
-        if (!fileInfo.exists) {
-            console.error("Recording file does not exist, cannot stream:", uri);
-            setIsUploading(false); // 記得重設 loading 狀態
-            return;
-        }
-
-        // 在這個檢查之後，TypeScript 就知道 fileInfo 包含 size 屬性
-        const CHUNK_SIZE = 4096;
-        let position = 0;
-        let keepReading = true;
-
-        console.log(`Starting to stream file of size: ${fileInfo.size}`);
-
-        while (keepReading) {
-            try {
-                const chunk = await FileSystem.readAsStringAsync(uri, {
-                    encoding: FileSystem.EncodingType.Base64,
-                    position: position,
-                    length: CHUNK_SIZE,
-                });
-
-                if (chunk.length > 0) {
-                    // 如果讀到了內容，就發送
-                    // console.log(`Sending chunk from position: ${position}, size: ${chunk.length}`);
-                    socket.emit('audio-chunk', Buffer.from(chunk, 'base64'));
-                    position += CHUNK_SIZE; // 更新下一次讀取的位置
-                } else {
-                    // 如果讀到的是空字串，代表檔案已經讀完
-                    console.log("End of file reached.");
-                    keepReading = false;
-                }
-            } catch (error) {
-                console.error("Error reading file chunk:", error);
-                keepReading = false;
-            }
-        }
-
-        // 4. 通知後端音訊發送完畢
-        socket.emit('end-audio');
-        console.log('Finished streaming recording to server.');
+    return () => {
+      console.log("Cleaning up socket connection for ID:", socket.id);
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("audioResponse", onAudioResponse);
+      socket.off("endAudioResponse", onEndAudioResponse);
+      socket.off("finalResponse", onFinalResponse);
+      socket.disconnect();
     };
+  }, []);
 
-    // 監聽錄音狀態，結束後觸發串流上傳
-    useEffect(() => {
-        if (recorderState.url) {
-            streamRecordingToServer(recorderState.url);
-        }
-    }, [recorderState.url]);
+  // --- Hook: 監聽 Track Player 事件以更新 UI ---
+  useTrackPlayerEvents(
+    [TrackPlayerEvent.PlaybackState, TrackPlayerEvent.PlaybackError], // <-- 新增 Event.PlaybackError
+    (event) => {
+      if (event.type === TrackPlayerEvent.PlaybackState) {
+        const isSpeaking =
+          event.state === TrackPlayerState.Playing ||
+          event.state === TrackPlayerState.Buffering;
+        setIsAiSpeaking(isSpeaking);
 
-
-    // --- 按鈕事件處理 (邏輯簡化) ---
-    const handleRecordButtonPress = () => {
-        if (recorderState.isRecording) {
-            stopRecording();
-            setRiveListenState(false);
+        if (isSpeaking) {
+          setStatusText("AI 正在說話...");
         } else {
-            startRecording();
-            setRiveListenState(true);
+          if (!isRecording && hasSentGreetingRef.current) {
+            setStatusText("輪到你了，請按鈕開始錄音");
+          }
         }
-    };
-
-    // --- 播放控制 (重播) ---
-    const replayAudio = (uri: string | undefined) => {
-        if (!uri) return;
-        setPlaybackQueue(prev => [...prev, uri]);
+      }
     }
+  );
 
-    const lastMessage = messages[messages.length - 1];
-    const secondLastMessage = messages[messages.length - 2];
+  // --- 錄音控制函式 ---
+  const handleStart = async () => {
+    try {
+      await ExpoAudioStreamModule.requestPermissionsAsync();
+      setStatusText("正在聆聽...");
 
-    const getPlayIcon = (uri: string | undefined) => {
-        if (!uri) return 'play';
-        return isPlaying && currentPlayingUri === uri ? 'pause' : 'play';
+      const config: RecordingConfig = {
+        interval: 250,
+        sampleRate: 16000,
+        channels: 1,
+        encoding: "pcm_16bit",
+        onAudioStream: async (audioData) => {
+          if (socketRef.current?.connected && audioData.data) {
+            socketRef.current.emit("audioStream", audioData.data);
+          }
+        },
+        output: { primary: { enabled: false } },
+      };
+      await startRecording(config);
+    } catch (error) {
+      console.error("Failed to start recording:", error);
+      setStatusText("錄音啟動失敗");
     }
+  };
 
-    return (
-        <View style={{ flex: 1, backgroundColor: '#000' }}>
-            {/* <Header variant="game" title={houseTitle} onBackPress={() => router.back()} /> */}
-            {isInitializing ? (
-                <LoadingAnimationA />
-            ) : (
-                // [修改] 使用一個 View 包裹所有需要疊加的元素
-                <View style={styles.mainContainer}>
-                    {/* 1. 背景圖片 (最底層) */}
-                    <ImageBackground
-                        source={require('@/assets/images/Dialogue/bg.png')}
-                        style={styles.backgroundImage}
-                        resizeMode="cover"
-                    >
-                        {/* 2. Rive 動畫 (中間層) */}
-                        <View style={styles.riveContainer}>
-                            <Rive
-                                ref={riveRef}
-                                url="https://mou-english.s3.ap-northeast-1.amazonaws.com/Anna.riv"
-                                artboardName="iPhone 16 - 1"
-                                stateMachineName="State Machine 1"
-                                autoplay={true}
-                                style={styles.rive}
-                            />
-                        </View>
-                    </ImageBackground>
+  const handleStop = async () => {
+    await stopRecording();
+    if (socketRef.current?.connected) {
+      socketRef.current.emit("endAudioStream");
+    }
+    await TrackPlayer.reset(); // 強制停止並清空 AI 未說完的話
+    setStatusText("AI 正在思考...");
+  };
 
-                    {/* 3. 您要加入的頂部圖片 (最上層) */}
-                    <Image
-                        source={require('@/assets/images/Dialogue/fg.png')}
-                        style={styles.topOverlayImage}
-                        resizeMode="cover"
-                    />
+  // --- UI 渲染 ---
+  const renderLoadingScreen = () => (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#FFFFFF" />
+      <Text style={styles.loadingText}>INITIALIZING...</Text>
+    </View>
+  );
 
-                    {/* 底部的控制元件，為了確保它們在最上層，可以放在這個 View 之外 */}
-                    <View style={styles.bottomContainer}>
-                        <WaveformPlaceholder />
-                        <View style={styles.bottomControlsContainer}>
-                            <Pressable
-                                onPress={() => replayAudio(secondLastMessage?.uri)}
-                                disabled={!secondLastMessage?.uri || isUploading}
-                                style={[styles.smallButton, (!secondLastMessage?.uri || isUploading) && styles.disabledButton]}
-                            >
-                                <Ionicons name="play-skip-back" size={32} color="white" />
-                            </Pressable>
-                            <Pressable
-                                onPress={handleRecordButtonPress}
-                                disabled={isUploading}
-                                style={[styles.recordButton, (recorderState.isRecording || isUploading) && styles.recordButtonActive]}
-                            >
-                                <Ionicons name="mic" size={50} color="white" />
-                            </Pressable>
-                            <Pressable
-                                onPress={() => replayAudio(lastMessage?.uri)}
-                                disabled={!secondLastMessage?.uri || isUploading}
-                                style={[styles.smallButton, (!secondLastMessage?.uri || isUploading) && styles.disabledButton]}
-                            >
-                                <Ionicons name={getPlayIcon(lastMessage?.uri)} size={32} color="white" />
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-            )}
+  const renderisFinishScreen = () => (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#FFFFFF" />
+      <Text style={styles.loadingText}>對話已經結束</Text>
+    </View>
+  );
+
+  // --- 對話介面 ---
+  const renderChatScreen = () => (
+    <ImageBackground
+      source={require("@/assets/images/Dialogue/bg.png")}
+      resizeMode="cover"
+      style={styles.chatContainer}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.characterContainer}>
+          <Rive
+            ref={riveRef}
+            url="https://mou-english.s3.ap-northeast-1.amazonaws.com/Anna.riv"
+            artboardName="iPhone 16 - 1"
+            stateMachineName="State Machine 1"
+            autoplay={true}
+            style={styles.rive}
+          />
+          <Image
+            source={require("@/assets/images/Dialogue/fg.png")}
+            style={styles.overlayImage}
+          />
         </View>
-    );
+
+        {/* 錄音按鈕 */}
+        <TouchableOpacity
+          style={[
+            styles.recordButton,
+            (isRecording || isAiSpeaking) && styles.recordButtonDisabled, // 錄音或 AI 說話時，按鈕變半透明
+            isRecording && styles.recordButtonActive, // 錄音時，按鈕加個外框
+          ]}
+          onPress={isRecording ? handleStop : handleStart}
+          disabled={!isConnected || isAiSpeaking} // AI 說話時完全禁用按鈕
+        >
+          <Image
+            source={require("@/assets/images/Dialogue/fg.png")}
+            style={styles.micIcon}
+          />
+        </TouchableOpacity>
+      </SafeAreaView>
+    </ImageBackground>
+  );
+
+  return isInitialized
+    ? isConversationEnded
+      ? renderisFinishScreen()
+      : renderChatScreen()
+    : renderLoadingScreen();
 }
 
-const LoadingAnimationA = () => (
-    <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FFFFFF" />
-        <Text style={styles.loadingText}>正在建立對話，請稍候...</Text>
-    </View>
-);
-
-// --- 樣式表 ---
+// --- 樣式 ---
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-    },
-    backgroundImage: {
-        flex: 1, // 讓背景圖片佔滿整個容器
-    },
-    riveContainer: {
-        flex: 1, // 讓 Rive 容器也佔滿，以便在背景上疊加
-        marginTop: 100,
-        justifyContent: 'center', // 可以根據需要調整 Rive 的垂直位置
-        alignItems: 'center',   // 可以根據需要調整 Rive 的水平位置
-    },
-    topOverlayImage: {
-        // [修改] 使用絕對定位將圖片疊加到最上層
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: '100%',
-        height: '100%',
-        resizeMode: 'contain', // 根據需要調整
-        zIndex: 10, // 確保圖片在其他元素之上
-        // 可以根據需要添加額外的 margin、padding 或調整位置
-    },
-    screen: {
-        flex: 1,
-        justifyContent: 'flex-end', // 讓內容靠底
-    },
-    characterContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    characterImage: {
-        width: '80%',
-        height: '80%',
-        resizeMode: 'contain',
-    },
-    bottomContainer: {
-        paddingBottom: 40,
-        paddingHorizontal: 20,
-        zIndex: 10000
-    },
-    bottomControlsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    recordButton: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: '#E91E63', // 醒目的粉紅色
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 4,
-        borderColor: 'rgba(255, 255, 255, 0.5)',
-    },
-    recordButtonActive: {
-        backgroundColor: '#C2185B', // 按下或處理中時的深色
-    },
-    smallButton: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    disabledButton: {
-        opacity: 0.5,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#1a1a1a', // 給一個深色背景
-    },
-    loadingText: {
-        color: 'white',
-        marginTop: 15,
-        fontSize: 16,
-    },
-    rive: {
-        width: 400,
-        height: 400,
-    },
+  // --- 載入介面樣式 ---
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#1c1c1e", // 深色背景
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+
+  // --- 對話介面樣式 ---
+  chatContainer: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  // --- 人物相關樣式 ---
+  characterContainer: {
+    // 使用絕對定位讓容器疊在背景圖上，並佔滿全螢幕
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    marginTop: 100,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  characterImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  overlayImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+    position: "absolute",
+    marginTop: 200,
+  },
+
+  // --- 錄音按鈕樣式 ---
+  recordButton: {
+    position: "absolute",
+    bottom: 60, // 距離底部 60px
+    width: 80,
+    height: 80,
+    borderRadius: 40, // 圓形
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.5)",
+  },
+  recordButtonActive: {
+    // 正在錄音時的樣式，例如發光的紅色外框
+    borderColor: "#ff453a",
+    backgroundColor: "rgba(255, 69, 58, 0.4)",
+  },
+  recordButtonDisabled: {
+    opacity: 0.5, // 禁用時變半透明
+  },
+  rive: {
+    width: 400,
+    height: 400,
+  },
+  micIcon: {
+    width: 40,
+    height: 40,
+    resizeMode: "contain",
+  },
 });

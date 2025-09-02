@@ -10,9 +10,14 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cherites.app"
+      "bundleIdentifier": "com.cherites.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "我們需要您的麥克風權限，才能進行即時語音對話。",
+        "UIBackgroundModes": ["audio"]
+      }
     },
     "android": {
+      "newArchEnabled": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -30,12 +35,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      [
-        "expo-av",
-        {
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
-        }
-      ],
+      "@siteed/expo-audio-studio",
       "expo-router",
       [
         "expo-splash-screen",
