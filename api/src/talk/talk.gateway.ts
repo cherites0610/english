@@ -1,14 +1,15 @@
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   ConnectedSocket,
   MessageBody,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { BadGatewayException, Logger, NotFoundException } from '@nestjs/common';
-import { Server, Socket } from 'socket.io';
+import { Logger, NotFoundException } from '@nestjs/common';
+import { Server, WebSocket } from 'ws';
 import { SpeechClient } from '@google-cloud/speech';
 import {
   GoogleGenerativeAI,
@@ -16,9 +17,9 @@ import {
   GenerativeModel,
 } from '@google/generative-ai';
 import { RedisService } from 'src/redis/redis.service';
-import * as WebSocket from 'ws';
 import { BattleAdminService } from 'src/battle/battle-admin.service';
 import { UserService } from 'src/user/user.service';
+import { v4 as uuidv4 } from 'uuid';
 
 // --- 型別定義 ---
 interface ChatHistory {
@@ -111,8 +112,12 @@ const GEMINI_SYSTEM_INSTRUCTION = `
 As a Conversational Lifestyle Robot, adhere to Rules, execute Workflows, and output responses in plain text with the appropriate tag. Persona is defined in Persona Configuration.
 `;
 
-@WebSocketGateway()
-export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
+@WebSocketGateway({
+  cors: { orgin: '*' },
+})
+export class TalkGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -120,8 +125,12 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly speechClient: SpeechClient;
   private readonly genAI: GoogleGenerativeAI;
   private readonly geminiModel: GenerativeModel;
+
   private readonly speechStreams = new Map<string, any>();
   private readonly ttsConnections = new Map<string, WebSocket>();
+
+  private clients: Map<WebSocket, string> = new Map();
+  private clientsById: Map<string, WebSocket> = new Map();
 
   constructor(
     private readonly redisService: RedisService,
@@ -152,47 +161,63 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log('✅ WebSocket Gateway Initialized!', server);
   }
 
-  handleConnection(client: Socket) {
-    this.logger.log(`🔗 Client connected: ${client.id}`);
+  handleConnection(client: WebSocket) {
+    const clientId = uuidv4();
+    this.clients.set(client, clientId);
+    this.clientsById.set(clientId, client);
+    this.logger.log(`🔗 Client connected: ${clientId}`);
+
+    // [新增] 為每個連線設定原始訊息監聽器，以處理二進位音訊
+    client.on('message', (data: Buffer) => {
+      // 假設所有二進位訊息都是音訊流
+      if (data instanceof Buffer) {
+        if (!this.speechStreams.has(clientId)) {
+          this.createNewStreamForClient(clientId);
+        }
+        const stream = this.speechStreams.get(clientId);
+        if (stream) {
+          stream.write(data);
+        }
+      }
+    });
   }
 
-  handleDisconnect(client: Socket) {
-    this.logger.log(`🔌 Client disconnected: ${client.id}`);
-    this.closeStreamForClient(client.id);
-    this.ttsConnections.get(client.id)?.close();
+  handleDisconnect(client: WebSocket) {
+    const clientId = this.clients.get(client);
+    if (clientId) {
+      this.logger.log(`🔌 Client disconnected: ${clientId}`);
+      // 清理所有相關資源
+      this.closeStreamForClient(clientId);
+      this.ttsConnections.get(clientId)?.close();
+      this.clients.delete(client);
+      this.clientsById.delete(clientId);
+    }
   }
 
   @SubscribeMessage('createConversation')
   async handleCreateConversation(
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() client: WebSocket,
     @MessageBody() payload: { name: string },
   ) {
-    console.log(payload);
-
+    const clientId = this.clients.get(client);
+    if (!clientId) return;
+    this.logger.debug('payload', payload);
     this.logger.log(
-      `[${client.id}] Received createConversation for name: "${payload.name}"`,
+      `[${clientId}] Received createConversation for name: "${payload.name}"`,
     );
     const initialPrompt = await this.buildInitialPrompt(payload.name);
-    await this.processAndStreamResponse(initialPrompt, client.id, []);
-  }
-
-  @SubscribeMessage('audioStream')
-  handleAudioStream(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() data: string,
-  ) {
-    if (!this.speechStreams.has(client.id))
-      this.createNewStreamForClient(client);
-    const stream = this.speechStreams.get(client.id);
-    if (stream) stream.write(Buffer.from(data, 'base64'));
+    await this.processAndStreamResponse(initialPrompt, clientId, []);
   }
 
   @SubscribeMessage('endAudioStream')
-  handleEndAudioStream(@ConnectedSocket() client: Socket) {
-    const stream = this.speechStreams.get(client.id);
+  handleEndAudioStream(@ConnectedSocket() client: WebSocket) {
+    const clientId = this.clients.get(client);
+    if (!clientId) return;
+
+    const stream = this.speechStreams.get(clientId);
     if (stream) {
       this.logger.log(
-        `🏁 Received end audio signal from ${client.id}. Ending STT input.`,
+        `🏁 Received end audio signal from ${clientId}. Ending STT input.`,
       );
       stream.end();
     }
@@ -218,8 +243,8 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return prompt;
   }
 
-  private createNewStreamForClient(client: Socket) {
-    this.logger.log(`🚀 Creating new STT stream for ${client.id}`);
+  private createNewStreamForClient(clientId: string) {
+    this.logger.log(`🚀 Creating new STT stream for ${clientId}`);
     const stream = this.speechClient
       .streamingRecognize({
         config: {
@@ -230,21 +255,19 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
         interimResults: false,
       })
       .on('error', (err) => {
-        this.logger.error(`STT Stream Error for ${client.id}:`, err);
-        this.closeStreamForClient(client.id);
+        this.logger.error(`STT Stream Error for ${clientId}:`, err);
+        this.closeStreamForClient(clientId);
       })
       .on('data', async (data) => {
         const transcript = data.results[0]?.alternatives[0]?.transcript;
         if (transcript && data.results[0].isFinal) {
-          this.logger.log(
-            `🎤 Final Transcript for ${client.id}: ${transcript}`,
-          );
-          const history = await this.getHistoryFromRedis(client.id);
-          await this.processAndStreamResponse(transcript, client.id, history);
-          this.closeStreamForClient(client.id);
+          this.logger.log(`🎤 Final Transcript for ${clientId}: ${transcript}`);
+          const history = await this.getHistoryFromRedis(clientId);
+          await this.processAndStreamResponse(transcript, clientId, history);
+          this.closeStreamForClient(clientId);
         }
       });
-    this.speechStreams.set(client.id, stream);
+    this.speechStreams.set(clientId, stream);
   }
 
   private closeStreamForClient(clientId: string) {
@@ -271,7 +294,7 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.logger.log(
           `✅ [${clientId}] BOTH streams finished. Sending final end signal.`,
         );
-        this.server.to(clientId).emit('endAudioResponse');
+        this.sendToClientById(clientId, 'endAudioResponse', {});
       }
     };
 
@@ -321,7 +344,9 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
         );
 
         // 步驟 1: 透過新事件，將最後的文字回應傳給前端
-        this.server.to(clientId).emit('finalResponse', { text: fullResponse });
+        this.sendToClientById(clientId, 'finalResponse', {
+          text: fullResponse,
+        });
 
         // 步驟 2: (非同步) 呼叫您自訂的函式來處理完整的對話歷史
         this.processFinalConversation(clientId, history, fullResponse);
@@ -380,7 +405,8 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private startElevenLabsStream(clientId: string, onCloseCallback: () => void) {
     const voiceId = '0lp4RIz96WD1RUtvEu3Q';
-    const wsUrl = `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2`;
+    const outputFormat = 'pcm_24000'; // 或者 pcm_22050, pcm_24000, pcm_44100
+    const wsUrl = `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2&output_format=${outputFormat}`;
     const ttsWs = new WebSocket(wsUrl, {
       headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
     });
@@ -392,9 +418,34 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     ttsWs.on('message', (data: Buffer) => {
       const response = JSON.parse(data.toString());
+      console.log(response);
 
       if (response.audio) {
-        this.server.to(clientId).emit('audioResponse', response.audio);
+        // [驗證步驟] 在發送前，先檢查 payload 的大小
+        const eventName = 'audioResponse';
+        const payload = response.audio;
+
+        // 建立完整的 JSON 字串，模擬即將發送的內容
+        const messageToSend = JSON.stringify({
+          event: eventName,
+          payload: payload,
+        });
+        // 計算字串的位元組長度
+        const messageSizeInBytes = Buffer.byteLength(messageToSend, 'utf8');
+
+        this.logger.log(
+          `📦 [${clientId}] Preparing to send '${eventName}' with payload size: ${messageSizeInBytes} bytes.`,
+        );
+
+        // 如果大小超過 65536 bytes (64KB)，就非常可疑
+        if (messageSizeInBytes > 65536) {
+          this.logger.warn(
+            `⚠️ [${clientId}] WARNING: Message size (${messageSizeInBytes} bytes) is large and may exceed WebSocket limits.`,
+          );
+        }
+
+        // 繼續你原有的發送邏輯
+        this.sendToClientById(clientId, eventName, payload);
       }
     });
 
@@ -412,6 +463,20 @@ export class TalkGateway implements OnGatewayConnection, OnGatewayDisconnect {
         onCloseCallback();
       }
     });
+  }
+
+  private sendToClientById(
+    clientId: string,
+    event: string,
+    payload: any,
+  ): boolean {
+    const client = this.clientsById.get(clientId);
+    if (client && client.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({ event, payload });
+      client.send(message);
+      return true;
+    }
+    return false;
   }
 
   // --- Redis Helpers (使用您的 RedisService) ---

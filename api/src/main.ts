@@ -4,11 +4,22 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as express from 'express';
 import { WsAdapter } from '@nestjs/platform-ws';
+import { ServerOptions } from 'ws';
+
+class CustomWsAdapter extends WsAdapter {
+  create(port: number, options?: ServerOptions) {
+    return super.create(port, {
+      ...options,
+      maxPayload: 1024 * 1024 * 30, // 5MB
+      maxHttpBufferSize: 30 * 1024 * 1024,
+    });
+  }
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.useWebSocketAdapter(new WsAdapter(app));
+  app.useWebSocketAdapter(new CustomWsAdapter(app));
   app.setGlobalPrefix('/api');
 
   const config = new DocumentBuilder()
