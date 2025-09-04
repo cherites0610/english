@@ -1,0 +1,495 @@
+[gd_scene load_steps=25 format=3 uid="uid://cmv4wsu6p8oru"]
+
+[ext_resource type="Script" uid="uid://eoqq2abxjvl1" path="res://scripts/homeNPC.gd" id="1_yyhk5"]
+[ext_resource type="Texture2D" uid="uid://bbaxdrcytymn2" path="res://sprites/peoples/AnnaHome/腿.png" id="2_3vnl5"]
+[ext_resource type="Texture2D" uid="uid://b3k8agbl3q4em" path="res://sprites/peoples/AnnaHome/中瀏海.png" id="3_7eykn"]
+[ext_resource type="Texture2D" uid="uid://bsvef0ewywn5t" path="res://sprites/peoples/AnnaHome/右前瀏海.png" id="4_lirbm"]
+[ext_resource type="Texture2D" uid="uid://bsjs3hxogqs4c" path="res://sprites/peoples/AnnaHome/右後毛.png" id="5_dgj8h"]
+[ext_resource type="Texture2D" uid="uid://j6uffmthorbn" path="res://sprites/peoples/AnnaHome/右手.png" id="6_v4ie0"]
+[ext_resource type="Texture2D" uid="uid://cfdq24qnjsyk5" path="res://sprites/peoples/AnnaHome/呆毛.png" id="7_id0dv"]
+[ext_resource type="Texture2D" uid="uid://c6c2n1xrkdvxu" path="res://sprites/peoples/AnnaHome/大笑.png" id="8_pxcpq"]
+[ext_resource type="Texture2D" uid="uid://bohn8agp6gant" path="res://sprites/peoples/AnnaHome/完成.png" id="9_f2n03"]
+[ext_resource type="Texture2D" uid="uid://cbo1hhofxbqgp" path="res://sprites/peoples/AnnaHome/左前瀏海.png" id="10_tlgon"]
+[ext_resource type="Texture2D" uid="uid://mq5bo2jernkq" path="res://sprites/peoples/AnnaHome/左後毛-1.png" id="11_gfv56"]
+[ext_resource type="Texture2D" uid="uid://uxpevoyuh6un" path="res://sprites/peoples/AnnaHome/左手.png" id="12_3cni5"]
+[ext_resource type="Texture2D" uid="uid://dplepcrducrbe" path="res://sprites/peoples/AnnaHome/張眼.png" id="13_bhyvv"]
+[ext_resource type="Texture2D" uid="uid://ik78vfepwbrd" path="res://sprites/peoples/AnnaHome/微笑.png" id="14_jy8fg"]
+[ext_resource type="Texture2D" uid="uid://dokqdkkf13nx8" path="res://sprites/peoples/AnnaHome/未完成.png" id="15_t4x1s"]
+[ext_resource type="Texture2D" uid="uid://dck2esckb0k0o" path="res://sprites/peoples/AnnaHome/瞇眼.png" id="16_nnimo"]
+[ext_resource type="Texture2D" uid="uid://dcqms5dbkk7l6" path="res://sprites/peoples/AnnaHome/閉眼.png" id="17_36n4a"]
+[ext_resource type="Texture2D" uid="uid://v6lvn56jbt0e" path="res://sprites/peoples/AnnaHome/未命名的作品 (6).png" id="18_csdmc"]
+[ext_resource type="Texture2D" uid="uid://ur43s3vwu8gi" path="res://sprites/peoples/AnnaHome/未命名的作品 (8).png" id="19_j4tqf"]
+[ext_resource type="Texture2D" uid="uid://cprsyhhtbpp4t" path="res://sprites/peoples/AnnaHome/未命名的作品 (7).png" id="20_o5uhc"]
+[ext_resource type="SpriteFrames" uid="uid://bdjuqdpae2khk" path="res://sprites/tres/eyes.tres" id="21_pojpd"]
+
+[sub_resource type="Animation" id="Animation_2n84c"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("breatheAll:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("breatheAll/中瀏海:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("breatheAll/中瀏海:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("breatheAll/右前瀏海:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("breatheAll/右前瀏海:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("breatheAll/左前瀏海:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("breatheAll/左前瀏海:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("breatheAll/左後毛:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("breatheAll/左後毛:rotation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("breatheAll/右後毛:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("breatheAll/右後毛:rotation")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("breatheAll/右手:position")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("breatheAll/右手:rotation")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("breatheAll/左手:position")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("breatheAll/左手:rotation")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_pydqa"]
+resource_name = "breathe"
+length = 2.0
+loop_mode = 1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("breatheAll:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.0666667, 0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("breatheAll/中瀏海:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0523599, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("breatheAll/中瀏海:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-37, 0), Vector2(0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("breatheAll/右前瀏海:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-22, -4), Vector2(0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("breatheAll/右前瀏海:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0523599, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("breatheAll/左前瀏海:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(34, -7), Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("breatheAll/左前瀏海:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -0.0523599, 0.0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("breatheAll/左後毛:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(34, 0), Vector2(0, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("breatheAll/左後毛:rotation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -0.0523599, 0.0]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("breatheAll/右後毛:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-18, 0), Vector2(0, 0)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("breatheAll/右後毛:rotation")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0523599, 0.0]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("breatheAll/右手:position")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(-0.05, 0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 0), Vector2(-5, 0), Vector2(0, 0)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("breatheAll/右手:rotation")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(-0.816667, 0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, -0.0523599, 0.0]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("breatheAll/左手:position")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-4, 0), Vector2(0, 0)]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("breatheAll/左手:rotation")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0872665, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4byvi"]
+_data = {
+&"RESET": SubResource("Animation_2n84c"),
+&"breathe": SubResource("Animation_pydqa")
+}
+
+[node name="Node2D" type="Node2D"]
+position = Vector2(329, 635.634)
+scale = Vector2(0.3, 0.3)
+script = ExtResource("1_yyhk5")
+
+[node name="breathe" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_4byvi")
+}
+autoplay = "breathe"
+
+[node name="腿" type="Sprite2D" parent="."]
+position = Vector2(10, -5.63399)
+texture = ExtResource("2_3vnl5")
+
+[node name="breatheAll" type="Node2D" parent="."]
+
+[node name="中瀏海" type="Sprite2D" parent="breatheAll"]
+z_index = 5
+texture = ExtResource("3_7eykn")
+
+[node name="右前瀏海" type="Sprite2D" parent="breatheAll"]
+z_index = 5
+texture = ExtResource("4_lirbm")
+
+[node name="右後毛" type="Sprite2D" parent="breatheAll"]
+z_index = 1
+texture = ExtResource("5_dgj8h")
+
+[node name="右手" type="Sprite2D" parent="breatheAll"]
+texture = ExtResource("6_v4ie0")
+
+[node name="呆毛" type="Sprite2D" parent="breatheAll"]
+texture = ExtResource("7_id0dv")
+
+[node name="大笑" type="Sprite2D" parent="breatheAll"]
+visible = false
+z_index = 2
+texture = ExtResource("8_pxcpq")
+
+[node name="finish" type="Sprite2D" parent="breatheAll"]
+texture = ExtResource("9_f2n03")
+
+[node name="左前瀏海" type="Sprite2D" parent="breatheAll"]
+z_index = 5
+texture = ExtResource("10_tlgon")
+
+[node name="左後毛" type="Sprite2D" parent="breatheAll"]
+texture = ExtResource("11_gfv56")
+
+[node name="左手" type="Sprite2D" parent="breatheAll"]
+texture = ExtResource("12_3cni5")
+
+[node name="微笑" type="Sprite2D" parent="breatheAll"]
+z_index = 2
+texture = ExtResource("14_jy8fg")
+
+[node name="unFinish" type="Sprite2D" parent="breatheAll"]
+texture = ExtResource("15_t4x1s")
+
+[node name="瞇眼" type="Sprite2D" parent="breatheAll"]
+visible = false
+z_index = 2
+texture = ExtResource("16_nnimo")
+
+[node name="身體" type="Sprite2D" parent="breatheAll"]
+texture = ExtResource("18_csdmc")
+
+[node name="臉" type="Sprite2D" parent="breatheAll"]
+z_index = 1
+texture = ExtResource("19_j4tqf")
+
+[node name="眉毛" type="Sprite2D" parent="breatheAll"]
+z_index = 5
+texture = ExtResource("20_o5uhc")
+
+[node name="閉眼" type="Sprite2D" parent="breatheAll"]
+visible = false
+z_index = 2
+texture = ExtResource("17_36n4a")
+
+[node name="Eyes" type="Node2D" parent="breatheAll"]
+
+[node name="張眼" type="Sprite2D" parent="breatheAll/Eyes"]
+z_index = 2
+texture = ExtResource("13_bhyvv")
+
+[node name="EyeClosed" type="AnimatedSprite2D" parent="."]
+z_index = 5
+position = Vector2(10, -5.24591)
+sprite_frames = ExtResource("21_pojpd")
+animation = &"eyes"
+frame = 1
+frame_progress = 1.0
+
+[connection signal="animation_finished" from="EyeClosed" to="." method="_on_eye_closed_animation_finished"]

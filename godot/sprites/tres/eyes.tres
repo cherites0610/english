@@ -1,0 +1,17 @@
+[gd_resource type="SpriteFrames" load_steps=2 format=3 uid="uid://bdjuqdpae2khk"]
+
+[ext_resource type="Texture2D" uid="uid://dcqms5dbkk7l6" path="res://sprites/peoples/AnnaHome/閉眼.png" id="1_goho0"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_goho0")
+}, {
+"duration": 0.5,
+"texture": ExtResource("1_goho0")
+}],
+"loop": false,
+"name": &"eyes",
+"speed": 5.0
+}]
