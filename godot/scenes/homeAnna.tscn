@@ -412,6 +412,14 @@ autoplay = "breathe"
 position = Vector2(10, -5.63399)
 texture = ExtResource("2_3vnl5")
 
+[node name="EyeClosed" type="AnimatedSprite2D" parent="."]
+z_index = 5
+position = Vector2(10, -5.24561)
+sprite_frames = ExtResource("21_pojpd")
+animation = &"eyes"
+frame = 1
+frame_progress = 1.0
+
 [node name="breatheAll" type="Node2D" parent="."]
 
 [node name="中瀏海" type="Sprite2D" parent="breatheAll"]
@@ -432,14 +440,6 @@ texture = ExtResource("6_v4ie0")
 [node name="呆毛" type="Sprite2D" parent="breatheAll"]
 texture = ExtResource("7_id0dv")
 
-[node name="大笑" type="Sprite2D" parent="breatheAll"]
-visible = false
-z_index = 2
-texture = ExtResource("8_pxcpq")
-
-[node name="finish" type="Sprite2D" parent="breatheAll"]
-texture = ExtResource("9_f2n03")
-
 [node name="左前瀏海" type="Sprite2D" parent="breatheAll"]
 z_index = 5
 texture = ExtResource("10_tlgon")
@@ -449,18 +449,6 @@ texture = ExtResource("11_gfv56")
 
 [node name="左手" type="Sprite2D" parent="breatheAll"]
 texture = ExtResource("12_3cni5")
-
-[node name="微笑" type="Sprite2D" parent="breatheAll"]
-z_index = 2
-texture = ExtResource("14_jy8fg")
-
-[node name="unFinish" type="Sprite2D" parent="breatheAll"]
-texture = ExtResource("15_t4x1s")
-
-[node name="瞇眼" type="Sprite2D" parent="breatheAll"]
-visible = false
-z_index = 2
-texture = ExtResource("16_nnimo")
 
 [node name="身體" type="Sprite2D" parent="breatheAll"]
 texture = ExtResource("18_csdmc")
@@ -478,18 +466,32 @@ visible = false
 z_index = 2
 texture = ExtResource("17_36n4a")
 
-[node name="Eyes" type="Node2D" parent="breatheAll"]
+[node name="finish" type="Node2D" parent="breatheAll"]
 
-[node name="張眼" type="Sprite2D" parent="breatheAll/Eyes"]
+[node name="瞇眼" type="Sprite2D" parent="breatheAll/finish"]
+z_index = 2
+texture = ExtResource("16_nnimo")
+
+[node name="完成" type="Sprite2D" parent="breatheAll/finish"]
+texture = ExtResource("9_f2n03")
+
+[node name="大笑" type="Sprite2D" parent="breatheAll/finish"]
+z_index = 2
+texture = ExtResource("8_pxcpq")
+
+[node name="unFinish" type="Node2D" parent="breatheAll"]
+
+[node name="微笑" type="Sprite2D" parent="breatheAll/unFinish"]
+z_index = 2
+texture = ExtResource("14_jy8fg")
+
+[node name="未完成" type="Sprite2D" parent="breatheAll/unFinish"]
+texture = ExtResource("15_t4x1s")
+
+[node name="Eyes" type="Node2D" parent="breatheAll/unFinish"]
+
+[node name="張眼" type="Sprite2D" parent="breatheAll/unFinish/Eyes"]
 z_index = 2
 texture = ExtResource("13_bhyvv")
-
-[node name="EyeClosed" type="AnimatedSprite2D" parent="."]
-z_index = 5
-position = Vector2(10, -5.24591)
-sprite_frames = ExtResource("21_pojpd")
-animation = &"eyes"
-frame = 1
-frame_progress = 1.0
 
 [connection signal="animation_finished" from="EyeClosed" to="." method="_on_eye_closed_animation_finished"]

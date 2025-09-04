@@ -1,7 +1,7 @@
 extends Node2D
 
 @onready var blink_sprite = $EyeClosed
-@onready var eyes_group = $breatheAll/Eyes
+@onready var eyes_group = $breatheAll/unFinish/Eyes
 @onready var blink_timer: Timer = Timer.new()
 
 @onready var idle_sprite = $breatheAll/unFinish
@@ -30,6 +30,8 @@ func _ready():
 
 func _start_blink():
 	if blink_sprite.visible:
+		return
+	if finish:  # 如果已經完成就不眨眼
 		return
 	print("眨眼觸發！")  # log：開始眨眼
 	eyes_group.visible = false       # 只隱藏眼睛，不影響呼吸動畫
