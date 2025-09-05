@@ -30,7 +30,7 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     const result = await this.authService.loginWithGoogle(code);
-    const redirectUrl = `mou-english://auth?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`;
+    const redirectUrl = `com.mou.english://auth?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`;
     res.redirect(redirectUrl);
   }
 
@@ -44,7 +44,7 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     const result = await this.authService.loginWithLine(code);
-    const redirectUrl = `mou-english://auth?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`;
+    const redirectUrl = `com.mou.english://auth?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`;
     res.redirect(redirectUrl);
   }
 

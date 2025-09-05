@@ -176,17 +176,7 @@ export class TalkGateway
           this.createNewStreamForClient(clientId);
         }
         const stream = this.speechStreams.get(clientId);
-        if (stream) {
-          console.log(
-            `[${clientId}] Received audio buffer with size: ${data.length} bytes.`,
-          ); // 新增日誌
-          if (!fs.existsSync(`./debug_audio_${clientId}.raw`)) {
-            this.logger.log(`Saving debug audio for ${clientId}`);
-            fs.writeFileSync(`./debug_audio_${clientId}.raw`, data);
-          }
-
-          stream.write(data);
-        }
+        stream.write(data);
       }
     });
   }
@@ -258,7 +248,7 @@ export class TalkGateway
       .streamingRecognize({
         config: {
           encoding: 'LINEAR16',
-          sampleRateHertz: 16000,
+          sampleRateHertz: 44100,
           languageCode: 'en-us',
           enableAutomaticPunctuation: true, // 建議開啟，可以自動加上標點符號
         },
@@ -269,8 +259,6 @@ export class TalkGateway
         this.closeStreamForClient(clientId);
       })
       .on('data', async (data) => {
-        console.log(data);
-
         const transcript = data.results[0]?.alternatives[0]?.transcript;
         if (transcript && data.results[0].isFinal) {
           this.logger.log(`🎤 Final Transcript for ${clientId}: ${transcript}`);
@@ -341,7 +329,7 @@ export class TalkGateway
         }
         if (endCondition) break;
       }
-
+      this.logger.debug(`完整的回覆:${fullResponse}`);
       geminiStreamFinished = true;
       this.logger.log(`✅ [${clientId}] Gemini stream finished.`);
 
