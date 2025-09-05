@@ -17,7 +17,8 @@ config/icon="res://icon.svg"
 
 [audio]
 
-buses/default_bus_layout="res://autoload/default_bus_layout.tres"
+buses/default_bus_layout="uid://cgt4mdmk8xqn1"
+driver/enable_input=true
 
 [autoload]
 

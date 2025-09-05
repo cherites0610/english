@@ -1,6 +1,6 @@
 [gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://cgt4mdmk8xqn1"]
 
-[sub_resource type="AudioEffectCapture" id="AudioEffectCapture_j3pel"]
+[sub_resource type="AudioEffectCapture" id="AudioEffectCapture_qd84h"]
 resource_name = "Capture"
 
 [resource]
@@ -10,5 +10,5 @@ bus/1/mute = false
 bus/1/bypass_fx = false
 bus/1/volume_db = 0.0
 bus/1/send = &"Master"
-bus/1/effect/0/effect = SubResource("AudioEffectCapture_j3pel")
+bus/1/effect/0/effect = SubResource("AudioEffectCapture_qd84h")
 bus/1/effect/0/enabled = true

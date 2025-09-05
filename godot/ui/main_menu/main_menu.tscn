@@ -33,83 +33,87 @@ texture = ExtResource("1_06t4h")
 expand_mode = 2
 stretch_mode = 5
 
+[node name="HouseButton1" type="TextureButton" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.6
+anchor_top = 0.209
+anchor_right = 0.6
+anchor_bottom = 0.209
+offset_left = -344.0
+offset_top = -404.52
+offset_right = 1704.0
+offset_bottom = 1643.48
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.32, 0.32)
+texture_normal = ExtResource("3_dy7ct")
+stretch_mode = 0
+
+[node name="HouseButton2" type="TextureButton" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.489
+anchor_top = 0.33
+anchor_right = 0.681
+anchor_bottom = 0.512
+scale = Vector2(0.120336, 0.120336)
+texture_normal = ExtResource("4_0o4t1")
+stretch_mode = 5
+
+[node name="HouseButton3" type="TextureButton" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.429156
+anchor_top = 0.325094
+anchor_right = 0.429156
+anchor_bottom = 0.325094
+offset_left = -152.32
+offset_top = -200.12
+offset_right = 1895.68
+offset_bottom = 1847.88
+scale = Vector2(0.148455, 0.148455)
+texture_normal = ExtResource("5_0k4wn")
+stretch_mode = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="HouseButton4" type="TextureButton" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.443
+anchor_top = 0.575
+anchor_right = 0.443
+anchor_bottom = 0.575
+offset_left = -139.04
+offset_top = -168.0
+offset_right = 1908.96
+offset_bottom = 1880.0
+scale = Vector2(0.136188, 0.136188)
+texture_normal = ExtResource("6_j5v2v")
+stretch_mode = 0
+metadata/_edit_use_anchors_ = true
+
+[node name="HouseButton5" type="TextureButton" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.567
+anchor_top = 0.713
+anchor_right = 0.567
+anchor_bottom = 0.713
+offset_left = -127.76
+offset_top = -174.64
+offset_right = 1920.24
+offset_bottom = 1873.36
+scale = Vector2(0.124969, 0.124969)
+texture_normal = ExtResource("7_iotk1")
+metadata/_edit_use_anchors_ = true
+
 [node name="Header" parent="." instance=ExtResource("2_8qtwp")]
 layout_mode = 1
 anchors_preset = 10
 anchor_bottom = 0.0
 offset_bottom = 128.0
 grow_vertical = 1
-
-[node name="HouseButton1" type="TextureButton" parent="."]
-layout_mode = 0
-anchor_left = 0.441667
-anchor_top = 0.0726563
-anchor_right = 0.81696
-anchor_bottom = 0.283759
-offset_right = 1777.79
-offset_bottom = 1777.79
-scale = Vector2(0.131939, 0.131939)
-texture_normal = ExtResource("3_dy7ct")
-metadata/_edit_use_anchors_ = true
-
-[node name="HouseButton2" type="TextureButton" parent="."]
-layout_mode = 0
-anchor_left = 0.226389
-anchor_top = 0.220313
-anchor_right = 0.568678
-anchor_bottom = 0.41285
-offset_right = 1801.55
-offset_bottom = 1801.55
-scale = Vector2(0.120336, 0.120336)
-texture_normal = ExtResource("4_0o4t1")
-metadata/_edit_use_anchors_ = true
-
-[node name="HouseButton3" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 296.0
-offset_top = 381.0
-offset_right = 2344.0
-offset_bottom = 2429.0
-scale = Vector2(0.148455, 0.148455)
-texture_normal = ExtResource("5_0k4wn")
-metadata/_edit_use_anchors_ = true
-
-[node name="HouseButton4" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 148.0
-offset_top = 568.0
-offset_right = 2196.0
-offset_bottom = 2616.0
-scale = Vector2(0.136188, 0.136188)
-texture_normal = ExtResource("6_j5v2v")
-metadata/_edit_use_anchors_ = true
-
-[node name="HouseButton5" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 318.0
-offset_top = 738.0
-offset_right = 2366.0
-offset_bottom = 2786.0
-scale = Vector2(0.124969, 0.124969)
-texture_normal = ExtResource("7_iotk1")
-metadata/_edit_use_anchors_ = true
-
-[node name="NpcSpawnLocations" type="Node" parent="."]
-
-[node name="Marker2D1" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(219, 1037)
-
-[node name="Marker2D2" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(549, 518)
-
-[node name="Marker2D3" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(527, 785)
-
-[node name="Marker2D4" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(201, 616)
-
-[node name="Marker2D5" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(242, 298)
 
 [node name="Npc1" type="Sprite2D" parent="."]
 position = Vector2(198, 275)
@@ -129,8 +133,25 @@ offset_top = -153.0
 offset_bottom = -3.0
 grow_vertical = 0
 
-[connection signal="pressed" from="HouseButton1" to="." method="_on_house_button_1_pressed"]
-[connection signal="pressed" from="HouseButton2" to="." method="_on_house_button_2_pressed"]
-[connection signal="pressed" from="HouseButton3" to="." method="_on_house_button_3_pressed"]
-[connection signal="pressed" from="HouseButton4" to="." method="_on_house_button_4_pressed"]
-[connection signal="pressed" from="HouseButton5" to="." method="_on_house_button_5_pressed"]
+[node name="NpcSpawnLocations" type="Node" parent="."]
+
+[node name="Marker2D1" type="Marker2D" parent="NpcSpawnLocations"]
+position = Vector2(219, 1037)
+
+[node name="Marker2D2" type="Marker2D" parent="NpcSpawnLocations"]
+position = Vector2(549, 518)
+
+[node name="Marker2D3" type="Marker2D" parent="NpcSpawnLocations"]
+position = Vector2(527, 785)
+
+[node name="Marker2D4" type="Marker2D" parent="NpcSpawnLocations"]
+position = Vector2(201, 616)
+
+[node name="Marker2D5" type="Marker2D" parent="NpcSpawnLocations"]
+position = Vector2(242, 298)
+
+[connection signal="pressed" from="Background/HouseButton1" to="." method="_on_house_button_1_pressed"]
+[connection signal="pressed" from="Background/HouseButton2" to="." method="_on_house_button_2_pressed"]
+[connection signal="pressed" from="Background/HouseButton3" to="." method="_on_house_button_3_pressed"]
+[connection signal="pressed" from="Background/HouseButton4" to="." method="_on_house_button_4_pressed"]
+[connection signal="pressed" from="Background/HouseButton5" to="." method="_on_house_button_5_pressed"]

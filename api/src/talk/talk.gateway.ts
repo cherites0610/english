@@ -11,6 +11,7 @@ import {
 import { Logger, NotFoundException } from '@nestjs/common';
 import { Server, WebSocket } from 'ws';
 import { SpeechClient } from '@google-cloud/speech';
+import * as fs from 'fs';
 import {
   GoogleGenerativeAI,
   Part,
@@ -176,6 +177,14 @@ export class TalkGateway
         }
         const stream = this.speechStreams.get(clientId);
         if (stream) {
+          console.log(
+            `[${clientId}] Received audio buffer with size: ${data.length} bytes.`,
+          ); // 新增日誌
+          if (!fs.existsSync(`./debug_audio_${clientId}.raw`)) {
+            this.logger.log(`Saving debug audio for ${clientId}`);
+            fs.writeFileSync(`./debug_audio_${clientId}.raw`, data);
+          }
+
           stream.write(data);
         }
       }
@@ -251,6 +260,7 @@ export class TalkGateway
           encoding: 'LINEAR16',
           sampleRateHertz: 16000,
           languageCode: 'en-us',
+          enableAutomaticPunctuation: true, // 建議開啟，可以自動加上標點符號
         },
         interimResults: false,
       })
@@ -259,6 +269,8 @@ export class TalkGateway
         this.closeStreamForClient(clientId);
       })
       .on('data', async (data) => {
+        console.log(data);
+
         const transcript = data.results[0]?.alternatives[0]?.transcript;
         if (transcript && data.results[0].isFinal) {
           this.logger.log(`🎤 Final Transcript for ${clientId}: ${transcript}`);
@@ -405,8 +417,7 @@ export class TalkGateway
 
   private startElevenLabsStream(clientId: string, onCloseCallback: () => void) {
     const voiceId = '0lp4RIz96WD1RUtvEu3Q';
-    const outputFormat = 'pcm_24000'; // 或者 pcm_22050, pcm_24000, pcm_44100
-    const wsUrl = `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2&output_format=${outputFormat}`;
+    const wsUrl = `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2`;
     const ttsWs = new WebSocket(wsUrl, {
       headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
     });
@@ -418,8 +429,6 @@ export class TalkGateway
 
     ttsWs.on('message', (data: Buffer) => {
       const response = JSON.parse(data.toString());
-      console.log(response);
-
       if (response.audio) {
         // [驗證步驟] 在發送前，先檢查 payload 的大小
         const eventName = 'audioResponse';
@@ -436,13 +445,6 @@ export class TalkGateway
         this.logger.log(
           `📦 [${clientId}] Preparing to send '${eventName}' with payload size: ${messageSizeInBytes} bytes.`,
         );
-
-        // 如果大小超過 65536 bytes (64KB)，就非常可疑
-        if (messageSizeInBytes > 65536) {
-          this.logger.warn(
-            `⚠️ [${clientId}] WARNING: Message size (${messageSizeInBytes} bytes) is large and may exceed WebSocket limits.`,
-          );
-        }
 
         // 繼續你原有的發送邏輯
         this.sendToClientById(clientId, eventName, payload);

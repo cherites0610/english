@@ -43,7 +43,14 @@ scale = Vector2(4.21039, 4.21039)
 text = "返回上一頁"
 
 [node name="MicPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"RecordBus"
 
 [node name="VoicePlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(15.3636, 15.3636)
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

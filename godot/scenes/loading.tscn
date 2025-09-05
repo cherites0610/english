@@ -2,7 +2,7 @@
 
 [ext_resource type="SpriteFrames" uid="uid://p8trd40xmg4h" path="res://sprites/tres/loading.tres" id="1_ir5ef"]
 
-[node name="loading" type="Node2D"]
+[node name="Loading" type="Node2D"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(361, 642)
@@ -10,5 +10,4 @@ scale = Vector2(0.493869, 0.493869)
 sprite_frames = ExtResource("1_ir5ef")
 animation = &"loading"
 autoplay = "loading"
-frame = 359
-frame_progress = 1.0
+frame_progress = 0.572465
