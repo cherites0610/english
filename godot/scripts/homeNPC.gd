@@ -33,25 +33,25 @@ func _start_blink():
 		return
 	if finish:  # 如果已經完成就不眨眼
 		return
-	print("眨眼觸發！")  # log：開始眨眼
+	#print("眨眼觸發！")  # log：開始眨眼
 	eyes_group.visible = false       # 只隱藏眼睛，不影響呼吸動畫
 	blink_sprite.visible = true
 	blink_sprite.play("eyes")        # 確保動畫名稱和 .tres 一致
 
 func _on_EyeClosed_animation_finished():
-	print("動畫完成訊號，目前動畫：", blink_sprite.animation)
+	#print("動畫完成訊號，目前動畫：", blink_sprite.animation)
 	if blink_sprite.animation == "eyes":
 		blink_sprite.visible = false
 		blink_sprite.stop()
 		eyes_group.visible = true
-		print("眨眼結束！")
+		#print("眨眼結束！")
 		# 重設下一次眨眼時間
 		_reset_blink_timer()
 
 func _reset_blink_timer():
 	var next_time = randf_range(2.0, 5.0)
 	blink_timer.start(next_time)
-	print("下一次眨眼預計在 ", next_time, " 秒後")
+	#print("下一次眨眼預計在 ", next_time, " 秒後")
 
 # 外部或內部切換 finish 狀態時呼叫
 func set_finish(state: bool):
@@ -66,4 +66,4 @@ func _input(event):
 	if event.is_action_pressed("ui_accept"):
 		finish = not finish
 	_update_body_state()
-	print("切換 finish =", finish)
+	#print("切換 finish =", finish)

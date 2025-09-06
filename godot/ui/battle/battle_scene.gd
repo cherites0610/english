@@ -1,10 +1,14 @@
 extends Control
 
 # --- 節點參考 ---
-@onready var mic_player = $MicPlayer
-@onready var voice_player = $VoicePlayer
-@onready var record_button = $RecordButton
-@onready var status_label = $StatusLabel # 建議新增一個 Label 節點來顯示狀態
+@onready var mic_player = $DialogueUI/MicPlayer
+@onready var voice_player = $DialogueUI/VoicePlayer
+@onready var record_button = $DialogueUI/RecordButton
+@onready var status_label = $DialogueUI/StatusLabel
+
+@onready var loading_ui = $LoadingUI
+@onready var dialogue_ui = $DialogueUI
+@onready var settlement_ui = $SettlementUI
 
 # --- WebSocket 相關變數 ---
 var ws_peer = WebSocketPeer.new()
@@ -12,13 +16,22 @@ var is_recording = false
 var is_conversation_created = false
 var mp3_full_byte_array = PackedByteArray()
 
+# --- 狀態管理相關變數 ---
+var isLoading: bool = true
+var has_received_first_response: bool = false
+
 # --- 音訊相關變數 ---
+var is_playing_ai_voice: bool = false
 var record_bus_idx: int
 var record_effect: AudioEffectCapture
 var voice_playback: AudioStreamGeneratorPlayback
 
 # 當場景載入時執行
 func _ready():
+	loading_ui.visible = true
+	dialogue_ui.visible = false
+	settlement_ui.visible = false
+	
 	if OS.get_name() in ["Android", "iOS"]:
 		if OS.request_permissions():
 			print('正在請求權限')
@@ -30,12 +43,13 @@ func _ready():
 	
 	record_button.pressed.connect(_on_record_button_pressed)
 	
-	var url = "ws://localhost:5010" # 請確保 URL 和 Port 正確
+	var url = "wss://english-api.cherites.org" # 請確保 URL 和 Port 正確
 	var new_buffer_size = 1024 * 1024 * 30
 	ws_peer.inbound_buffer_size = new_buffer_size
 	ws_peer.outbound_buffer_size = new_buffer_size
 	ws_peer.connect_to_url(url)
 	status_label.text = "正在連接到伺服器..."
+	voice_player.finished.connect(_on_voice_player_finished)
 	
 	# 取得錄音匯流排的索引 (務必確認 Audio Bus 設定正確)
 	record_bus_idx = AudioServer.get_bus_index("RecordBus")
@@ -114,24 +128,21 @@ func _on_record_button_pressed():
 		mic_player.stop()
 		record_effect = null
 		
-		# [新增] 傳送錄音結束的信號給伺服器
 		send_ws_event("endAudioStream", null)
 
-# [無修改] 將音訊緩衝區 (PackedVector2Array) 序列化為位元組 (PackedByteArray)
 func serialize_audio_buffer(buffer: PackedVector2Array) -> PackedByteArray:
 	var byte_array = PackedByteArray()
-	byte_array.resize(buffer.size() * 4)
+	byte_array.resize(buffer.size() * 2)
 	var offset = 0
 	for sample in buffer:
-		var left_int = int(sample.x * 32767.0)
-		var right_int = int(sample.y * 32767.0)
-		byte_array.encode_s16(offset, left_int)
-		offset += 2
-		byte_array.encode_s16(offset, right_int)
+		# 將左右聲道混合成單聲道 (取平均值)
+		var mono_sample_float = (sample.x + sample.y) / 2.0
+		var mono_sample_int = int(mono_sample_float * 32767.0)
+		
+		byte_array.encode_s16(offset, mono_sample_int)
 		offset += 2
 	return byte_array
 	
-# [無修改] 建立一個輔助函式來發送結構化 JSON 事件
 func send_ws_event(event_name: String, payload):
 	if ws_peer.get_ready_state() != WebSocketPeer.STATE_OPEN:
 		printerr("WebSocket 未連線，無法發送事件 '", event_name, "'")
@@ -141,7 +152,6 @@ func send_ws_event(event_name: String, payload):
 	var json_string = JSON.stringify(event_data)
 	ws_peer.send_text(json_string)
 	
-# [新增] 組合所有 MP3 區塊並播放的函式
 func play_full_mp3():
 	if mp3_full_byte_array.is_empty():
 		print("沒有收到任何有效的 MP3 資料，不進行播放。")
@@ -156,8 +166,14 @@ func play_full_mp3():
 	mp3_full_byte_array = PackedByteArray()
 
 	voice_player.stream = audio_stream_mp3
+	
+	is_playing_ai_voice = true
 	voice_player.play()
 	print("✅ MP3 音訊已載入並開始播放！")
+	
+func _on_voice_player_finished():
+	is_playing_ai_voice = false
+	print("AI 語音播放完畢。")
 
 # [重要修改] 處理來自 NestJS 伺服器的各種事件
 func handle_ws_event(event_name: String, payload):
@@ -183,6 +199,14 @@ func handle_ws_event(event_name: String, payload):
 			
 		"endAudioResponse":
 			print("\n>>> 收到 endAudioResponse 事件！準備播放！ <<<\n")
+			
+			if not has_received_first_response:
+				isLoading = false
+				has_received_first_response = true
+				print("首次 AI 回應已接收，isLoading 設為 false。")
+				loading_ui.visible = false
+				dialogue_ui.visible = true
+			
 			play_full_mp3() # 呼叫變得更簡單的播放函式
 			
 			status_label.text = "換你了，請按下按鈕開始說話"
@@ -193,6 +217,9 @@ func handle_ws_event(event_name: String, payload):
 			status_label.text = "對話結束: " + payload.text
 			record_button.disabled = true # 對話結束，永久禁用按鈕
 			ws_peer.close()
+			
+			dialogue_ui.visible = false
+			settlement_ui.visible = true
 
 		_:
 			print("收到未處理的事件: ", event_name)

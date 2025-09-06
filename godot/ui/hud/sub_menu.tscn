@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://h60lnr6jhc47"]
+
+[ext_resource type="Script" uid="uid://17532fiu1elj" path="res://ui/hud/sub_menu.gd" id="1_4a6ue"]
+[ext_resource type="Texture2D" uid="uid://dswnlmaeo8t3o" path="res://icon.svg" id="1_x2wy2"]
+
+[node name="SubMenu" type="PanelContainer"]
+offset_right = 128.0
+offset_bottom = 392.0
+script = ExtResource("1_4a6ue")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TaskButton" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_x2wy2")
+
+[node name="MailButton" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_x2wy2")
+
+[node name="SettingsButton" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_x2wy2")

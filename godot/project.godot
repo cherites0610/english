@@ -14,6 +14,7 @@ config/name="english"
 run/main_scene="uid://dlvuxihtf5b5c"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="res://icon.svg"
+run/mix_rate=48000
 
 [audio]
 
@@ -22,13 +23,17 @@ driver/enable_input=true
 
 [autoload]
 
-GlobalState="*res://autoload/GlobalState.gd"
+GlobalState="*res://autoload/global_state.tscn"
 
 [display]
 
 window/size/viewport_width=720
 window/size/viewport_height=1280
 window/handheld/orientation=1
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/DeeplinkPlugin/plugin.cfg")
 
 [rendering]
 

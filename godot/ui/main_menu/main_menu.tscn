@@ -1,15 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://dlvuxihtf5b5c"]
+[gd_scene load_steps=6 format=3 uid="uid://dlvuxihtf5b5c"]
 
 [ext_resource type="Script" uid="uid://d4njqkjc25rib" path="res://ui/main_menu/main_menu.gd" id="1_0o4t1"]
 [ext_resource type="Texture2D" uid="uid://5tesw1yh3lug" path="res://assets/mainmenu/Home_bg.png" id="1_06t4h"]
 [ext_resource type="PackedScene" uid="uid://goo2fblg32ks" path="res://ui/hud/header.tscn" id="2_8qtwp"]
-[ext_resource type="Texture2D" uid="uid://dt7l1dhcqsnpi" path="res://assets/Fun_Play.png" id="3_dy7ct"]
-[ext_resource type="Texture2D" uid="uid://bqenb2rkyrfre" path="res://assets/Transportation.png" id="4_0o4t1"]
-[ext_resource type="Texture2D" uid="uid://b1nd2nigrc7ke" path="res://assets/Dining.png" id="5_0k4wn"]
-[ext_resource type="Texture2D" uid="uid://m8tkqd71y34q" path="res://assets/BuyHub.png" id="6_j5v2v"]
-[ext_resource type="Texture2D" uid="uid://jjpnyb7p6c52" path="res://assets/Goverment.png" id="7_iotk1"]
-[ext_resource type="Texture2D" uid="uid://d18rj13niy7sx" path="res://assets/npcs/anna/amy.jpg" id="8_w44g7"]
 [ext_resource type="PackedScene" uid="uid://cl0w7jg75m3ht" path="res://ui/hud/bottom_menu.tscn" id="9_dy7ct"]
+[ext_resource type="PackedScene" uid="uid://cmv4wsu6p8oru" path="res://scenes/homeAnna.tscn" id="11_s4pem"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -30,100 +25,8 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(340, 232)
 texture = ExtResource("1_06t4h")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="HouseButton1" type="TextureButton" parent="Background"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.6
-anchor_top = 0.209
-anchor_right = 0.6
-anchor_bottom = 0.209
-offset_left = -344.0
-offset_top = -404.52
-offset_right = 1704.0
-offset_bottom = 1643.48
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.32, 0.32)
-texture_normal = ExtResource("3_dy7ct")
-stretch_mode = 0
-
-[node name="HouseButton2" type="TextureButton" parent="Background"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.489
-anchor_top = 0.33
-anchor_right = 0.681
-anchor_bottom = 0.512
-scale = Vector2(0.120336, 0.120336)
-texture_normal = ExtResource("4_0o4t1")
-stretch_mode = 5
-
-[node name="HouseButton3" type="TextureButton" parent="Background"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.429156
-anchor_top = 0.325094
-anchor_right = 0.429156
-anchor_bottom = 0.325094
-offset_left = -152.32
-offset_top = -200.12
-offset_right = 1895.68
-offset_bottom = 1847.88
-scale = Vector2(0.148455, 0.148455)
-texture_normal = ExtResource("5_0k4wn")
-stretch_mode = 0
-metadata/_edit_use_anchors_ = true
-
-[node name="HouseButton4" type="TextureButton" parent="Background"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.443
-anchor_top = 0.575
-anchor_right = 0.443
-anchor_bottom = 0.575
-offset_left = -139.04
-offset_top = -168.0
-offset_right = 1908.96
-offset_bottom = 1880.0
-scale = Vector2(0.136188, 0.136188)
-texture_normal = ExtResource("6_j5v2v")
-stretch_mode = 0
-metadata/_edit_use_anchors_ = true
-
-[node name="HouseButton5" type="TextureButton" parent="Background"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.567
-anchor_top = 0.713
-anchor_right = 0.567
-anchor_bottom = 0.713
-offset_left = -127.76
-offset_top = -174.64
-offset_right = 1920.24
-offset_bottom = 1873.36
-scale = Vector2(0.124969, 0.124969)
-texture_normal = ExtResource("7_iotk1")
-metadata/_edit_use_anchors_ = true
-
-[node name="Header" parent="." instance=ExtResource("2_8qtwp")]
-layout_mode = 1
-anchors_preset = 10
-anchor_bottom = 0.0
-offset_bottom = 128.0
-grow_vertical = 1
-
-[node name="Npc1" type="Sprite2D" parent="."]
-position = Vector2(198, 275)
-scale = Vector2(0.214156, 0.214156)
-texture = ExtResource("8_w44g7")
-
-[node name="Npc2" type="Sprite2D" parent="."]
-position = Vector2(217, 1025)
-scale = Vector2(0.208245, 0.208245)
-texture = ExtResource("8_w44g7")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="BottomMenu" parent="." instance=ExtResource("9_dy7ct")]
 layout_mode = 1
@@ -132,6 +35,23 @@ anchor_top = 1.0
 offset_top = -153.0
 offset_bottom = -3.0
 grow_vertical = 0
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 244.0
+offset_top = 503.0
+offset_right = 345.0
+offset_bottom = 535.0
+scale = Vector2(2.44, 2.44)
+text = "切換npc狀態"
+
+[node name="Npc1" parent="." instance=ExtResource("11_s4pem")]
+position = Vector2(1230, 598)
+scale = Vector2(0.167141, 0.167141)
+
+[node name="Npc2" parent="." instance=ExtResource("11_s4pem")]
+position = Vector2(950, 597)
+scale = Vector2(0.167141, 0.167141)
 
 [node name="NpcSpawnLocations" type="Node" parent="."]
 
@@ -150,8 +70,11 @@ position = Vector2(201, 616)
 [node name="Marker2D5" type="Marker2D" parent="NpcSpawnLocations"]
 position = Vector2(242, 298)
 
-[connection signal="pressed" from="Background/HouseButton1" to="." method="_on_house_button_1_pressed"]
-[connection signal="pressed" from="Background/HouseButton2" to="." method="_on_house_button_2_pressed"]
-[connection signal="pressed" from="Background/HouseButton3" to="." method="_on_house_button_3_pressed"]
-[connection signal="pressed" from="Background/HouseButton4" to="." method="_on_house_button_4_pressed"]
-[connection signal="pressed" from="Background/HouseButton5" to="." method="_on_house_button_5_pressed"]
+[node name="Header" parent="." instance=ExtResource("2_8qtwp")]
+layout_mode = 1
+anchors_preset = 10
+anchor_bottom = 0.0
+offset_bottom = 128.0
+grow_vertical = 1
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://s3qk6l3ffnhw"]
+
+[ext_resource type="Script" uid="uid://ceiccbvi7u0mr" path="res://autoload/GlobalState.gd" id="1_jcpgf"]
+[ext_resource type="Script" uid="uid://dnuxtevedwwe2" path="res://addons/DeeplinkPlugin/Deeplink.gd" id="2_aj8pl"]
+
+[node name="GlobalState" type="Node"]
+script = ExtResource("1_jcpgf")
+
+[node name="RefreshTimer" type="Timer" parent="."]
+
+[node name="TokenRequest" type="HTTPRequest" parent="."]
+
+[node name="ApiRequest" type="HTTPRequest" parent="."]
+
+[node name="Deeplink" type="Node" parent="."]
+script = ExtResource("2_aj8pl")
+metadata/_custom_type_script = "uid://dnuxtevedwwe2"

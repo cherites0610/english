@@ -7,13 +7,43 @@ extends Control
 @onready var npc2 = $Npc2
 @onready var npc_spawn_locations = $NpcSpawnLocations
 
+@onready var task_button = $SubMenu/TaskButton
+@onready var mail_button = $SubMenu/MailButton
+@onready var settings_button = $SubMenu/SettingsButton
+
+const SubMenuScene = preload("res://ui/hud/sub_menu.tscn")
+const ModalScene = preload("res://ui/hud/modal.tscn")
 
 # _ready 函式會在場景啟動時自動執行一次
 func _ready():
 	# 呼叫我們自己寫的函式來處理 NPC 的位置
 	randomize_npc_positions()
+	
+	var sub_menu_instance = SubMenuScene.instantiate()
+	# 將 SubMenu 實例加入到場景中
+	add_child(sub_menu_instance) 
+	# 像之前一樣，設定它的位置
+	sub_menu_instance.position = Vector2(20, 20) 
+	
+	sub_menu_instance.task_button_pressed.connect(_on_task_button_pressed)
+	sub_menu_instance.mail_button_pressed.connect(_on_mail_button_pressed)
+	sub_menu_instance.settings_button_pressed.connect(_on_settings_button_pressed)
 
+func _on_task_button_pressed():
+	var modal = ModalScene.instantiate()
+	add_child(modal)
+	modal.show_with_content("任務", "這裡是您的每日任務列表...")
 
+func _on_mail_button_pressed():
+	var modal = ModalScene.instantiate()
+	add_child(modal)
+	modal.show_with_content("郵件", "您目前沒有新郵件。")
+
+func _on_settings_button_pressed():
+	var modal = ModalScene.instantiate()
+	add_child(modal)
+	modal.show_with_content("設定", "音量設定\n畫質設定\n...")
+	
 # 這是一個自訂函式，專門用來處理 NPC 的隨機位置邏輯
 func randomize_npc_positions():
 	# 2. 取得所有可用的出生點 (Marker2D 節點)
@@ -59,3 +89,12 @@ func _on_house_button_5_pressed() -> void:
 	GlobalState.current_level_id = "house_5"
 	print("第五個房屋被點擊了！")
 	get_tree().change_scene_to_file("res://ui/battle/battle_scene.tscn")
+
+
+func _on_button_pressed() -> void:
+	if npc1.finish:
+		npc1.set_finish(false)
+	else:
+		npc1.set_finish(true)
+		
+	pass # Replace with function body.

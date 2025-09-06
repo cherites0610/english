@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://b8vwj15kh08lm"]
+[gd_scene load_steps=4 format=3 uid="uid://b8vwj15kh08lm"]
 
 [ext_resource type="Script" uid="uid://cjukc08kgk47w" path="res://ui/battle/battle_scene.gd" id="1_5g7vw"]
 [ext_resource type="Texture2D" uid="uid://dd230763fvqyb" path="res://assets/battles/coffee/咖啡廳bg.png" id="1_fw8re"]
+[ext_resource type="PackedScene" uid="uid://cvcdf0fbae8uw" path="res://scenes/loading.tscn" id="3_vm476"]
 
 [node name="BattleScene" type="Control"]
 layout_mode = 3
@@ -12,45 +13,79 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5g7vw")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="DialogueUI" type="Control" parent="."]
+visible = false
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-scale = Vector2(0.551455, 0.551455)
-texture = ExtResource("1_fw8re")
-stretch_mode = 5
+grow_vertical = 2
 
-[node name="RecordButton" type="Button" parent="."]
+[node name="TextureRect" type="TextureRect" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 6.10352e-05
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_fw8re")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="RecordButton" type="Button" parent="DialogueUI"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.0015625
 anchor_bottom = 0.0015625
 offset_left = 270.0
-offset_top = 876.0
+offset_top = 877.938
 offset_right = 278.0
-offset_bottom = 884.0
+offset_bottom = 885.938
 scale = Vector2(16.0281, 16.0281)
 metadata/_edit_use_anchors_ = true
 
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" type="Button" parent="DialogueUI"]
 layout_mode = 0
 offset_left = 35.0
-offset_top = 66.0
+offset_top = 66.0001
 offset_right = 123.0
-offset_bottom = 97.0
+offset_bottom = 97.0001
 scale = Vector2(4.21039, 4.21039)
 text = "返回上一頁"
 
-[node name="MicPlayer" type="AudioStreamPlayer" parent="."]
+[node name="MicPlayer" type="AudioStreamPlayer" parent="DialogueUI"]
 bus = &"RecordBus"
 
-[node name="VoicePlayer" type="AudioStreamPlayer" parent="."]
+[node name="VoicePlayer" type="AudioStreamPlayer" parent="DialogueUI"]
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="StatusLabel" type="Label" parent="DialogueUI"]
 layout_mode = 0
+offset_top = 6.10352e-05
 offset_right = 40.0
-offset_bottom = 23.0
+offset_bottom = 23.0001
 scale = Vector2(15.3636, 15.3636)
 
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[node name="LoadingUI" type="Control" parent="."]
+anchors_preset = 0
+offset_top = -6.10352e-05
+offset_right = 40.0
+offset_bottom = 39.9999
+
+[node name="Loading" parent="LoadingUI" instance=ExtResource("3_vm476")]
+position = Vector2(-7, 1.00006)
+
+[node name="SettlementUI" type="Control" parent="."]
+anchors_preset = 0
+offset_top = -6.10352e-05
+offset_right = 40.0
+offset_bottom = 39.9999
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettlementUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+text = "結算介面!"
+
+[connection signal="pressed" from="DialogueUI/BackButton" to="." method="_on_back_button_pressed"]
