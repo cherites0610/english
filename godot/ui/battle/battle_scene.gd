@@ -28,7 +28,8 @@ var voice_playback: AudioStreamGeneratorPlayback
 
 # 當場景載入時執行
 func _ready():
-	loading_ui.visible = true
+	#loading_ui.visible = true
+	SceneManager.show_loading_screen()
 	dialogue_ui.visible = false
 	settlement_ui.visible = false
 	
@@ -201,10 +202,10 @@ func handle_ws_event(event_name: String, payload):
 			print("\n>>> 收到 endAudioResponse 事件！準備播放！ <<<\n")
 			
 			if not has_received_first_response:
-				isLoading = false
 				has_received_first_response = true
-				print("首次 AI 回應已接收，isLoading 設為 false。")
-				loading_ui.visible = false
+				print("首次 AI 回應已接收。")
+				SceneManager.hide_loading_screen() # <--- 在這裡呼叫全域函式來隱藏
+				# loading_ui.visible = false # <--- 這一行可以刪除或註解掉了
 				dialogue_ui.visible = true
 			
 			play_full_mp3() # 呼叫變得更簡單的播放函式
