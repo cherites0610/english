@@ -168,6 +168,23 @@ func save_tokens_to_disk():
 		file.store_string(json_string)
 
 func load_tokens_from_disk():
+	# --- 【核心修改】偵錯模式下的假登入 ---
+	# 檢查是否啟用假登入，並且確認目前是在偵錯環境下執行
+	if FAKE_LOGIN_IN_DEBUG and OS.is_debug_build():
+		print("--- FAKE LOGIN ENABLED ---")
+		# 直接設定你想要的 access_token
+		var fake_access_token = "cherites"
+		# 同時也給 refresh_token 一個假的值，避免某些檢查出錯
+		var fake_refresh_token = "fake_refresh_token_for_debug"
+		
+		# 【重要】呼叫 store_tokens 來處理後續所有標準流程。
+		# 這會自動幫我們啟動計時器、發送信號，並擷取使用者個人資料。
+		store_tokens(fake_access_token, fake_refresh_token)
+		
+		# 因為已經完成「假登入」，所以直接返回，跳過下方從磁碟讀取檔案的程式碼。
+		return
+	# --- 【修改結束】 ---
+
 	print("--- Loading Tokens ---")
 	var file_exists = FileAccess.file_exists(SAVE_PATH)
 	print("Checking for file at '", SAVE_PATH, "'. Exists: ", file_exists)
@@ -198,7 +215,6 @@ func load_tokens_from_disk():
 			refresh_access_token()
 		else:
 			logout()
-
 
 # 公開的刷新方法，可以被計時器或內部邏輯呼叫
 func refresh_access_token():
