@@ -8,11 +8,13 @@ extends Control
 @onready var npc_spawn_locations = $NpcSpawnLocations
 
 @onready var task_button = $SubMenu/TaskButton
+@onready var task_request = $TaskRequest
 @onready var mail_button = $SubMenu/MailButton
 @onready var settings_button = $SubMenu/SettingsButton
 
 const SubMenuScene = preload("res://ui/hud/sub_menu.tscn")
 const ModalScene = preload("res://ui/hud/modal.tscn")
+var current_modal = null
 
 # _ready 函式會在場景啟動時自動執行一次
 func _ready():
@@ -32,7 +34,7 @@ func _ready():
 func _on_task_button_pressed():
 	var modal = ModalScene.instantiate()
 	add_child(modal)
-	modal.show_with_content("任務", "這裡是您的每日任務列表...")
+	modal.show_quests(modal.QuestViewType.REGULAR)
 
 func _on_mail_button_pressed():
 	var modal = ModalScene.instantiate()

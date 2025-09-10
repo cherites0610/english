@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ct3eosvxtmsau"]
 
-[ext_resource type="Script" uid="uid://cjp5vr17o330q" path="res://ui/hud/login_scene.gd" id="1_wisbw"]
+[ext_resource type="Script" uid="uid://cjp5vr17o330q" path="res://ui/login_scene.gd" id="1_wisbw"]
 
 [sub_resource type="Theme" id="Theme_wisbw"]
 
