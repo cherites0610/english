@@ -206,3 +206,7 @@ func _on_request_declined(requester_id: String) -> void:
 	# 根據你的API，拒絕可能也是用 "rejected" 或 "declined"
 	# 這裡我們假設用 "rejected"，你可以根據實際情況修改
 	respond_to_request(requester_id, "rejected")
+
+
+func _on_back_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://ui/main_menu/main_menu.tscn")
