@@ -25,6 +25,7 @@ func _ready() -> void:
 	
 	# 立即載入第一個分頁的內容
 	fetch_friends_list()
+	EventManager.post_event("JOIN_FRIEND_PAGE")
 
 # 當分頁被切換時呼叫
 func _on_tab_changed(tab_idx: int) -> void:
