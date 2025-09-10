@@ -18,6 +18,6 @@ func show_with_content(title: String, content: String):
 func close_modal():
 	self.queue_free()
 
-
 func _on_close_button_pressed() -> void:
+	print('123')
 	close_modal()

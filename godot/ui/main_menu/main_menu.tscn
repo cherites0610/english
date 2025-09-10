@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dlvuxihtf5b5c"]
+[gd_scene load_steps=7 format=3 uid="uid://dlvuxihtf5b5c"]
 
 [ext_resource type="Script" uid="uid://d4njqkjc25rib" path="res://ui/main_menu/main_menu.gd" id="1_0o4t1"]
 [ext_resource type="Texture2D" uid="uid://5tesw1yh3lug" path="res://assets/mainmenu/Home_bg.png" id="1_06t4h"]
 [ext_resource type="PackedScene" uid="uid://goo2fblg32ks" path="res://ui/hud/header.tscn" id="2_8qtwp"]
+[ext_resource type="Texture2D" uid="uid://bqenb2rkyrfre" path="res://assets/Transportation.png" id="6_joh67"]
 [ext_resource type="PackedScene" uid="uid://cl0w7jg75m3ht" path="res://ui/hud/bottom_menu.tscn" id="9_dy7ct"]
 [ext_resource type="PackedScene" uid="uid://cmv4wsu6p8oru" path="res://scenes/homeAnna.tscn" id="11_s4pem"]
 
@@ -77,4 +78,12 @@ anchor_bottom = 0.0
 offset_bottom = 128.0
 grow_vertical = 1
 
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 1
+offset_right = 2048.0
+offset_bottom = 2048.0
+scale = Vector2(0.245932, 0.245932)
+texture_normal = ExtResource("6_joh67")
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_house_button_1_pressed"]

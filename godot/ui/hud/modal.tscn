@@ -32,14 +32,13 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/WindowPanel/VBoxContainer/TitleBar"]
 layout_mode = 2
-size_flags_horizontal = 3
 text = "視窗標題"
 horizontal_alignment = 1
 
 [node name="CloseButton" type="TextureButton" parent="CenterContainer/WindowPanel/VBoxContainer/TitleBar"]
 layout_mode = 2
+size_flags_horizontal = 0
 texture_normal = ExtResource("1_h8qmc")
-ignore_texture_size = true
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/WindowPanel/VBoxContainer"]
 layout_mode = 2
