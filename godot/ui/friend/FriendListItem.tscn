@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsuvf30k7e2ug"]
+
+[ext_resource type="Script" uid="uid://bnrjx6m6bbkm5" path="res://ui/friend/friend_list_item.gd" id="1_3rkw6"]
+
+[node name="FriendListItem" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3rkw6")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="AvatarRequest" type="HTTPRequest" parent="HBoxContainer"]
+
+[node name="AvatarTexture" type="TextureRect" parent="HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "玩家名稱"
+
+[node name="LevelLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Lv. 1"
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DeleteButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "刪除"

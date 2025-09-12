@@ -133,9 +133,13 @@ offset_bottom = 2508.0
 scale = Vector2(0.245932, 0.245932)
 texture_normal = ExtResource("8_s4pem")
 
+[node name="Button2" type="Button" parent="."]
+offset_left = 237.0
+offset_top = 608.0
+offset_right = 341.0
+offset_bottom = 640.0
+scale = Vector2(2.44, 2.44)
+text = "進入好友介面"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="HouseButton1" to="." method="_on_house_button_1_pressed"]
-[connection signal="pressed" from="HouseButton2" to="." method="_on_house_button_1_pressed"]
-[connection signal="pressed" from="HouseButton3" to="." method="_on_house_button_1_pressed"]
-[connection signal="pressed" from="HouseButton4" to="." method="_on_house_button_1_pressed"]
-[connection signal="pressed" from="HouseButton5" to="." method="_on_house_button_1_pressed"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_house_button_1_pressed"]
