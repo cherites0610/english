@@ -23,11 +23,6 @@ layout_mode = 2
 layout_mode = 2
 text = "玩家姓名"
 
-[node name="MoneyIcon" type="TextureRect" parent="HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("1_77m70")
-stretch_mode = 2
-
 [node name="MoneyLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "9999"
@@ -35,3 +30,8 @@ text = "9999"
 [node name="LevelLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "Lv. 10"
+
+[node name="MoneyIcon" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_77m70")
+stretch_mode = 2

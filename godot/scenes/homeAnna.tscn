@@ -423,11 +423,11 @@ frame_progress = 1.0
 [node name="breatheAll" type="Node2D" parent="."]
 
 [node name="中瀏海" type="Sprite2D" parent="breatheAll"]
-z_index = 5
+z_index = 2
 texture = ExtResource("3_7eykn")
 
 [node name="右前瀏海" type="Sprite2D" parent="breatheAll"]
-z_index = 5
+z_index = 2
 texture = ExtResource("4_lirbm")
 
 [node name="右後毛" type="Sprite2D" parent="breatheAll"]
@@ -441,7 +441,7 @@ texture = ExtResource("6_v4ie0")
 texture = ExtResource("7_id0dv")
 
 [node name="左前瀏海" type="Sprite2D" parent="breatheAll"]
-z_index = 5
+z_index = 2
 texture = ExtResource("10_tlgon")
 
 [node name="左後毛" type="Sprite2D" parent="breatheAll"]
@@ -458,7 +458,7 @@ z_index = 1
 texture = ExtResource("19_j4tqf")
 
 [node name="眉毛" type="Sprite2D" parent="breatheAll"]
-z_index = 5
+z_index = 3
 texture = ExtResource("20_o5uhc")
 
 [node name="閉眼" type="Sprite2D" parent="breatheAll"]
