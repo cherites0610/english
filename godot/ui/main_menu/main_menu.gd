@@ -12,6 +12,10 @@ extends Control
 @onready var mail_button = $SubMenu/MailButton
 @onready var settings_button = $SubMenu/SettingsButton
 
+const QuestModalScene = preload("res://ui/hud/quest_modal.tscn")
+const MailModalScene  = preload("res://ui/hud/MailModal.tscn")
+const SettingModalScene  = preload("res://ui/hud/settings_modal.tscn")
+
 @onready var background = $Background
 @onready var house_buttons = [
 	$HouseButton1,
@@ -74,19 +78,17 @@ func update_button_positions():
 		house_buttons[i].position = button_pos
 
 func _on_task_button_pressed():
-	var modal = ModalScene.instantiate()
-	add_child(modal)
-	modal.show_quests(modal.QuestViewType.REGULAR)
+	var quest_modal = QuestModalScene.instantiate()
+	add_child(quest_modal)
 
 func _on_mail_button_pressed():
-	var modal = ModalScene.instantiate()
-	add_child(modal)
-	modal.show_with_content("郵件", "您目前沒有新郵件。")
+	var mail_modal = MailModalScene.instantiate()
+	add_child(mail_modal)
 
 func _on_settings_button_pressed():
-	var modal = ModalScene.instantiate()
-	add_child(modal)
-	modal.show_with_content("設定", "音量設定\n畫質設定\n...")
+	var setting_modal = SettingModalScene.instantiate()
+	add_child(setting_modal)
+	setting_modal.show_modal()
 	
 # 這是一個自訂函式，專門用來處理 NPC 的隨機位置邏輯
 func randomize_npc_positions():

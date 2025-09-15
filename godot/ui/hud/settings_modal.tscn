@@ -1,0 +1,86 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0tx4lcbe85xu"]
+
+[ext_resource type="Script" uid="uid://csidk8i7ee1sb" path="res://ui/hud/settings_modal.gd" id="1_jx20s"]
+
+[node name="SettingsModal" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jx20s")
+
+[node name="WindowPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WindowPanel"]
+layout_mode = 2
+
+[node name="TitleBar" type="HBoxContainer" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="WindowPanel/VBoxContainer/TitleBar"]
+layout_mode = 2
+text = "設定"
+
+[node name="CloseButton" type="Button" parent="WindowPanel/VBoxContainer/TitleBar"]
+layout_mode = 2
+text = "X"
+
+[node name="AccountBindingLabel" type="Label" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+text = "帳號綁定"
+
+[node name="GoogleButton" type="Button" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+text = "使用 Google 帳號登入"
+
+[node name="LineButton" type="Button" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+text = "使用 Line 帳號登入"
+
+[node name="HSeparator" type="HSeparator" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ProfileLabel" type="Label" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+text = "個人資料"
+
+[node name="NameHBox" type="HBoxContainer" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="WindowPanel/VBoxContainer/NameHBox"]
+layout_mode = 2
+text = "暱稱: "
+
+[node name="NameEdit" type="LineEdit" parent="WindowPanel/VBoxContainer/NameHBox"]
+layout_mode = 2
+placeholder_text = "請輸入您的新暱稱"
+
+[node name="SaveNameButton" type="Button" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+text = "儲存暱稱"
+
+[node name="HSeparator2" type="HSeparator" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="AudioLabel" type="Label" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+text = "音效設定"
+
+[node name="VolumeHBox" type="HBoxContainer" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="VolumeLabel" type="Label" parent="WindowPanel/VBoxContainer/VolumeHBox"]
+layout_mode = 2
+
+[node name="VolumeSlider" type="HSlider" parent="WindowPanel/VBoxContainer/VolumeHBox"]
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="LogoutButton" type="Button" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2

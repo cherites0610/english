@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq0nbg1836x80"]
+
+[ext_resource type="Script" uid="uid://cl4jeojr3xcvy" path="res://ui/hud/mail_modal.gd" id="1_erd76"]
+
+[node name="MailModal" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.490196)
+script = ExtResource("1_erd76")
+
+[node name="WindowPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -75.0
+offset_right = 278.0
+offset_bottom = 225.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WindowPanel"]
+layout_mode = 2
+
+[node name="TitleBar" type="HBoxContainer" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="WindowPanel/VBoxContainer/TitleBar"]
+layout_mode = 2
+text = "郵件"
+
+[node name="CloseButton" type="Button" parent="WindowPanel/VBoxContainer/TitleBar"]
+z_index = 300
+layout_mode = 2
+text = "X"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="WindowPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MailListContainer" type="VBoxContainer" parent="WindowPanel/VBoxContainer/ScrollContainer"]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]

@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://doaos0wqgfk1w"]
+
+[ext_resource type="Script" uid="uid://b425oyybxpax5" path="res://mail_list_item.gd" id="1_jwukm"]
+
+[node name="MailListItem" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jwukm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="BasicInfo" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ReadStatus" type="ColorRect" parent="VBoxContainer/BasicInfo"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/BasicInfo"]
+layout_mode = 2
+
+[node name="FromLabel" type="Label" parent="VBoxContainer/BasicInfo"]
+layout_mode = 2
+
+[node name="ReceivedAtLabel" type="Label" parent="VBoxContainer/BasicInfo"]
+layout_mode = 2
+
+[node name="ContextLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
