@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8vwj15kh08lm"]
+[gd_scene load_steps=3 format=3 uid="uid://b8vwj15kh08lm"]
 
 [ext_resource type="Script" uid="uid://cjukc08kgk47w" path="res://ui/battle/battle_scene.gd" id="1_5g7vw"]
 [ext_resource type="Texture2D" uid="uid://dd230763fvqyb" path="res://assets/battles/coffee/咖啡廳bg.png" id="1_fw8re"]
-[ext_resource type="PackedScene" uid="uid://cvcdf0fbae8uw" path="res://scenes/loading.tscn" id="3_vm476"]
 
 [node name="BattleScene" type="Control"]
 layout_mode = 3
@@ -65,16 +64,6 @@ offset_top = 6.10352e-05
 offset_right = 40.0
 offset_bottom = 23.0001
 scale = Vector2(15.3636, 15.3636)
-
-[node name="LoadingUI" type="Control" parent="."]
-visible = false
-anchors_preset = 0
-offset_top = -6.10352e-05
-offset_right = 40.0
-offset_bottom = 39.9999
-
-[node name="Loading" parent="LoadingUI" instance=ExtResource("3_vm476")]
-position = Vector2(-7, 1.00006)
 
 [node name="SettlementUI" type="Control" parent="."]
 visible = false

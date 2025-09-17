@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://cvgjdegr47g22"]
+
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_vvjqg"]
+[ext_resource type="Texture2D" uid="uid://b542vdtqo76ye" path="res://icons/diamond.png" id="2_5qsy8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvjqg"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="diamond" type="PanelContainer"]
+custom_minimum_size = Vector2(200, 50)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -200.0
+offset_bottom = 81.0
+grow_horizontal = 0
+theme = ExtResource("1_vvjqg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_vvjqg")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.65
+texture = ExtResource("2_5qsy8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 50
+text = "400"

@@ -6,11 +6,11 @@ const SearchResultItemScene = preload("res://ui/friend/search_result_item.tscn")
 
 @onready var http_request: HTTPRequest = $ApiRequest
 @onready var tab_container: TabContainer = $TabContainer
-@onready var friends_list_container: VBoxContainer = $TabContainer/FriendsListTab
-@onready var pending_list_container: VBoxContainer = $TabContainer/PendingListTab
-@onready var search_input: LineEdit = $TabContainer/SearchTab/HBoxContainer/SearchInput
-@onready var search_button: Button = $TabContainer/SearchTab/HBoxContainer/SearchButton
-@onready var search_results_container: VBoxContainer = $TabContainer/SearchTab/ScrollContainer/SearchResultsContainer
+@onready var friends_list_container: VBoxContainer = $"TabContainer/好友列表"
+@onready var pending_list_container: VBoxContainer = $"TabContainer/申請列表"
+@onready var search_input: LineEdit = $"TabContainer/搜尋好友/HBoxContainer/SearchInput"
+@onready var search_button: Button = $"TabContainer/搜尋好友/HBoxContainer/SearchButton"
+@onready var search_results_container: VBoxContainer = $"TabContainer/搜尋好友/ScrollContainer/SearchResultsContainer"
 
 var friends_data: Array = []
 var pending_data: Array = []

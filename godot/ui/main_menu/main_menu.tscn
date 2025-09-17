@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" uid="uid://d4njqkjc25rib" path="res://ui/main_menu/main_menu.gd" id="1_0o4t1"]
 [ext_resource type="Texture2D" uid="uid://nj0013f0hmuj" path="res://assets/mainmenu/Home_bg.png" id="1_06t4h"]
-[ext_resource type="PackedScene" uid="uid://goo2fblg32ks" path="res://ui/hud/header.tscn" id="2_8qtwp"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="5_xio0d"]
 [ext_resource type="Texture2D" uid="uid://bqenb2rkyrfre" path="res://assets/Transportation.png" id="6_joh67"]
 [ext_resource type="Texture2D" uid="uid://dt7l1dhcqsnpi" path="res://assets/Fun_Play.png" id="7_4e78x"]
 [ext_resource type="Texture2D" uid="uid://jjpnyb7p6c52" path="res://assets/Goverment.png" id="8_s4pem"]
-[ext_resource type="PackedScene" uid="uid://cl0w7jg75m3ht" path="res://ui/hud/bottom_menu.tscn" id="9_dy7ct"]
 [ext_resource type="Texture2D" uid="uid://b1nd2nigrc7ke" path="res://assets/Dining.png" id="9_xio0d"]
+[ext_resource type="PackedScene" uid="uid://342gbjrodqxa" path="res://ui/hud/money.tscn" id="10_4e78x"]
 [ext_resource type="Texture2D" uid="uid://m8tkqd71y34q" path="res://assets/BuyHub.png" id="10_tf5ef"]
 [ext_resource type="PackedScene" uid="uid://cmv4wsu6p8oru" path="res://scenes/homeAnna.tscn" id="11_s4pem"]
-[ext_resource type="PackedScene" uid="uid://vab6jjuddusg" path="res://ui/hud/collapsible_menu.tscn" id="11_xio0d"]
+[ext_resource type="PackedScene" uid="uid://cvgjdegr47g22" path="res://ui/hud/diamond.tscn" id="11_xio0d"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -34,15 +34,8 @@ texture = ExtResource("1_06t4h")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="BottomMenu" parent="." instance=ExtResource("9_dy7ct")]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-offset_top = -153.0
-offset_bottom = -3.0
-grow_vertical = 0
-
 [node name="Button" type="Button" parent="."]
+z_index = 200
 layout_mode = 1
 anchors_preset = -1
 offset_left = 25.0
@@ -50,6 +43,7 @@ offset_top = 894.0
 offset_right = 126.0
 offset_bottom = 926.0
 scale = Vector2(2.44, 2.44)
+theme = ExtResource("5_xio0d")
 text = "切換npc狀態"
 
 [node name="Npc1" parent="." instance=ExtResource("11_s4pem")]
@@ -76,13 +70,6 @@ position = Vector2(201, 616)
 
 [node name="Marker2D5" type="Marker2D" parent="NpcSpawnLocations"]
 position = Vector2(224, 242)
-
-[node name="Header" parent="." instance=ExtResource("2_8qtwp")]
-layout_mode = 1
-anchors_preset = 10
-anchor_bottom = 0.0
-offset_bottom = 128.0
-grow_vertical = 1
 
 [node name="HouseButton1" type="TextureButton" parent="."]
 z_index = 5
@@ -134,20 +121,21 @@ offset_bottom = 2508.0
 scale = Vector2(0.245932, 0.245932)
 texture_normal = ExtResource("8_s4pem")
 
-[node name="Button2" type="Button" parent="."]
-layout_mode = 0
-offset_left = 237.0
-offset_top = 608.0
-offset_right = 341.0
-offset_bottom = 640.0
-scale = Vector2(2.44, 2.44)
-text = "進入好友介面"
+[node name="Money" parent="." instance=ExtResource("10_4e78x")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.95
+anchor_top = 0.01
+anchor_right = 0.95
+anchor_bottom = 0.01
 
-[node name="CollapsibleMenu" parent="." instance=ExtResource("11_xio0d")]
-offset_left = 354.0
-offset_top = 382.0
-offset_right = 354.0
-offset_bottom = 382.0
+[node name="Diamond" parent="." instance=ExtResource("11_xio0d")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.65
+anchor_top = 0.01
+anchor_right = 0.65
+anchor_bottom = 0.01
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="HouseButton1" to="." method="_on_house_button_1_pressed"]
@@ -155,4 +143,3 @@ offset_bottom = 382.0
 [connection signal="pressed" from="HouseButton3" to="." method="_on_house_button_3_pressed"]
 [connection signal="pressed" from="HouseButton4" to="." method="_on_house_button_4_pressed"]
 [connection signal="pressed" from="HouseButton5" to="." method="_on_house_button_5_pressed"]
-[connection signal="pressed" from="Button2" to="." method="_on_button_2_pressed"]

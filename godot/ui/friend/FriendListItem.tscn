@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dsuvf30k7e2ug"]
+[gd_scene load_steps=5 format=3 uid="uid://dsuvf30k7e2ug"]
 
 [ext_resource type="Script" uid="uid://bnrjx6m6bbkm5" path="res://ui/friend/friend_list_item.gd" id="1_3rkw6"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="2_1vyt2"]
+[ext_resource type="FontFile" uid="uid://dpgc325si5bxp" path="res://Baloo_2/static/Baloo2-Bold.ttf" id="3_nn6b8"]
+[ext_resource type="FontFile" uid="uid://dnv1rkpgr60tr" path="res://Baloo_2/static/Baloo2-ExtraBold.ttf" id="4_53yvn"]
 
 [node name="FriendListItem" type="PanelContainer"]
 anchors_preset = 15
@@ -8,10 +11,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_1vyt2")
 script = ExtResource("1_3rkw6")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+theme_override_constants/separation = 12
 
 [node name="AvatarRequest" type="HTTPRequest" parent="HBoxContainer"]
 
@@ -23,13 +28,23 @@ stretch_mode = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 4
 
 [node name="NameLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("2_1vyt2")
+theme_type_variation = &"GraphFrameTitleLabel"
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_nn6b8")
+theme_override_font_sizes/font_size = 20
 text = "玩家名稱"
 
 [node name="LevelLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_53yvn")
+theme_override_font_sizes/font_size = 20
 text = "Lv. 1"
 
 [node name="Control" type="Control" parent="HBoxContainer"]
@@ -38,4 +53,5 @@ size_flags_horizontal = 3
 
 [node name="DeleteButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"DeleteButton"
 text = "刪除"

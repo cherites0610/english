@@ -25,7 +25,6 @@ driver/enable_input=true
 
 GlobalState="*res://autoload/global_state.tscn"
 EventManager="*res://autoload/EventManager.gd"
-SceneManager="*res://autoload/SceneManager.gd"
 
 [display]
 

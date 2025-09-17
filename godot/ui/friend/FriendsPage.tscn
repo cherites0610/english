@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cjvklit3cvufr"]
+[gd_scene load_steps=3 format=3 uid="uid://cjvklit3cvufr"]
 
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_l8d0g"]
 [ext_resource type="Script" uid="uid://c6jhnhk3xhi4x" path="res://ui/friend/FriendsPage.gd" id="1_v6lq1"]
 
 [node name="FriendsPage" type="Control"]
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_l8d0g")
 script = ExtResource("1_v6lq1")
 
 [node name="TabContainer" type="TabContainer" parent="."]
@@ -20,45 +22,45 @@ grow_horizontal = 2
 grow_vertical = 2
 current_tab = 2
 
-[node name="FriendsListTab" type="VBoxContainer" parent="TabContainer"]
+[node name="好友列表" type="VBoxContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
 tooltip_text = "好友列表"
 metadata/_tab_index = 0
 
-[node name="PendingListTab" type="VBoxContainer" parent="TabContainer"]
+[node name="申請列表" type="VBoxContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="SearchTab" type="VBoxContainer" parent="TabContainer"]
+[node name="搜尋好友" type="VBoxContainer" parent="TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/SearchTab"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/搜尋好友"]
 layout_mode = 2
 
-[node name="SearchInput" type="LineEdit" parent="TabContainer/SearchTab/HBoxContainer"]
+[node name="SearchInput" type="LineEdit" parent="TabContainer/搜尋好友/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "請輸入使用者名稱..."
 
-[node name="SearchButton" type="Button" parent="TabContainer/SearchTab/HBoxContainer"]
+[node name="SearchButton" type="Button" parent="TabContainer/搜尋好友/HBoxContainer"]
 layout_mode = 2
 text = "搜尋"
 
-[node name="backButton" type="Button" parent="TabContainer/SearchTab/HBoxContainer"]
+[node name="backButton" type="Button" parent="TabContainer/搜尋好友/HBoxContainer"]
 layout_mode = 2
 text = "返回上一步"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/SearchTab"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/搜尋好友"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SearchResultsContainer" type="VBoxContainer" parent="TabContainer/SearchTab/ScrollContainer"]
+[node name="SearchResultsContainer" type="VBoxContainer" parent="TabContainer/搜尋好友/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ApiRequest" type="HTTPRequest" parent="."]
 
-[connection signal="pressed" from="TabContainer/SearchTab/HBoxContainer/backButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="TabContainer/搜尋好友/HBoxContainer/backButton" to="." method="_on_back_button_pressed"]

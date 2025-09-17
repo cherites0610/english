@@ -49,11 +49,12 @@ func _ready():
 	# 將 SubMenu 實例加入到場景中
 	add_child(sub_menu_instance) 
 	# 像之前一樣，設定它的位置
-	sub_menu_instance.position = Vector2(20, 20) 
+	sub_menu_instance.position = Vector2(20, 150) 
 	
 	sub_menu_instance.task_button_pressed.connect(_on_task_button_pressed)
 	sub_menu_instance.mail_button_pressed.connect(_on_mail_button_pressed)
 	sub_menu_instance.settings_button_pressed.connect(_on_settings_button_pressed)
+	sub_menu_instance.friend_button.pressed.connect(_on_friend_button_pressed)
 
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
@@ -89,6 +90,9 @@ func _on_settings_button_pressed():
 	var setting_modal = SettingModalScene.instantiate()
 	add_child(setting_modal)
 	setting_modal.show_modal()
+	
+func _on_friend_button_pressed():
+	get_tree().change_scene_to_file("res://ui/friend/FriendsPage.tscn")
 	
 # 這是一個自訂函式，專門用來處理 NPC 的隨機位置邏輯
 func randomize_npc_positions():
@@ -144,7 +148,3 @@ func _on_button_pressed() -> void:
 		npc1.set_finish(true)
 		
 	pass # Replace with function body.
-
-
-func _on_button_2_pressed() -> void:
-	get_tree().change_scene_to_file("res://ui/friend/FriendsPage.tscn")
