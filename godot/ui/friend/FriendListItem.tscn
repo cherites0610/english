@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dsuvf30k7e2ug"]
 
 [ext_resource type="Script" uid="uid://bnrjx6m6bbkm5" path="res://ui/friend/friend_list_item.gd" id="1_3rkw6"]
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="2_1vyt2"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="2_1vyt2"]
 [ext_resource type="FontFile" uid="uid://dpgc325si5bxp" path="res://Baloo_2/static/Baloo2-Bold.ttf" id="3_nn6b8"]
 [ext_resource type="FontFile" uid="uid://dnv1rkpgr60tr" path="res://Baloo_2/static/Baloo2-ExtraBold.ttf" id="4_53yvn"]
 

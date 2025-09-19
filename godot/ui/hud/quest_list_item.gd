@@ -5,9 +5,9 @@ extends PanelContainer
 signal quest_selected(quest_data)
 
 # 請準備三張圖示，並將路徑填寫於此
-const MAIN_QUEST_ICON = preload("res://assets/BuyHub.png")
-const DAILY_QUEST_ICON = preload("res://assets/BuyHub.png")
-const ACHIEVEMENT_ICON = preload("res://assets/BuyHub.png")
+const MAIN_QUEST_ICON = preload("res://assets/mainmenu/IMG_2177.PNG")
+const DAILY_QUEST_ICON = preload("res://assets/mainmenu/IMG_2177.PNG")
+const ACHIEVEMENT_ICON = preload("res://assets/mainmenu/IMG_2177.PNG")
 
 @onready var icon = $HBoxContainer/QuestTypeIcon
 @onready var title_label = $HBoxContainer/VBoxContainer/TitleLabel

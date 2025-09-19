@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cjvklit3cvufr"]
 
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_l8d0g"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_l8d0g"]
 [ext_resource type="Script" uid="uid://c6jhnhk3xhi4x" path="res://ui/friend/FriendsPage.gd" id="1_v6lq1"]
 
 [node name="FriendsPage" type="Control"]

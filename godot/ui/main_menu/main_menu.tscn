@@ -1,14 +1,14 @@
 [gd_scene load_steps=12 format=3 uid="uid://dlvuxihtf5b5c"]
 
 [ext_resource type="Script" uid="uid://d4njqkjc25rib" path="res://ui/main_menu/main_menu.gd" id="1_0o4t1"]
-[ext_resource type="Texture2D" uid="uid://nj0013f0hmuj" path="res://assets/mainmenu/Home_bg.png" id="1_06t4h"]
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="5_xio0d"]
-[ext_resource type="Texture2D" uid="uid://bqenb2rkyrfre" path="res://assets/Transportation.png" id="6_joh67"]
-[ext_resource type="Texture2D" uid="uid://dt7l1dhcqsnpi" path="res://assets/Fun_Play.png" id="7_4e78x"]
-[ext_resource type="Texture2D" uid="uid://jjpnyb7p6c52" path="res://assets/Goverment.png" id="8_s4pem"]
-[ext_resource type="Texture2D" uid="uid://b1nd2nigrc7ke" path="res://assets/Dining.png" id="9_xio0d"]
+[ext_resource type="Texture2D" uid="uid://ges2l55tgkg1" path="res://assets/mainmenu/Home_bg2.png" id="2_s4pem"]
+[ext_resource type="Texture2D" uid="uid://bdtca8ee5q5wx" path="res://assets/mainmenu1/IMG_2181.png" id="3_s4pem"]
+[ext_resource type="Texture2D" uid="uid://c77ipdnspkdv6" path="res://assets/mainmenu1/IMG_2179.png" id="4_xio0d"]
+[ext_resource type="Texture2D" uid="uid://bknyel7sb6nth" path="res://assets/mainmenu1/IMG_2180.png" id="5_tf5ef"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="5_xio0d"]
+[ext_resource type="Texture2D" uid="uid://cq03l66lfwe6r" path="res://assets/mainmenu1/IMG_2177 (1).png" id="6_qao3l"]
+[ext_resource type="Texture2D" uid="uid://cgr3yngv8j34w" path="res://assets/mainmenu1/IMG_2182.png" id="7_s4pem"]
 [ext_resource type="PackedScene" uid="uid://342gbjrodqxa" path="res://ui/hud/money.tscn" id="10_4e78x"]
-[ext_resource type="Texture2D" uid="uid://m8tkqd71y34q" path="res://assets/BuyHub.png" id="10_tf5ef"]
 [ext_resource type="PackedScene" uid="uid://cmv4wsu6p8oru" path="res://scenes/homeAnna.tscn" id="11_s4pem"]
 [ext_resource type="PackedScene" uid="uid://cvgjdegr47g22" path="res://ui/hud/diamond.tscn" id="11_xio0d"]
 
@@ -27,14 +27,84 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(340, 232)
-texture = ExtResource("1_06t4h")
+texture = ExtResource("2_s4pem")
 expand_mode = 1
 stretch_mode = 6
 
+[node name="HouseButton1" type="TextureButton" parent="Background"]
+z_index = 5
+custom_minimum_size = Vector2(250, 250)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.952
+anchor_top = 0.04
+anchor_right = 1.0
+anchor_bottom = 0.072
+offset_left = -614.0
+offset_bottom = 614.0
+grow_horizontal = 0
+texture_normal = ExtResource("3_s4pem")
+
+[node name="HouseButton2" type="TextureButton" parent="Background"]
+z_index = 5
+custom_minimum_size = Vector2(250, 250)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.298
+anchor_bottom = 0.5
+offset_top = -307.0
+offset_right = 614.0
+offset_bottom = 307.0
+grow_vertical = 2
+texture_normal = ExtResource("4_xio0d")
+
+[node name="HouseButton3" type="TextureButton" parent="Background"]
+z_index = 5
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.987
+anchor_top = 0.444
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -614.0
+offset_top = -307.0
+offset_bottom = 307.0
+grow_horizontal = 0
+grow_vertical = 2
+texture_normal = ExtResource("5_tf5ef")
+
+[node name="HouseButton4" type="TextureButton" parent="Background"]
+z_index = 5
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.589
+anchor_bottom = 0.605
+offset_top = -307.0
+offset_right = 614.0
+offset_bottom = 307.0
+grow_vertical = 2
+texture_normal = ExtResource("6_qao3l")
+
+[node name="HouseButton5" type="TextureButton" parent="Background"]
+z_index = 5
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.887
+anchor_top = 0.887
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -614.0
+offset_top = -614.0
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("7_s4pem")
+
 [node name="Button" type="Button" parent="."]
+visible = false
 z_index = 200
 layout_mode = 1
 anchors_preset = -1
@@ -57,69 +127,19 @@ scale = Vector2(0.167141, 0.167141)
 [node name="NpcSpawnLocations" type="Node" parent="."]
 
 [node name="Marker2D1" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(219, 1037)
+position = Vector2(195, 1565)
 
 [node name="Marker2D2" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(589, 459)
+position = Vector2(877, 1259)
 
 [node name="Marker2D3" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(527, 785)
+position = Vector2(151, 969)
 
 [node name="Marker2D4" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(201, 616)
+position = Vector2(185, 401)
 
 [node name="Marker2D5" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(224, 242)
-
-[node name="HouseButton1" type="TextureButton" parent="."]
-z_index = 5
-layout_mode = 0
-offset_left = 206.0
-offset_top = 642.0
-offset_right = 2254.0
-offset_bottom = 2690.0
-scale = Vector2(0.245932, 0.245932)
-texture_normal = ExtResource("7_4e78x")
-
-[node name="HouseButton2" type="TextureButton" parent="."]
-z_index = 5
-layout_mode = 1
-offset_left = 278.0
-offset_top = -64.0
-offset_right = 2326.0
-offset_bottom = 1984.0
-scale = Vector2(0.245932, 0.245932)
-texture_normal = ExtResource("6_joh67")
-
-[node name="HouseButton3" type="TextureButton" parent="."]
-z_index = 5
-layout_mode = 0
-offset_left = 225.0
-offset_top = 245.0
-offset_right = 2273.0
-offset_bottom = 2293.0
-scale = Vector2(0.245932, 0.245932)
-texture_normal = ExtResource("9_xio0d")
-
-[node name="HouseButton4" type="TextureButton" parent="."]
-z_index = 5
-layout_mode = 0
-offset_left = -318.0
-offset_top = -136.0
-offset_right = 1730.0
-offset_bottom = 1912.0
-scale = Vector2(0.245932, 0.245932)
-texture_normal = ExtResource("10_tf5ef")
-
-[node name="HouseButton5" type="TextureButton" parent="."]
-z_index = 5
-layout_mode = 0
-offset_left = -92.0
-offset_top = 460.0
-offset_right = 1956.0
-offset_bottom = 2508.0
-scale = Vector2(0.245932, 0.245932)
-texture_normal = ExtResource("8_s4pem")
+position = Vector2(925, 770)
 
 [node name="Money" parent="." instance=ExtResource("10_4e78x")]
 layout_mode = 1
@@ -137,9 +157,14 @@ anchor_top = 0.01
 anchor_right = 0.65
 anchor_bottom = 0.01
 
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[connection signal="pressed" from="Background/HouseButton1" to="." method="_on_house_button_1_pressed"]
+[connection signal="pressed" from="Background/HouseButton2" to="." method="_on_house_button_2_pressed"]
+[connection signal="pressed" from="Background/HouseButton3" to="." method="_on_house_button_3_pressed"]
+[connection signal="pressed" from="Background/HouseButton4" to="." method="_on_house_button_4_pressed"]
+[connection signal="pressed" from="Background/HouseButton5" to="." method="_on_house_button_5_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="HouseButton1" to="." method="_on_house_button_1_pressed"]
-[connection signal="pressed" from="HouseButton2" to="." method="_on_house_button_2_pressed"]
-[connection signal="pressed" from="HouseButton3" to="." method="_on_house_button_3_pressed"]
-[connection signal="pressed" from="HouseButton4" to="." method="_on_house_button_4_pressed"]
-[connection signal="pressed" from="HouseButton5" to="." method="_on_house_button_5_pressed"]

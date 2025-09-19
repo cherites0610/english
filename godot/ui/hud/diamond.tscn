@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cvgjdegr47g22"]
 
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_vvjqg"]
-[ext_resource type="Texture2D" uid="uid://b542vdtqo76ye" path="res://icons/diamond.png" id="2_5qsy8"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_vvjqg"]
+[ext_resource type="Texture2D" uid="uid://b542vdtqo76ye" path="res://assets/icons/diamond.png" id="2_5qsy8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvjqg"]
 content_margin_left = 10.0

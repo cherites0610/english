@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://db6y2edw3y4w3"]
 
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_2iamd"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_2iamd"]
 [ext_resource type="Script" uid="uid://dgdtu8pg48cdo" path="res://ui/hud/quest_modal.gd" id="1_22lbx"]
 
 [node name="QuestModal" type="ColorRect"]

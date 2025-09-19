@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dr6qjo10afpe8"
-path="res://.godot/imported/money.png-830e938081a23796e5d12820611a0364.ctex"
+uid="uid://bhs33i05ea771"
+path="res://.godot/imported/trash-can.png-d6f3c2cc0851d0696e26b1847e529be6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://icons/money.png"
-dest_files=["res://.godot/imported/money.png-830e938081a23796e5d12820611a0364.ctex"]
+source_file="res://assets/icons/trash-can.png"
+dest_files=["res://.godot/imported/trash-can.png-d6f3c2cc0851d0696e26b1847e529be6.ctex"]
 
 [params]
 

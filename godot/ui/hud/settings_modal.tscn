@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b0tx4lcbe85xu"]
 
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_d64sm"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_d64sm"]
 [ext_resource type="Script" uid="uid://csidk8i7ee1sb" path="res://ui/hud/settings_modal.gd" id="1_jx20s"]
 
 [node name="SettingsModal" type="ColorRect"]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqenb2rkyrfre"
-path="res://.godot/imported/Transportation.png-1c54e020b12c63c74223a3ca47c0aab2.ctex"
+uid="uid://3rf1ofunhg7i"
+path="res://.godot/imported/setting.png-8476276de13496c50f12ab1079bb2461.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Transportation.png"
-dest_files=["res://.godot/imported/Transportation.png-1c54e020b12c63c74223a3ca47c0aab2.ctex"]
+source_file="res://assets/icons/setting.png"
+dest_files=["res://.godot/imported/setting.png-8476276de13496c50f12ab1079bb2461.ctex"]
 
 [params]
 

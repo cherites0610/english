@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b46hwbgixafnh"
-path="res://.godot/imported/mail.png-dc12726e291552ed95047e0994383a6e.ctex"
+uid="uid://155xk8tw5npu"
+path="res://.godot/imported/cross.png-4605bc80fd2c890ebad412d86281a510.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://icons/mail.png"
-dest_files=["res://.godot/imported/mail.png-dc12726e291552ed95047e0994383a6e.ctex"]
+source_file="res://assets/modalimage/cross.png"
+dest_files=["res://.godot/imported/cross.png-4605bc80fd2c890ebad412d86281a510.ctex"]
 
 [params]
 

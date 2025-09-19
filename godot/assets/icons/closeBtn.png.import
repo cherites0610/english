@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m8tkqd71y34q"
-path="res://.godot/imported/BuyHub.png-4e5fed9d2c19f8df10aca7f7c842d70d.ctex"
+uid="uid://dwvko8ec2gb0h"
+path="res://.godot/imported/closeBtn.png-6a6471b8c5f11706fe84a14ccb8e0592.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/BuyHub.png"
-dest_files=["res://.godot/imported/BuyHub.png-4e5fed9d2c19f8df10aca7f7c842d70d.ctex"]
+source_file="res://assets/icons/closeBtn.png"
+dest_files=["res://.godot/imported/closeBtn.png-6a6471b8c5f11706fe84a14ccb8e0592.ctex"]
 
 [params]
 

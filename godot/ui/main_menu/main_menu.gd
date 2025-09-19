@@ -25,16 +25,6 @@ const SettingModalScene  = preload("res://ui/hud/settings_modal.tscn")
 	$HouseButton5
 ]
 
-# 定義五顆按鈕在底圖上的百分比位置 (x=寬度比例, y=高度比例)
-var button_ratios = [
-	Vector2(0.45, 0.05), # House 1
-	Vector2(0.12, 0.18), # House 2
-	Vector2(0.45, 0.31), # House 3
-	Vector2(0.12, 0.45), # House 4
-	Vector2(0.45, 0.62)  # House 5
-]
-
-
 const SubMenuScene = preload("res://ui/hud/sub_menu.tscn")
 const ModalScene = preload("res://ui/hud/modal.tscn")
 var current_modal = null
@@ -44,7 +34,6 @@ func _ready():
 	print('背景',background)
 	# 呼叫我們自己寫的函式來處理 NPC 的位置
 	randomize_npc_positions()
-	update_button_positions()
 	var sub_menu_instance = SubMenuScene.instantiate()
 	# 將 SubMenu 實例加入到場景中
 	add_child(sub_menu_instance) 
@@ -56,27 +45,6 @@ func _ready():
 	sub_menu_instance.settings_button_pressed.connect(_on_settings_button_pressed)
 	sub_menu_instance.friend_button.pressed.connect(_on_friend_button_pressed)
 
-func _notification(what):
-	if what == NOTIFICATION_RESIZED:
-		update_button_positions()
-
-#算小屋位置函數
-func update_button_positions():
-	if not background or not background.texture:
-		return
-
-	var tex_size = background.texture.get_size()
-	var bg_rect = background.size         
-	var offset = background.position     
-	var scale = bg_rect / tex_size
-
-	for i in range(house_buttons.size()):
-		var ratio = button_ratios[i]
-		var button_pos = offset + Vector2(
-			ratio.x * tex_size.x * scale.x,
-			ratio.y * tex_size.y * scale.y
-		)
-		house_buttons[i].position = button_pos
 
 func _on_task_button_pressed():
 	var quest_modal = QuestModalScene.instantiate()
