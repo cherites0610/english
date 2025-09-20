@@ -5,15 +5,17 @@ extends ColorRect
 const MailListItemScene = preload("res://ui/hud/mail_list_item.tscn")
 
 @onready var mail_list_container = $WindowPanel/VBoxContainer/ScrollContainer/MailListContainer
-@onready var close_button = $WindowPanel/VBoxContainer/TitleBar/CloseButton
+@onready var close_button = $WindowPanel/VBoxContainer/TitleBar/CloseButton #這是舊Btn
 @onready var http_request = $HTTPRequest
+@onready var close_button2 = $TextureRect/CloseButton2
 
 # 追蹤當前展開的項目，以實現手風琴效果
 var currently_expanded_item = null
 var requestMode = 0
 
 func _ready():
-	close_button.pressed.connect(queue_free)
+	close_button.pressed.connect(queue_free) #這是舊Btn
+	close_button2.pressed.connect(queue_free)
 	# 連接 HTTPRequest 的信號
 	http_request.request_completed.connect(_on_request_completed)
 	

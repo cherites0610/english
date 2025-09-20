@@ -1,0 +1,6 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://cqbfve36rypgr"]
+
+[ext_resource type="Texture2D" uid="uid://bq1il2c5ypp08" path="res://assets/modalimage/select.png" id="1_bwp34"]
+
+[resource]
+texture = ExtResource("1_bwp34")

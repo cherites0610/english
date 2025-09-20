@@ -1225,12 +1225,11 @@ expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xe0j8"]
-bg_color = Color(0.469588, 0.703556, 0.913996, 1)
+bg_color = Color(0.960784, 0.941176, 0.85098, 1)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.768627, 0.301961, 0.345098, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -1374,7 +1373,7 @@ corner_radius_bottom_left = 12
 [resource]
 default_font = ExtResource("1_y206l")
 default_font_size = 20
-Button/colors/font_color = Color(0, 0, 0, 1)
+Button/colors/font_color = Color(0.266667, 0.156863, 0.164706, 1)
 Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
 Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
 Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)

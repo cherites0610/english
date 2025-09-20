@@ -13,8 +13,9 @@ extends Control
 @onready var settings_button = $SubMenu/SettingsButton
 
 const QuestModalScene = preload("res://ui/hud/quest_modal.tscn")
-const MailModalScene  = preload("res://ui/hud/MailModal.tscn")
 const SettingModalScene  = preload("res://ui/hud/settings_modal.tscn")
+const MailModalScene  = preload("res://ui/hud/MailModal.tscn")
+
 
 @onready var background = $Background
 @onready var house_buttons = [
