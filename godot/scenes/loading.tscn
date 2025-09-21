@@ -1,29 +1,444 @@
-[gd_scene load_steps=7 format=3 uid="uid://cvcdf0fbae8uw"]
+[gd_scene load_steps=21 format=3 uid="uid://cvcdf0fbae8uw"]
 
-[ext_resource type="Shader" uid="uid://dxw7d5r766t3u" path="res://scenes/loading.gdshader" id="1_dhqfv"]
 [ext_resource type="Texture2D" uid="uid://c3c8ncm7adn7e" path="res://sprites/loading/遮罩.png" id="2_101rs"]
+[ext_resource type="Texture2D" uid="uid://bc1tvf00ih7jy" path="res://sprites/loading/右輪.png" id="3_x5boc"]
 [ext_resource type="Texture2D" uid="uid://bttoh0o5t4ado" path="res://sprites/loading/地球.png" id="3_yt702"]
+[ext_resource type="Texture2D" uid="uid://dwijajclbopgk" path="res://sprites/loading/左輪.png" id="4_gspuy"]
+[ext_resource type="Texture2D" uid="uid://do1y6i0dkfcmi" path="res://sprites/loading/車車本體.png" id="5_f8gjb"]
+[ext_resource type="Texture2D" uid="uid://3n42a8cb0vel" path="res://sprites/loading/橫線.png" id="6_ffpfu"]
+[ext_resource type="Texture2D" uid="uid://bwxsm8l1kbnbo" path="res://sprites/loading/L.png" id="7_buusq"]
+[ext_resource type="Texture2D" uid="uid://bwht4ltjtpua6" path="res://sprites/loading/o.png" id="8_se4la"]
+[ext_resource type="Texture2D" uid="uid://dgdtefiaihh4s" path="res://sprites/loading/a.png" id="9_i1ib6"]
+[ext_resource type="Texture2D" uid="uid://ha4x8i1mbm1m" path="res://sprites/loading/d.png" id="10_sdmdu"]
+[ext_resource type="Texture2D" uid="uid://c3fvio7tajm3d" path="res://sprites/loading/i.png" id="11_jrjsk"]
+[ext_resource type="Texture2D" uid="uid://clnuetpbdun6c" path="res://sprites/loading/n.png" id="12_wydon"]
+[ext_resource type="Texture2D" uid="uid://b0yf0vuvdbkiu" path="res://sprites/loading/g.png" id="13_5f2ii"]
+[ext_resource type="Texture2D" uid="uid://dfkj7j13j7vd4" path="res://sprites/loading/1.png" id="14_5dkpg"]
+[ext_resource type="Texture2D" uid="uid://easto6ugd65n" path="res://sprites/loading/2.png" id="15_3bc4j"]
+[ext_resource type="Texture2D" uid="uid://blpr8gqw23t1k" path="res://sprites/loading/3.png" id="16_c4w18"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2ytni"]
-shader = ExtResource("1_dhqfv")
-shader_parameter/mask_texture = ExtResource("2_101rs")
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ni88j"]
+light_mode = 2
 
-[sub_resource type="Animation" id="Animation_nxo4k"]
+[sub_resource type="Animation" id="Animation_wn6p5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ball:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("車子本體:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("車子本體:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("輪子:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("英文/L:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("英文/O:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("英文/3:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("英文/A:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("英文/D:position")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("英文/I:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("英文/N:position")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("英文/G:position")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("英文/1:position")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("英文/2:position")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_necb2"]
 resource_name = "旋轉"
+length = 6.0
+loop_mode = 1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ball:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [6.28319, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("車子本體:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1, 1.03), Vector2(1, 1), Vector2(1, 1.03), Vector2(1, 1), Vector2(1, 1.03), Vector2(1, 1), Vector2(1, 1.03), Vector2(1, 1), Vector2(1, 1.03), Vector2(1, 1), Vector2(1, 1.03), Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("車子本體:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("輪子:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(-0.00833321, 0.5, 0.991667, 1.5, 1.99167, 2.5, 2.99167, 3.5, 3.99167, 4.5, 4.99167, 5.5, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10), Vector2(0, 0), Vector2(0, -10)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("英文/L:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.11, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("英文/O:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.22, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("英文/3:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 1.5, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("英文/A:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.33, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("英文/D:position")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.44, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("英文/I:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.55, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("英文/N:position")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 1.06, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("英文/G:position")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 1.17, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("英文/1:position")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0, 1.28, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("英文/2:position")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0, 1.39, 2, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -30), Vector2(0, 0), Vector2(0, 0)]
+}
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_c856a"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_f2sb7"]
 _data = {
-&"旋轉": SubResource("Animation_nxo4k")
+&"RESET": SubResource("Animation_wn6p5"),
+&"旋轉": SubResource("Animation_necb2")
 }
 
 [node name="Loading" type="Node2D"]
 
 [node name="Ball" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_2ytni")
-position = Vector2(555, 1182)
+material = SubResource("CanvasItemMaterial_ni88j")
+position = Vector2(565, 1180)
 texture = ExtResource("3_yt702")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Ball"]
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(564, 1179)
+energy = 0.0
+texture = ExtResource("2_101rs")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_c856a")
+&"": SubResource("AnimationLibrary_f2sb7")
 }
+autoplay = "旋轉"
+
+[node name="輪子" type="Node2D" parent="."]
+z_index = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="輪子"]
+position = Vector2(584, 1088)
+texture = ExtResource("3_x5boc")
+
+[node name="Sprite2D2" type="Sprite2D" parent="輪子"]
+position = Vector2(544, 1088)
+texture = ExtResource("4_gspuy")
+
+[node name="車子本體" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="車子本體"]
+position = Vector2(568, 1080)
+texture = ExtResource("5_f8gjb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(568, 1066)
+texture = ExtResource("6_ffpfu")
+
+[node name="英文" type="Node2D" parent="."]
+position = Vector2(496, 1960)
+
+[node name="L" type="Sprite2D" parent="英文"]
+texture = ExtResource("7_buusq")
+
+[node name="O" type="Sprite2D" parent="英文"]
+texture = ExtResource("8_se4la")
+
+[node name="A" type="Sprite2D" parent="英文"]
+texture = ExtResource("9_i1ib6")
+
+[node name="D" type="Sprite2D" parent="英文"]
+texture = ExtResource("10_sdmdu")
+
+[node name="I" type="Sprite2D" parent="英文"]
+texture = ExtResource("11_jrjsk")
+
+[node name="N" type="Sprite2D" parent="英文"]
+texture = ExtResource("12_wydon")
+
+[node name="G" type="Sprite2D" parent="英文"]
+texture = ExtResource("13_5f2ii")
+
+[node name="1" type="Sprite2D" parent="英文"]
+texture = ExtResource("14_5dkpg")
+
+[node name="2" type="Sprite2D" parent="英文"]
+texture = ExtResource("15_3bc4j")
+
+[node name="3" type="Sprite2D" parent="英文"]
+texture = ExtResource("16_c4w18")
