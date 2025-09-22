@@ -12,7 +12,7 @@ signal profile_updated
 const MainMenuScene = preload("res://ui/main_menu/main_menu.tscn")
 # --- 常數 ---
 const SAVE_PATH = "user://session.json"
-const BASE_URL = "https://english-api.cherites.org/api"
+const BASE_URL = "https://f2cb26ecab38.ngrok-free.app/api"
 const REFRESH_TOKEN_URL = BASE_URL + "/auth/refresh"
 const PROFILE_URL = BASE_URL + "/user/profile"
 
@@ -67,6 +67,7 @@ func _on_api_request_completed(result, response_code, headers, body):
 	
 	if profile_data and profile_data is Dictionary:
 		self.user_profile = profile_data
+		print(self.user_profile)
 		print("使用者資料已更新！歡迎，", self.user_profile.get("name"))
 		
 		# 【核心】發出信號，通知所有關心的 UI 元件來更新畫面
