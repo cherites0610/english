@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://b8vwj15kh08lm"]
+[gd_scene load_steps=5 format=3 uid="uid://b8vwj15kh08lm"]
 
 [ext_resource type="Script" uid="uid://cjukc08kgk47w" path="res://ui/battle/battle_scene.gd" id="1_5g7vw"]
 [ext_resource type="Texture2D" uid="uid://dd230763fvqyb" path="res://assets/battles/coffee/咖啡廳bg.png" id="1_fw8re"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_vm476"]
+
+[sub_resource type="Theme" id="Theme_vm476"]
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
 
 [node name="BattleScene" type="Control"]
 layout_mode = 3
@@ -10,9 +14,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_vm476")
 script = ExtResource("1_5g7vw")
 
 [node name="DialogueUI" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,13 +41,16 @@ stretch_mode = 6
 [node name="RecordButton" type="Button" parent="DialogueUI"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.0015625
-anchor_bottom = 0.0015625
+anchor_left = -0.106944
+anchor_top = 0.0102046
+anchor_right = 0.00416671
+anchor_bottom = 0.0320796
 offset_left = 270.0
 offset_top = 877.938
 offset_right = 278.0
 offset_bottom = 885.938
-scale = Vector2(16.0281, 16.0281)
+scale = Vector2(4.18651, 4.18651)
+text = "開始錄音"
 metadata/_edit_use_anchors_ = true
 
 [node name="BackButton" type="Button" parent="DialogueUI"]
@@ -66,16 +75,76 @@ offset_bottom = 23.0001
 scale = Vector2(15.3636, 15.3636)
 
 [node name="SettlementUI" type="Control" parent="."]
-visible = false
-anchors_preset = 0
-offset_top = -6.10352e-05
-offset_right = 40.0
-offset_bottom = 39.9999
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SettlementUI"]
-layout_mode = 0
+[node name="ColorRect" type="ColorRect" parent="SettlementUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.992157, 0.964706, 0.890196, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettlementUI/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -38.5
 offset_right = 40.0
-offset_bottom = 40.0
+offset_bottom = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SummaryTitleLabel" type="Label" parent="SettlementUI/ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "對話總結"
+horizontal_alignment = 1
+
+[node name="SummaryLabel" type="RichTextLabel" parent="SettlementUI/ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_vm476")
 text = "結算介面!"
+
+[node name="GrammarTitleLabel" type="Label" parent="SettlementUI/ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "文法分析"
+horizontal_alignment = 1
+
+[node name="GrammarLabel" type="RichTextLabel" parent="SettlementUI/ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_vm476")
+text = "結算介面!"
+
+[node name="KeywordsTitleLabel" type="Label" parent="SettlementUI/ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "關鍵字"
+horizontal_alignment = 1
+
+[node name="KeywordsContainer" type="VBoxContainer" parent="SettlementUI/ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_vm476")
+
+[node name="ConfirmButton" type="Button" parent="SettlementUI/ColorRect/VBoxContainer"]
+layout_mode = 2
+text = "確認"
 
 [connection signal="pressed" from="DialogueUI/BackButton" to="." method="_on_back_button_pressed"]
