@@ -7,27 +7,21 @@ extends Control
 @onready var npc2 = $Npc2
 @onready var npc_spawn_locations = $NpcSpawnLocations
 
-@onready var task_button = $SubMenu/TaskButton
-@onready var task_request = $TaskRequest
-@onready var mail_button = $SubMenu/MailButton
-@onready var settings_button = $SubMenu/SettingsButton
-
-const QuestModalScene = preload("res://ui/hud/quest_modal.tscn")
+const QuestModalScene = preload("res://ui/hud/quest/quest_modal.tscn")
 const SettingModalScene  = preload("res://ui/hud/settings_modal.tscn")
-const MailModalScene  = preload("res://ui/hud/MailModal.tscn")
+const MailModalScene  = preload("res://ui/hud/mail/MailModal.tscn")
 
 
 @onready var background = $Background
 @onready var house_buttons = [
-	$HouseButton1,
-	$HouseButton2,
-	$HouseButton3,
-	$HouseButton4,
-	$HouseButton5
+	$Background/HouseButton1,
+	$Background/HouseButton2,
+	$Background/HouseButton3,
+	$Background/HouseButton4,
+	$Background/HouseButton5
 ]
 
 const SubMenuScene = preload("res://ui/hud/sub_menu.tscn")
-const ModalScene = preload("res://ui/hud/modal.tscn")
 var current_modal = null
 
 # _ready 函式會在場景啟動時自動執行一次
@@ -40,7 +34,7 @@ func _ready():
 	add_child(sub_menu_instance) 
 	# 像之前一樣，設定它的位置
 	sub_menu_instance.position = Vector2(20, 150) 
-	
+	sub_menu_instance.z_index = 100
 	sub_menu_instance.task_button_pressed.connect(_on_task_button_pressed)
 	sub_menu_instance.mail_button_pressed.connect(_on_mail_button_pressed)
 	sub_menu_instance.settings_button_pressed.connect(_on_settings_button_pressed)
@@ -52,6 +46,7 @@ func _on_task_button_pressed():
 	add_child(quest_modal)
 
 func _on_mail_button_pressed():
+	print(123)
 	var mail_modal = MailModalScene.instantiate()
 	add_child(mail_modal)
 

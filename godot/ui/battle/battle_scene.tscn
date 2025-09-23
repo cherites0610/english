@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8vwj15kh08lm"]
+[gd_scene load_steps=7 format=3 uid="uid://b8vwj15kh08lm"]
 
 [ext_resource type="Script" uid="uid://cjukc08kgk47w" path="res://ui/battle/battle_scene.gd" id="1_5g7vw"]
 [ext_resource type="Texture2D" uid="uid://dd230763fvqyb" path="res://assets/battles/coffee/咖啡廳bg.png" id="1_fw8re"]
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://cartoon_ui_theme.tres" id="1_vm476"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_vm476"]
+[ext_resource type="PackedScene" uid="uid://cycpdbo8866co" path="res://scenes/playAnna.tscn" id="4_vj2sl"]
+[ext_resource type="PackedScene" uid="uid://cvcdf0fbae8uw" path="res://scenes/loading.tscn" id="4_yfr72"]
 
 [sub_resource type="Theme" id="Theme_vm476"]
 RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
@@ -18,7 +20,6 @@ theme = ExtResource("1_vm476")
 script = ExtResource("1_5g7vw")
 
 [node name="DialogueUI" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,20 +39,25 @@ texture = ExtResource("1_fw8re")
 expand_mode = 1
 stretch_mode = 6
 
+[node name="PlayAnna" parent="DialogueUI" instance=ExtResource("4_vj2sl")]
+position = Vector2(3, 404)
+
 [node name="RecordButton" type="Button" parent="DialogueUI"]
+z_index = 100
 layout_mode = 1
 anchors_preset = -1
-anchor_left = -0.106944
-anchor_top = 0.0102046
-anchor_right = 0.00416671
-anchor_bottom = 0.0320796
-offset_left = 270.0
-offset_top = 877.938
-offset_right = 278.0
-offset_bottom = 885.938
-scale = Vector2(4.18651, 4.18651)
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -44.0
+offset_top = -36.0
+offset_right = 44.0
+offset_bottom = -100.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 100
 text = "開始錄音"
-metadata/_edit_use_anchors_ = true
 
 [node name="BackButton" type="Button" parent="DialogueUI"]
 layout_mode = 0
@@ -68,6 +74,7 @@ bus = &"RecordBus"
 [node name="VoicePlayer" type="AudioStreamPlayer" parent="DialogueUI"]
 
 [node name="StatusLabel" type="Label" parent="DialogueUI"]
+visible = false
 layout_mode = 0
 offset_top = 6.10352e-05
 offset_right = 40.0
@@ -75,6 +82,7 @@ offset_bottom = 23.0001
 scale = Vector2(15.3636, 15.3636)
 
 [node name="SettlementUI" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -146,5 +154,25 @@ theme = SubResource("Theme_vm476")
 [node name="ConfirmButton" type="Button" parent="SettlementUI/ColorRect/VBoxContainer"]
 layout_mode = 2
 text = "確認"
+
+[node name="LoadingUI" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="LoadingUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.992157, 0.964706, 0.890196, 1)
+
+[node name="Loading" parent="LoadingUI" instance=ExtResource("4_yfr72")]
 
 [connection signal="pressed" from="DialogueUI/BackButton" to="." method="_on_back_button_pressed"]

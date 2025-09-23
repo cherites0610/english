@@ -1,35 +1,20 @@
-# MailModal.gd
 extends ColorRect
 
 # 預載入我們剛剛創建的郵件項目場景
-const MailListItemScene = preload("res://ui/hud/mail_list_item.tscn")
+const MailListItemScene = preload("res://ui/hud/mail/mail_list_item.tscn")
 
-@onready var mail_list_container = $WindowPanel/VBoxContainer/ScrollContainer/MailListContainer
-@onready var close_button = $WindowPanel/VBoxContainer/TitleBar/CloseButton #這是舊Btn
+@onready var mail_list_container = $TextureRect/ScrollContainer/MailListContainer
 @onready var http_request = $HTTPRequest
-@onready var close_button2 = $TextureRect/CloseButton2
+@onready var close_button = $TextureRect/CloseButton
 
 # 追蹤當前展開的項目，以實現手風琴效果
 var currently_expanded_item = null
 var requestMode = 0
 
 func _ready():
-	close_button.pressed.connect(queue_free) #這是舊Btn
-	close_button2.pressed.connect(queue_free)
-	# 連接 HTTPRequest 的信號
+	close_button.pressed.connect(queue_free)
 	http_request.request_completed.connect(_on_request_completed)
-	
-	# Modal 準備好後，立即獲取郵件列表
 	_fetch_mail_list()
-
-# --- Public API ---
-# 外部可以呼叫此函式來顯示 Modal (如果它是手動實例化的話)
-func show_modal():
-	self.show()
-	_fetch_mail_list()
-
-# --- 內部邏輯 ---
-
 # 1. 獲取郵件列表
 func _fetch_mail_list():
 	var url = GlobalState.BASE_URL + "/mail"
@@ -62,7 +47,6 @@ func _mark_mail_as_read(mail_id: String):
 func _on_request_completed(result, response_code, headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS or response_code >= 400:
 		return
-	print(requestMode)
 	if requestMode == 1:
 		# 清空舊列表
 		for child in mail_list_container.get_children():
@@ -71,7 +55,6 @@ func _on_request_completed(result, response_code, headers, body):
 		var json = JSON.new()
 		json.parse(body.get_string_from_utf8())
 		var response = json.get_data()
-		print(response)
 		
 		if response and response.has("data"):
 			var mails = response["data"]

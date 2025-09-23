@@ -25,6 +25,7 @@ driver/enable_input=true
 
 GlobalState="*res://autoload/global_state.tscn"
 EventManager="*res://autoload/EventManager.gd"
+DeeplinkPlugin="*res://addons/DeeplinkPlugin/DeeplinkPlugin.gd"
 
 [display]
 

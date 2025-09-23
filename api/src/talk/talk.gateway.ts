@@ -240,6 +240,7 @@ export class TalkGateway
     if (!user) {
       throw new NotFoundException(`User with ID "${userId}" not found`);
     }
+
     const battle =
       await this.battleService.getRandomStageByChildCategoryName(name);
     if (!battle) {

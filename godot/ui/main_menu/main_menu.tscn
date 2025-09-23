@@ -8,9 +8,9 @@
 [ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="5_xio0d"]
 [ext_resource type="Texture2D" uid="uid://cq03l66lfwe6r" path="res://assets/mainmenu1/IMG_2177 (1).png" id="6_qao3l"]
 [ext_resource type="Texture2D" uid="uid://cgr3yngv8j34w" path="res://assets/mainmenu1/IMG_2182.png" id="7_s4pem"]
-[ext_resource type="PackedScene" uid="uid://342gbjrodqxa" path="res://ui/hud/money.tscn" id="10_4e78x"]
+[ext_resource type="PackedScene" uid="uid://342gbjrodqxa" path="res://ui/hud/header/money.tscn" id="10_4e78x"]
 [ext_resource type="PackedScene" uid="uid://cmv4wsu6p8oru" path="res://scenes/homeAnna.tscn" id="11_s4pem"]
-[ext_resource type="PackedScene" uid="uid://cvgjdegr47g22" path="res://ui/hud/diamond.tscn" id="11_xio0d"]
+[ext_resource type="PackedScene" uid="uid://cvgjdegr47g22" path="res://ui/hud/header/diamond.tscn" id="11_xio0d"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -20,6 +20,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 6
+theme = ExtResource("5_xio0d")
 script = ExtResource("1_0o4t1")
 
 [node name="Background" type="TextureRect" parent="."]

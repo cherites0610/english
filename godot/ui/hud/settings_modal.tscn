@@ -21,10 +21,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -107.0
-offset_top = -196.5
-offset_right = 107.0
-offset_bottom = 196.5
+offset_left = -250.0
+offset_top = -600.0
+offset_right = 250.0
+offset_bottom = 600.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -36,6 +36,7 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="WindowPanel/VBoxContainer/TitleBar"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 70
 text = "設定"
 
 [node name="CloseButton" type="Button" parent="WindowPanel/VBoxContainer/TitleBar"]
@@ -44,14 +45,17 @@ text = "X"
 
 [node name="AccountBindingLabel" type="Label" parent="WindowPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
 text = "帳號綁定"
 
 [node name="GoogleButton" type="Button" parent="WindowPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
 text = "使用 Google 帳號登入"
 
 [node name="LineButton" type="Button" parent="WindowPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
 text = "使用 Line 帳號登入"
 
 [node name="HSeparator" type="HSeparator" parent="WindowPanel/VBoxContainer"]
@@ -59,6 +63,7 @@ layout_mode = 2
 
 [node name="ProfileLabel" type="Label" parent="WindowPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
 text = "個人資料"
 
 [node name="NameHBox" type="HBoxContainer" parent="WindowPanel/VBoxContainer"]
@@ -66,6 +71,7 @@ layout_mode = 2
 
 [node name="NameLabel" type="Label" parent="WindowPanel/VBoxContainer/NameHBox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
 text = "暱稱: "
 
 [node name="NameEdit" type="LineEdit" parent="WindowPanel/VBoxContainer/NameHBox"]
@@ -74,6 +80,7 @@ placeholder_text = "請輸入您的新暱稱"
 
 [node name="SaveNameButton" type="Button" parent="WindowPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
 text = "儲存暱稱"
 
 [node name="HSeparator2" type="HSeparator" parent="WindowPanel/VBoxContainer"]
@@ -81,6 +88,7 @@ layout_mode = 2
 
 [node name="AudioLabel" type="Label" parent="WindowPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
 text = "音效設定"
 
 [node name="VolumeHBox" type="HBoxContainer" parent="WindowPanel/VBoxContainer"]
@@ -88,6 +96,8 @@ layout_mode = 2
 
 [node name="VolumeLabel" type="Label" parent="WindowPanel/VBoxContainer/VolumeHBox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "音量設定"
 
 [node name="VolumeSlider" type="HSlider" parent="WindowPanel/VBoxContainer/VolumeHBox"]
 layout_mode = 2
@@ -97,3 +107,5 @@ layout_mode = 2
 
 [node name="LogoutButton" type="Button" parent="WindowPanel/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "登出"

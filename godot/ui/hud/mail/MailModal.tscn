@@ -1,18 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://cl4jeojr3xcvy"]
+[gd_scene load_steps=9 format=3 uid="uid://cl4jeojr3xcvy"]
 
-[ext_resource type="Script" uid="uid://cl4jeojr3xcvy" path="res://ui/hud/mail_modal.gd" id="1_erd76"]
-[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_fh6u7"]
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_yoeoj"]
+[ext_resource type="Script" uid="uid://c18x2ipypg0um" path="res://ui/hud/mail/mail_modal.gd" id="2_yoeoj"]
 [ext_resource type="Texture2D" uid="uid://c47uqc3yuf3ax" path="res://assets/modalimage/mailBG.png" id="3_7b25e"]
 [ext_resource type="FontFile" uid="uid://bopuqrdiff5py" path="res://Baloo_2/PopGothicCjkTc-Bold.ttf" id="4_a3ukd"]
 [ext_resource type="Texture2D" uid="uid://b4on6cvv5r02b" path="res://assets/icons/closeBtn.png" id="4_kiaaf"]
 [ext_resource type="Texture2D" uid="uid://c15368wnann5m" path="res://assets/modalimage/title.png" id="5_a3ukd"]
 [ext_resource type="Texture2D" uid="uid://dkokhnqjwx61l" path="res://assets/modalimage/airplane.png" id="5_kiaaf"]
 [ext_resource type="Texture2D" uid="uid://6ydvmsnbbrax" path="res://assets/icons/未命名的作品 (14).png" id="7_kiaaf"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7bdww"]
-texture = ExtResource("3_7b25e")
-axis_stretch_horizontal = 2
-region_rect = Rect2(0, 0, 996, 2047)
 
 [node name="MailModal" type="ColorRect"]
 z_index = 200
@@ -21,9 +16,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_fh6u7")
+theme = ExtResource("1_yoeoj")
 color = Color(0, 0, 0, 0.294118)
-script = ExtResource("1_erd76")
+script = ExtResource("2_yoeoj")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -90,7 +85,26 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("5_kiaaf")
 
-[node name="CloseButton2" type="TextureButton" parent="TextureRect"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TextureRect"]
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.114
+anchor_top = 0.295
+anchor_right = 0.875
+anchor_bottom = 0.671
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="MailListContainer" type="VBoxContainer" parent="TextureRect/ScrollContainer"]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 25
+
+[node name="CloseButton" type="TextureButton" parent="TextureRect"]
 z_index = 200
 layout_mode = 1
 anchors_preset = -1
@@ -106,53 +120,4 @@ texture_pressed = ExtResource("7_kiaaf")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="WindowPanel" type="PanelContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.093
-anchor_top = 0.268
-anchor_right = 0.9
-anchor_bottom = 0.707
-offset_left = 39.56
-offset_top = 16.44
-offset_right = -32.0
-offset_bottom = 21.5599
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_7bdww")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="WindowPanel"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="TitleBar" type="HBoxContainer" parent="WindowPanel/VBoxContainer"]
-layout_mode = 2
-
-[node name="TitleLabel" type="Label" parent="WindowPanel/VBoxContainer/TitleBar"]
-visible = false
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "郵件"
-
-[node name="CloseButton" type="Button" parent="WindowPanel/VBoxContainer/TitleBar"]
-visible = false
-z_index = 300
-layout_mode = 2
-text = "X"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="WindowPanel/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="MailListContainer" type="VBoxContainer" parent="WindowPanel/VBoxContainer/ScrollContainer"]
-visible = false
-custom_minimum_size = Vector2(0, 400)
-layout_mode = 2
-
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
-
-[connection signal="pressed" from="TextureRect/CloseButton2" to="." method="_on_close_button_2_pressed"]
-[connection signal="pressed" from="TextureRect/CloseButton2" to="." method="queue_free"]

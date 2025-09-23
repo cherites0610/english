@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=23 format=4 uid="uid://8o8bmos7gb0u"]
 
-[ext_resource type="FontFile" uid="uid://dnv1rkpgr60tr" path="res://Baloo_2/static/Baloo2-ExtraBold.ttf" id="1_y206l"]
+[ext_resource type="FontFile" uid="uid://sew1dfj3na2f" path="res://NaikaiFont-Bold.ttf" id="1_y206l"]
 
 [sub_resource type="Image" id="Image_y206l"]
 data = {
@@ -1277,7 +1277,7 @@ corner_radius_bottom_left = 12
 bg_color = Color(0.992157, 0.964706, 0.890196, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_meyyc"]
-bg_color = Color(0.878431, 0.968627, 0.980392, 1)
+bg_color = Color(0.992157, 0.964706, 0.890196, 1)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -1299,7 +1299,7 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 12.0
 content_margin_bottom = 4.0
-bg_color = Color(0.878431, 0.968627, 0.980392, 1)
+bg_color = Color(0.929412, 0.952941, 0.968627, 0)
 expand_margin_left = 4.0
 expand_margin_top = 4.0
 expand_margin_right = 12.0

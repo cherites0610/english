@@ -12,7 +12,7 @@ signal profile_updated
 const MainMenuScene = preload("res://ui/main_menu/main_menu.tscn")
 # --- 常數 ---
 const SAVE_PATH = "user://session.json"
-const BASE_URL = "https://f2cb26ecab38.ngrok-free.app/api"
+const BASE_URL = "https://english-api.cherites.org/api"
 const REFRESH_TOKEN_URL = BASE_URL + "/auth/refresh"
 const PROFILE_URL = BASE_URL + "/user/profile"
 

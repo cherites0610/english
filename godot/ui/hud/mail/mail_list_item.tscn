@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://doaos0wqgfk1w"]
+
+[ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_1qgen"]
+[ext_resource type="Script" uid="uid://b425oyybxpax5" path="res://mail_list_item.gd" id="1_l5ums"]
+
+[node name="MailListItem" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_1qgen")
+script = ExtResource("1_l5ums")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="BasicInfo" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ReadStatus" type="ColorRect" parent="VBoxContainer/MarginContainer/BasicInfo"]
+visible = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/MarginContainer/BasicInfo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 70
+text = "郵件標題"
+
+[node name="Control" type="Control" parent="VBoxContainer/MarginContainer/BasicInfo"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FromLabel" type="Label" parent="VBoxContainer/MarginContainer/BasicInfo"]
+visible = false
+layout_mode = 2
+text = "來自"
+
+[node name="ReceivedAtLabel" type="Label" parent="VBoxContainer/MarginContainer/BasicInfo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "接收"
+
+[node name="ContextLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2

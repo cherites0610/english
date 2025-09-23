@@ -6,6 +6,9 @@ extends Control
 @onready var record_button = $DialogueUI/RecordButton
 @onready var status_label = $DialogueUI/StatusLabel
 
+@onready var animate = $DialogueUI/PlayAnna
+
+@onready var loading_ui = $LoadingUI
 @onready var dialogue_ui = $DialogueUI
 @onready var settlement_ui = $SettlementUI
 # [新增] 結算介面內部元件的參考
@@ -31,6 +34,7 @@ var voice_playback: AudioStreamGeneratorPlayback
 
 # 當場景載入時執行
 func _ready():
+	loading_ui.show()
 	dialogue_ui.visible = false
 	settlement_ui.visible = false # 確保結算介面一開始也是隱藏的
 	
@@ -45,8 +49,8 @@ func _ready():
 	record_button.pressed.connect(_on_record_button_pressed)
 	# [新增] 連接結算介面的確認按鈕信號
 	confirm_button.pressed.connect(_on_confirm_button_pressed)
-	
-	var url = "wss://f2cb26ecab38.ngrok-free.app"
+	animate.set_state(animate.State.IDLE)
+	var url = "wss://7347a8d2caae.ngrok-free.app"
 	var new_buffer_size = 1024 * 1024 * 30
 	ws_peer.inbound_buffer_size = new_buffer_size
 	ws_peer.outbound_buffer_size = new_buffer_size
@@ -74,7 +78,8 @@ func _process(delta):
 		if not is_conversation_created:
 			status_label.text = "連線成功！正在建立對話..."
 			var conversation_data = {
-		"name": GlobalState.current_level_id, # 這個 name 欄位可以對應 battle.name 或 npc.name
+		#"name": GlobalState.current_level_id, # 這個 name 欄位可以對應 battle.name 或 npc.name
+		"name":"汽車",
 		"userID": GlobalState.user_profile.id,
 	  }
 			send_ws_event('createConversation', conversation_data)
@@ -103,11 +108,6 @@ func _process(delta):
 
 func handle_ws_event(event_name: String, payload):
 	match event_name:
-		"conversationCreated":
-			print("伺服器回應: ", payload.get("message", ""))
-			status_label.text = "請按下按鈕開始說話"
-			record_button.disabled = false
-			
 		"audioResponse":
 			if payload and payload is String and not payload.is_empty():
 				var chunk_byte_array = Marshalls.base64_to_raw(payload)
@@ -119,6 +119,7 @@ func handle_ws_event(event_name: String, payload):
 		"endAudioResponse":
 			print(">>> 收到 endAudioResponse 事件！準備播放！ <<<")
 			if not has_received_first_response:
+				loading_ui.hide()
 				has_received_first_response = true
 				dialogue_ui.visible = true
 			
@@ -220,6 +221,11 @@ func _on_record_button_pressed():
 	if is_recording:
 		status_label.text = "正在說話..."
 		record_button.text = "停止錄音"
+		
+		# [新增] 告訴 Anna 開始寫字
+		animate.set_state(animate.State.WRITING)
+		
+		# (麥克風啟動邏輯不變)
 		var mic_stream := AudioStreamMicrophone.new()
 		mic_player.stream = mic_stream
 		mic_player.bus = "RecordBus"
@@ -233,6 +239,11 @@ func _on_record_button_pressed():
 		status_label.text = "正在處理您的語音..."
 		record_button.text = "開始錄音"
 		record_button.disabled = true
+		
+		# [新增] 告訴 Anna 停止寫字，回到待機狀態
+		animate.set_state(animate.State.IDLE)
+		
+		# (麥克風停止邏輯不變)
 		mic_player.stop()
 		record_effect = null
 		send_ws_event("endAudioStream", null)
@@ -253,6 +264,9 @@ func play_full_mp3():
 		print("沒有收到任何有效的 MP3 資料，不進行播放。")
 		return
 
+	# [新增] 告訴 Anna 開始說話
+	animate.set_state(animate.State.TALKING)
+
 	var audio_stream_mp3 = AudioStreamMP3.new()
 	audio_stream_mp3.data = mp3_full_byte_array
 	mp3_full_byte_array = PackedByteArray()
@@ -263,4 +277,8 @@ func play_full_mp3():
 	
 func _on_voice_player_finished():
 	is_playing_ai_voice = false
+	
+	# [新增] 告訴 Anna 停止說話，回到待機狀態
+	animate.set_state(animate.State.IDLE)
+	
 	print("AI 語音播放完畢。")

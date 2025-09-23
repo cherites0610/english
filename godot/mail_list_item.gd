@@ -4,10 +4,10 @@ extends PanelContainer
 # 自訂信號，當此項目被點擊時，會將自己發送出去，通知父節點
 signal item_clicked(item_instance)
 
-@onready var read_status = $VBoxContainer/BasicInfo/ReadStatus
-@onready var title_label = $VBoxContainer/BasicInfo/TitleLabel
-@onready var from_label = $VBoxContainer/BasicInfo/FromLabel
-@onready var received_at_label = $VBoxContainer/BasicInfo/ReceivedAtLabel
+@onready var read_status = $VBoxContainer/MarginContainer/BasicInfo/ReadStatus
+@onready var title_label = $VBoxContainer/MarginContainer/BasicInfo/TitleLabel
+@onready var from_label = $VBoxContainer/MarginContainer/BasicInfo/FromLabel
+@onready var received_at_label = $VBoxContainer/MarginContainer/BasicInfo/ReceivedAtLabel
 @onready var context_label = $VBoxContainer/ContextLabel
 
 var mail_data: Dictionary
