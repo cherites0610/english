@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b8vwj15kh08lm"]
+[gd_scene load_steps=8 format=3 uid="uid://b8vwj15kh08lm"]
 
 [ext_resource type="Script" uid="uid://cjukc08kgk47w" path="res://ui/battle/battle_scene.gd" id="1_5g7vw"]
 [ext_resource type="Texture2D" uid="uid://dd230763fvqyb" path="res://assets/battles/coffee/咖啡廳bg.png" id="1_fw8re"]
 [ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_vm476"]
 [ext_resource type="PackedScene" uid="uid://cycpdbo8866co" path="res://scenes/playAnna.tscn" id="4_vj2sl"]
 [ext_resource type="PackedScene" uid="uid://cvcdf0fbae8uw" path="res://scenes/loading.tscn" id="4_yfr72"]
+[ext_resource type="Texture2D" uid="uid://durpsokuw3b5k" path="res://assets/battles/coffee/咖啡廳fg.png" id="5_vqou4"]
 
 [sub_resource type="Theme" id="Theme_vm476"]
 RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
@@ -40,7 +41,20 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="PlayAnna" parent="DialogueUI" instance=ExtResource("4_vj2sl")]
-position = Vector2(3, 404)
+position = Vector2(116, 401)
+scale = Vector2(0.8, 0.8)
+
+[node name="TextureRect2" type="TextureRect" parent="DialogueUI"]
+z_index = 1
+layout_mode = 0
+offset_left = -3.0
+offset_top = 128.0
+offset_right = 1637.0
+offset_bottom = 2488.0
+scale = Vector2(0.659045, 0.896414)
+texture = ExtResource("5_vqou4")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="RecordButton" type="Button" parent="DialogueUI"]
 z_index = 100

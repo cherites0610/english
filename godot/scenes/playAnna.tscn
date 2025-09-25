@@ -787,7 +787,7 @@ position = Vector2(545.842, 890.317)
 texture = ExtResource("11_6v308")
 
 [node name="張眼" type="Node2D" parent="."]
-z_index = 2
+z_index = 3
 position = Vector2(548.604, 900.446)
 
 [node name="Sprite2D" type="Sprite2D" parent="張眼"]
@@ -812,8 +812,8 @@ sprite_frames = SubResource("SpriteFrames_5ty6p")
 animation = &"talking"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-z_index = 3
-position = Vector2(548, 895)
+z_index = 2
+position = Vector2(548, 893)
 sprite_frames = SubResource("SpriteFrames_4k1y7")
 animation = &"close_eyes"
 frame = 1

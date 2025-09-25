@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dlvuxihtf5b5c"]
+[gd_scene load_steps=13 format=3 uid="uid://dlvuxihtf5b5c"]
 
 [ext_resource type="Script" uid="uid://d4njqkjc25rib" path="res://ui/main_menu/main_menu.gd" id="1_0o4t1"]
 [ext_resource type="Texture2D" uid="uid://ges2l55tgkg1" path="res://assets/mainmenu/Home_bg2.png" id="2_s4pem"]
@@ -8,6 +8,7 @@
 [ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="5_xio0d"]
 [ext_resource type="Texture2D" uid="uid://cq03l66lfwe6r" path="res://assets/mainmenu1/IMG_2177 (1).png" id="6_qao3l"]
 [ext_resource type="Texture2D" uid="uid://cgr3yngv8j34w" path="res://assets/mainmenu1/IMG_2182.png" id="7_s4pem"]
+[ext_resource type="Texture2D" uid="uid://bfqnxsttvkklv" path="res://assets/mainmenu1/未命名的作品 (18) (1).png" id="7_xio0d"]
 [ext_resource type="PackedScene" uid="uid://342gbjrodqxa" path="res://ui/hud/header/money.tscn" id="10_4e78x"]
 [ext_resource type="PackedScene" uid="uid://cmv4wsu6p8oru" path="res://scenes/homeAnna.tscn" id="11_s4pem"]
 [ext_resource type="PackedScene" uid="uid://cvgjdegr47g22" path="res://ui/hud/header/diamond.tscn" id="11_xio0d"]
@@ -37,7 +38,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="HouseButton1" type="TextureButton" parent="Background"]
-z_index = 5
+z_index = 1
 custom_minimum_size = Vector2(250, 250)
 layout_mode = 1
 anchors_preset = -1
@@ -51,7 +52,7 @@ grow_horizontal = 0
 texture_normal = ExtResource("3_s4pem")
 
 [node name="HouseButton2" type="TextureButton" parent="Background"]
-z_index = 5
+z_index = 1
 custom_minimum_size = Vector2(250, 250)
 layout_mode = 1
 anchors_preset = -1
@@ -64,7 +65,7 @@ grow_vertical = 2
 texture_normal = ExtResource("4_xio0d")
 
 [node name="HouseButton3" type="TextureButton" parent="Background"]
-z_index = 5
+z_index = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.987
@@ -77,9 +78,10 @@ offset_bottom = 307.0
 grow_horizontal = 0
 grow_vertical = 2
 texture_normal = ExtResource("5_tf5ef")
+texture_pressed = ExtResource("7_xio0d")
 
 [node name="HouseButton4" type="TextureButton" parent="Background"]
-z_index = 5
+z_index = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.589
@@ -91,7 +93,7 @@ grow_vertical = 2
 texture_normal = ExtResource("6_qao3l")
 
 [node name="HouseButton5" type="TextureButton" parent="Background"]
-z_index = 5
+z_index = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.887
@@ -122,25 +124,25 @@ position = Vector2(1230, 598)
 scale = Vector2(0.167141, 0.167141)
 
 [node name="Npc2" parent="." instance=ExtResource("11_s4pem")]
-position = Vector2(950, 597)
+position = Vector2(1233, 935)
 scale = Vector2(0.167141, 0.167141)
 
 [node name="NpcSpawnLocations" type="Node" parent="."]
 
 [node name="Marker2D1" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(195, 1565)
+position = Vector2(198, 1683)
 
 [node name="Marker2D2" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(877, 1259)
+position = Vector2(894, 1260)
 
 [node name="Marker2D3" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(151, 969)
+position = Vector2(110, 901)
 
 [node name="Marker2D4" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(185, 401)
+position = Vector2(156, 373)
 
 [node name="Marker2D5" type="Marker2D" parent="NpcSpawnLocations"]
-position = Vector2(925, 770)
+position = Vector2(935, 742)
 
 [node name="Money" parent="." instance=ExtResource("10_4e78x")]
 layout_mode = 1
