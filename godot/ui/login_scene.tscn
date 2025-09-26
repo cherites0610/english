@@ -1,9 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://ct3eosvxtmsau"]
+[gd_scene load_steps=6 format=3 uid="uid://ct3eosvxtmsau"]
 
 [ext_resource type="Theme" uid="uid://8o8bmos7gb0u" path="res://assets/cartoon_ui_theme.tres" id="1_2k7p3"]
 [ext_resource type="Script" uid="uid://cjp5vr17o330q" path="res://ui/login_scene.gd" id="1_wisbw"]
+[ext_resource type="Texture2D" uid="uid://beo0wsigew76b" path="res://assets/launch.png" id="3_yf6db"]
 
-[sub_resource type="Theme" id="Theme_wisbw"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf6db"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_etxus"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="LoginScene" type="Control"]
 layout_mode = 3
@@ -15,48 +28,44 @@ grow_vertical = 2
 theme = ExtResource("1_2k7p3")
 script = ExtResource("1_wisbw")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1, 0.994126)
-mouse_filter = 2
-color = Color(1, 0.988235, 0.843137, 1)
+texture = ExtResource("3_yf6db")
+expand_mode = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="ButtonContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -520.0
+offset_right = 250.0
+offset_bottom = -100.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(500, 0)
-layout_mode = 2
-theme = SubResource("Theme_wisbw")
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
-layout_mode = 2
-text = "選擇登錄方式"
-horizontal_alignment = 1
-
-[node name="GoogleLoginButton" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 200)
+[node name="GoogleLoginButton" type="Button" parent="ButtonContainer"]
+custom_minimum_size = Vector2(500, 100)
 layout_mode = 2
 theme = ExtResource("1_2k7p3")
+theme_override_styles/normal = SubResource("StyleBoxFlat_yf6db")
 text = "使用Google登入"
 
-[node name="LineLoginButton" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 200)
+[node name="LineLoginButton" type="Button" parent="ButtonContainer"]
+custom_minimum_size = Vector2(500, 100)
 layout_mode = 2
 theme = ExtResource("1_2k7p3")
+theme_override_styles/normal = SubResource("StyleBoxFlat_etxus")
 text = "使用Line登入"
-
-[node name="StatusLabel" type="Label" parent="CenterContainer/VBoxContainer"]
-layout_mode = 2
 
 [node name="AuthURLRequest" type="HTTPRequest" parent="."]

@@ -16,7 +16,7 @@ const BASE_URL = "https://english-api.cherites.org/api"
 const REFRESH_TOKEN_URL = BASE_URL + "/auth/refresh"
 const PROFILE_URL = BASE_URL + "/user/profile"
 
-const FAKE_LOGIN_IN_DEBUG = true
+const FAKE_LOGIN_IN_DEBUG = false
 
 # --- 狀態變數 ---
 var current_level_id = "" 

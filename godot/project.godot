@@ -11,9 +11,10 @@ config_version=5
 [application]
 
 config/name="english"
-run/main_scene="uid://dlvuxihtf5b5c"
+run/main_scene="uid://ct3eosvxtmsau"
 config/features=PackedStringArray("4.4", "Mobile")
-config/icon="res://icon.svg"
+boot_splash/image="uid://beo0wsigew76b"
+config/icon="uid://du362soy8p6e7"
 run/mix_rate=48000
 
 [audio]
